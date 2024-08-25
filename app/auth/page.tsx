@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 export default function Authentication() {
   const searchParams = useSearchParams();
@@ -14,10 +14,24 @@ export default function Authentication() {
   const role = searchParams.get("role");
 
   const [visible, setVisible] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [nama, setNama] = useState<string>("");
-  const [nip, setNip] = useState<string>("");
+
+  async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const response = await fetch("https://silab-dev.vercel.app/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    const responseData = await response.json();
+    const data = responseData["data"];
+  }
 
   return (
     <div className="flex flex-row px-[60px] justify-between  pb-4">
@@ -56,7 +70,10 @@ export default function Authentication() {
             </span>
           </p>
         </div>
-        <div className="flex flex-col w-full items-center space-y-[40px]">
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex flex-col w-full items-center space-y-[32px]"
+        >
           <fieldset
             className={`${
               auth == "signup" && role == "dosen" ? "visible" : "hidden"
@@ -65,10 +82,10 @@ export default function Authentication() {
             <label htmlFor="login" />
             <input
               type="text"
-              value={nama}
-              onChange={(value) => setNama(value.target.value)}
+              name="nama"
               className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="Nama Lengkap"
+              required={auth == "signup" && role == "dosen" ? true : false}
             />
           </fieldset>
           <fieldset
@@ -79,31 +96,31 @@ export default function Authentication() {
             <label htmlFor="login" />
             <input
               type="text"
-              value={nip}
-              onChange={(value) => setNip(value.target.value)}
+              name="nip"
               className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="NIP"
+              required={auth == "signup" && role == "dosen" ? true : false}
             />
           </fieldset>
           <fieldset>
             <label htmlFor="login" />
             <input
               type="email"
-              value={email}
-              onChange={(value) => setEmail(value.target.value)}
+              name="email"
               className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="Email"
+              required
             />
           </fieldset>
           <div className="flex flex-col w-full items-center space-y-[16px]">
             <fieldset>
               <label htmlFor="login" />
               <input
-                value={password}
-                onChange={(value) => setPassword(value.target.value)}
+                name="password"
                 type={visible ? "text" : "password"}
                 className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6 relative"
                 placeholder="Password"
+                required
               />
               <span className="absolute -translate-x-10 translate-y-4">
                 <Image
@@ -122,13 +139,13 @@ export default function Authentication() {
               Forgot password?
             </Link>
           </div>
-        </div>
-        <button
-          onClick={() => {}}
-          className="w-[400px] h-[48px] bg-[#3272CA] rounded-[30px] text-white text-[18px] font-semibold"
-        >
-          {auth == "login" ? "Log In" : "Sign Up"}
-        </button>
+          <button
+            type="submit"
+            className="w-[400px] h-[48px] bg-[#3272CA] rounded-[30px] text-white text-[18px] font-semibold"
+          >
+            {auth == "login" ? "Log In" : "Sign Up"}
+          </button>
+        </form>
         <div
           className={`flex flex-row space-x-1 ${
             role == "laboran" || role == "asisten" ? "hidden" : "visible"
