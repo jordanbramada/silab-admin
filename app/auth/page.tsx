@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { encrypt, setCookies } from "../lib/sessions";
 
 export default function Authentication() {
   const searchParams = useSearchParams();
@@ -14,23 +15,36 @@ export default function Authentication() {
   const role = searchParams.get("role");
 
   const [visible, setVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsLoading(true);
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const response = await fetch("https://silab-dev.vercel.app/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const responseData = await response.json();
-    const data = responseData["data"];
+    try {
+      const response = await fetch("https://silab-dev.vercel.app/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const responseData = await response.json();
+      const nim = responseData["data"]["nim"];
+
+      const expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
+      const session = await encrypt({ nim, expires });
+
+      setCookies(session, { expires, httpOnly: true });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -76,28 +90,28 @@ export default function Authentication() {
         >
           <fieldset
             className={`${
-              auth == "signup" && role == "dosen" ? "visible" : "hidden"
+              auth != "signup" && role != "dosen" ? "hidden" : "visible"
             }`}
           >
             <label htmlFor="login" />
             <input
               type="text"
               name="nama"
-              className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
+              className="border border-[#E1E3EA] focus:outline-[#3272CA] rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="Nama Lengkap"
               required={auth == "signup" && role == "dosen" ? true : false}
             />
           </fieldset>
           <fieldset
             className={`${
-              auth == "signup" && role == "dosen" ? "visible" : "hidden"
+              auth != "signup" && role != "dosen" ? "hidden" : "visible"
             }`}
           >
             <label htmlFor="login" />
             <input
               type="text"
               name="nip"
-              className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
+              className="border border-[#E1E3EA] focus:outline-[#3272CA] rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="NIP"
               required={auth == "signup" && role == "dosen" ? true : false}
             />
@@ -107,7 +121,7 @@ export default function Authentication() {
             <input
               type="email"
               name="email"
-              className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6"
+              className="border border-[#E1E3EA] focus:outline-[#3272CA] rounded-[30px] w-[400px] h-[56px] px-4 py-6"
               placeholder="Email"
               required
             />
@@ -118,7 +132,7 @@ export default function Authentication() {
               <input
                 name="password"
                 type={visible ? "text" : "password"}
-                className="border border-[#E1E3EA] focus:outline-none rounded-[30px] w-[400px] h-[56px] px-4 py-6 relative"
+                className="border border-[#E1E3EA] focus:outline-[#3272CA] rounded-[30px] w-[400px] h-[56px] px-4 py-6 relative"
                 placeholder="Password"
                 required
               />
@@ -143,7 +157,13 @@ export default function Authentication() {
             type="submit"
             className="w-[400px] h-[48px] bg-[#3272CA] rounded-[30px] text-white text-[18px] font-semibold"
           >
-            {auth == "login" ? "Log In" : "Sign Up"}
+            {isLoading ? (
+              <span className="loading loading-dots loading-md" />
+            ) : auth == "login" ? (
+              "Log In"
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </form>
         <div

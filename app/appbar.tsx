@@ -5,10 +5,17 @@ import { usePathname } from "next/navigation";
 
 export default function Appbar() {
   const pathname = usePathname();
+  const isDashboard = pathname.startsWith("/dashboard");
+  const breadcrumbPath = isDashboard
+    ? pathname
+        .replace(/^\/dashboard\/?/, "") // Remove "/dashboard" from the start
+        .split("/")
+        .filter(Boolean) // Remove empty segments
+    : [];
 
   return (
-    <div className="flex flex-row w-full px-8 pt-2 justify-between">
-      <div className="w-[60px] h-[60px] relative">
+    <div className="flex w-full flex-row justify-between px-8 pt-2">
+      <div className="relative h-[60px] w-[60px]">
         <Image
           alt="logo"
           src={"logo.svg"}
@@ -17,9 +24,7 @@ export default function Appbar() {
         />
       </div>
       <div
-        className={` flex-row align-middle ${
-          pathname != "/dashboard" ? "hidden" : "flex"
-        }`}
+        className={`flex-row align-middle ${isDashboard ? "flex" : "hidden"}`}
       >
         <Image
           alt="bookmark"
@@ -28,14 +33,14 @@ export default function Appbar() {
           width={24}
           className="mr-2"
         />
-        <p className="self-center text-[#5E6278]">Praktikum</p>
+        <p className="self-center text-[#5E6278]">
+          {pathname == "/dashboard" ? "dashboard" : breadcrumbPath.join(" / ")}
+        </p>
       </div>
       <div
-        className={`flex flex-row space-x-8 ${
-          pathname != "/dashboard" ? "hidden" : "flex"
-        }`}
+        className={`flex flex-row space-x-8 ${isDashboard ? "flex" : "hidden"}`}
       >
-        <div className="w-[400px] h-[60px] rounded-[90px] bg-[#F5F5F5] flex flex-row">
+        <div className="flex h-[60px] w-[400px] flex-row rounded-[90px] bg-[#F5F5F5]">
           <Image
             alt="search"
             src={"search.svg"}
@@ -46,14 +51,14 @@ export default function Appbar() {
           <input
             type="text"
             placeholder="Search"
-            className="w-full h-full rounded-[90px] bg-[#F5F5F5] focus:outline-none placeholder-[#5E6278] placeholder:font-semibold"
+            className="h-full w-full rounded-[90px] bg-[#F5F5F5] placeholder-[#5E6278] placeholder:font-semibold focus:outline-none"
           />
         </div>
         <div className="flex flex-col text-end">
-          <p className="font-semibold text-[16px] text-[#5E6278] text-opacity-50">
+          <p className="text-[16px] font-semibold text-[#5E6278] text-opacity-50">
             You logged in as a
           </p>
-          <p className="font-bold text-[#3272CA] text-[24px]">Laboran</p>
+          <p className="text-[24px] font-bold text-[#3272CA]">Laboran</p>
         </div>
       </div>
     </div>
