@@ -1,4 +1,8 @@
+import Link from "next/link";
 import SideBarItem, { SideBarProps } from "./sidebar-item";
+import Image from "next/image";
+import { signOut } from "@/app/lib/sessions";
+import SignOutButton from "./signout-button";
 
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.svg", route: "/dashboard", title: "Dashboard" },
@@ -26,17 +30,20 @@ const sideBarItems: SideBarProps[] = [
 
 export default function SideBar() {
   return (
-    <div className="mt-8 flex h-full w-[350px] flex-col space-y-5 px-8">
-      {sideBarItems.map((item) => {
-        return (
-          <SideBarItem
-            imageSrc={item.imageSrc}
-            route={item.route}
-            title={item.title}
-            key={item.title}
-          />
-        );
-      })}
+    <div className="mt-8 flex h-screen w-[350px] flex-col justify-between px-8 pb-4">
+      <div className="flex h-full w-full flex-col space-y-5">
+        {sideBarItems.map((item) => {
+          return (
+            <SideBarItem
+              imageSrc={item.imageSrc}
+              route={item.route}
+              title={item.title}
+              key={item.title}
+            />
+          );
+        })}
+      </div>
+      <SignOutButton />
     </div>
   );
 }

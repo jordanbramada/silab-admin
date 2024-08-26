@@ -15,11 +15,14 @@ export async function encrypt(payload: any) {
     .sign(key);
 }
 
-export async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, key, {
-    algorithms: ["HS256"],
-  });
-  return payload;
+export async function decrypt(input: string | undefined): Promise<any> {
+  if (input !== undefined) {
+    const { payload } = await jwtVerify(input, key, {
+      algorithms: ["HS256"],
+    });
+    return payload;
+  }
+  return;
 }
 
 export async function updateSession(request: NextRequest) {
@@ -40,4 +43,8 @@ export async function updateSession(request: NextRequest) {
 
 export async function setCookies(session: any, expiry: Object) {
   cookies().set("session", session, expiry);
+}
+
+export async function signOut() {
+  cookies().set("session", "", { expires: new Date(0) });
 }
