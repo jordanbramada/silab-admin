@@ -1,6 +1,10 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import fetchSubjectData, { SubjectBySemester } from "../actions/actions";
+import {
+  Subject,
+  SubjectBySemester,
+  fetchSubjectData,
+} from "../actions/actions";
 import { query } from "../page";
 import Image from "next/image";
 
@@ -8,7 +12,7 @@ interface SubjectDropdownMenuProps {
   query: query[];
   isDisabled: boolean;
   isShowAll: boolean;
-  onSubjectChange: (value: string) => void;
+  onSubjectChange: (value: Subject | undefined) => void;
 }
 
 export default function SubjectDropdownMenu({
@@ -19,10 +23,24 @@ export default function SubjectDropdownMenu({
 }: SubjectDropdownMenuProps) {
   const [subjectData, setSubjectData] = useState<SubjectBySemester[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const response = async () => fetchSubjectData(query);
-    response().then((data) => setSubjectData(data["data"]));
+    const fetchData = async () => {
+      setSelectedSubject("");
+      setLoading(true);
+
+      try {
+        const data = await fetchSubjectData(query);
+        setSubjectData(data.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [query]);
 
   return (
@@ -31,7 +49,7 @@ export default function SubjectDropdownMenu({
         disabled={isDisabled}
         className={`flex h-full w-[300px] flex-row items-center justify-between rounded-full bg-white px-[15px] ${isDisabled ? "border border-gray-300 bg-opacity-50 text-gray-500" : "bg-opacity-100 text-black"}`}
       >
-        {subjectData.length === 0 || isShowAll ? "Praktikum" : selectedSubject}
+        {selectedSubject === "" ? "Praktikum" : selectedSubject}
         <div className="relative h-[24px] w-[24px]">
           <Image src={"/down.png"} alt="chevron down" fill />
         </div>
@@ -48,7 +66,7 @@ export default function SubjectDropdownMenu({
                   className="block px-[15px] py-2 data-[focus]:bg-[#3272CA] data-[focus]:text-white"
                   onClick={() => {
                     setSelectedSubject(subject.name);
-                    onSubjectChange(subject.id);
+                    onSubjectChange(subject);
                   }}
                 >
                   {subject.name}

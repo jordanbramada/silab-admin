@@ -3,8 +3,8 @@
 import Image from "next/image";
 import ButtonGroup from "./components/button-group";
 import { useEffect, useState } from "react";
-import { SubjectBySemester } from "./actions/actions";
-import fetchSubjectData from "./actions/actions";
+import { Subject, SubjectBySemester } from "./actions/actions";
+import { fetchSubjectData } from "./actions/actions";
 import SubjectList from "./components/subject-list";
 
 export type query = {
@@ -15,10 +15,16 @@ export type query = {
 export default function Praktikum() {
   const [query, setQuery] = useState<query[]>([]);
   const [subjectData, setSubjectData] = useState<SubjectBySemester[]>([]);
+  const [subjectDetails, setSubjectDetails] = useState<Subject>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleQueryChanges = (query: query[]) => {
     setQuery(query);
+    setSubjectDetails(undefined);
+  };
+
+  const handleSubjectChanges = (subject: Subject | undefined) => {
+    setSubjectDetails(subject);
   };
 
   useEffect(() => {
@@ -60,11 +66,16 @@ export default function Praktikum() {
           />
         </div>
       </div>
-      <ButtonGroup onQueryChanges={handleQueryChanges} />
+      <ButtonGroup
+        onQueryChanges={handleQueryChanges}
+        onSubjectQueryChanges={handleSubjectChanges}
+      />
       <SubjectList
         isLoading={loading}
         query={query}
         subjectData={subjectData}
+        subjectDetails={subjectDetails}
+        onSubjectSelected={handleSubjectChanges}
       />
     </div>
   );

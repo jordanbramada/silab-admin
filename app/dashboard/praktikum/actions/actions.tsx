@@ -30,7 +30,7 @@ export type SubjectBySemester = {
   subjects: Subject[];
 };
 
-export default async function fetchSubjectData(query: query[] | []) {
+export async function fetchSubjectData(query: query[] | []) {
   let response;
   const token = cookies().get("session")?.value;
 
@@ -58,4 +58,26 @@ export default async function fetchSubjectData(query: query[] | []) {
   const responseData = await response.json();
 
   return responseData;
+}
+
+export async function getSubjectDetails(
+  subjectId: string | null,
+): Promise<Subject | undefined> {
+  const cookie = cookies().get("session")?.value;
+
+  try {
+    const response = await fetch(
+      `https://silab-dev.vercel.app/subject/${subjectId}`,
+      {
+        cache: "no-cache",
+        headers: {
+          Authorization: `Bearer ${cookie}`,
+        },
+      },
+    );
+    const responseData = await response.json();
+    return responseData["data"] as Subject;
+  } catch (error) {
+    console.log(error);
+  }
 }

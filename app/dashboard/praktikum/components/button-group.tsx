@@ -5,13 +5,20 @@ import SemesterDropdownMenu from "./semester-dropdown-menu";
 import { query } from "../page";
 import SubjectDropdownMenu from "./subject-dropdown-menu";
 import ClassesDropdownMenu from "./classes-dropdown-menu";
+import { useRouter } from "next/navigation";
+import { Subject } from "../actions/actions";
 
 type ButtonGroupProps = {
   onQueryChanges: (query: query[]) => void;
+  onSubjectQueryChanges: (subject: Subject | undefined) => void;
 };
 
-export default function ButtonGroup({ onQueryChanges }: ButtonGroupProps) {
+export default function ButtonGroup({
+  onQueryChanges,
+  onSubjectQueryChanges,
+}: ButtonGroupProps) {
   const [query, setQuery] = useState<query[]>([]);
+  const [subjectQuery, setSubjectQuery] = useState<Subject>();
 
   const handleSemesterChange = (value: number) => {
     if (value !== undefined) {
@@ -20,12 +27,21 @@ export default function ButtonGroup({ onQueryChanges }: ButtonGroupProps) {
         ...query,
       ]);
       setQuery([{ query: "semester", value: value.toString() }, ...query]);
+      setSubjectQuery(undefined);
     } else {
+      setSubjectQuery(undefined);
       setQuery([]);
     }
   };
 
-  const handleSubjectChange = (value: string) => {};
+  const handleSubjectChange = (value: Subject | undefined) => {
+    if (value !== undefined) {
+      onSubjectQueryChanges(value);
+      setSubjectQuery(value);
+    }
+  };
+
+  const handleClassChange = (value: string) => {};
 
   return (
     <div className="mt-[40px] flex h-[44px] w-full flex-row">
@@ -33,7 +49,9 @@ export default function ButtonGroup({ onQueryChanges }: ButtonGroupProps) {
         className={`py-15 px-15 mr-4 h-full w-[90px] rounded-[30px] bg-white ${query.length !== 0 ? "border" : "border border-[#BFD9EF] font-semibold text-[#3272CA]"}`}
         onClick={() => {
           setQuery([]);
+          setSubjectQuery(undefined);
           onQueryChanges([]);
+          onSubjectQueryChanges(undefined);
         }}
       >
         Show All
@@ -54,6 +72,7 @@ export default function ButtonGroup({ onQueryChanges }: ButtonGroupProps) {
           classes={[]}
           isDisabled={true}
           isShowAll={query.length === 0 ? true : false}
+          onClassChange={handleClassChange}
         />
         <button className="h-full rounded-[30px] bg-[#BFD9EF] px-[15px] text-[#3272CA]">
           Search
