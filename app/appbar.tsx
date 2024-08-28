@@ -18,7 +18,7 @@ export default function Appbar() {
       <div className="relative h-[60px] w-[60px]">
         <Image
           alt="logo"
-          src={"logo.svg"}
+          src={"/logo.svg"}
           fill
           style={{ objectFit: "contain" }}
         />
@@ -26,13 +26,15 @@ export default function Appbar() {
       <div
         className={`flex-row align-middle ${isDashboard ? "flex" : "hidden"}`}
       >
-        <Image
-          alt="bookmark"
-          src={"bookmark.svg"}
-          height={24}
-          width={24}
-          className="mr-2"
-        />
+        <div className="relative mr-2 w-[24px]">
+          <Image
+            alt="bookmark"
+            src={"/bookmark.png"}
+            fill
+            style={{ objectFit: "contain" }}
+            className="static"
+          />
+        </div>
         <p className="self-center text-[#5E6278]">
           {pathname == "/dashboard" ? "dashboard" : breadcrumbPath.join(" / ")}
         </p>
@@ -41,13 +43,15 @@ export default function Appbar() {
         className={`flex flex-row space-x-8 ${isDashboard ? "flex" : "hidden"}`}
       >
         <div className="flex h-[60px] w-[400px] flex-row rounded-[90px] bg-[#F5F5F5]">
-          <Image
-            alt="search"
-            src={"search.svg"}
-            height={24}
-            width={24}
-            className="ml-5 mr-3"
-          />
+          <div className="relative ml-5 mr-3 w-[24px]">
+            <Image
+              alt="search"
+              src={"/search.png"}
+              fill
+              style={{ objectFit: "contain" }}
+              className="static"
+            />
+          </div>
           <input
             type="text"
             placeholder="Search"

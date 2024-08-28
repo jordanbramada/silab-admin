@@ -7,22 +7,22 @@ import SignOutButton from "./signout-button";
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.svg", route: "/dashboard", title: "Dashboard" },
   {
-    imageSrc: "/praktikum.svg",
+    imageSrc: "/bookmark.png",
     route: "/dashboard/praktikum",
     title: "Praktikum",
   },
   {
-    imageSrc: "/presensi.svg",
+    imageSrc: "/presensi.png",
     route: "/dashboard/presensi-praktikan",
     title: "Presensi Praktikan",
   },
   {
-    imageSrc: "/presensi.svg",
+    imageSrc: "/presensi.png",
     route: "/dashboard/presensi-asisten",
     title: "Presensi Asisten",
   },
   {
-    imageSrc: "/master-data.svg",
+    imageSrc: "/master-data.png",
     route: "/dashboard/master-data",
     title: "Master Data",
   },
@@ -30,7 +30,7 @@ const sideBarItems: SideBarProps[] = [
 
 export default function SideBar() {
   return (
-    <div className="mt-8 flex h-screen w-[350px] flex-col justify-between px-8 pb-4">
+    <div className="mt-8 flex w-[350px] flex-col justify-between px-8 pb-4">
       <div className="flex h-full w-full flex-col space-y-5">
         {sideBarItems.map((item) => {
           return (

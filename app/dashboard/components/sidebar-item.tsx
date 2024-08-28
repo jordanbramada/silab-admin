@@ -25,6 +25,7 @@ export default function SideBarItem({ route, imageSrc, title }: SideBarProps) {
           height={24}
           width={24}
           alt={title}
+          sizes="100vw"
         />
         <p className="transition-all duration-300 group-hover/sidebaritem:translate-x-3">
           {title}
