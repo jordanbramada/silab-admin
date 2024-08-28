@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Subject } from "../actions/actions";
 
 interface SubjectDetailsProps {
@@ -16,8 +17,9 @@ export default function SubjectDetails({
         <div className="mt-10 grid h-full w-full grid-cols-3 gap-5">
           {subjectDetails.classes.map((classItem) => {
             return (
-              <button
-                key={classItem.id}
+              <Link
+                key={classItem._id}
+                href={`/dashboard/praktikum/${classItem._id}`}
                 className="flex h-[280px] flex-col items-start justify-between rounded-[24px] bg-[#3272CA] p-5"
               >
                 <p className="text-[64px] font-bold leading-none text-[#FFBF01]">
@@ -31,7 +33,7 @@ export default function SubjectDetails({
                     {classItem.day}, {classItem.startAt} - {classItem.endAt}
                   </p>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>

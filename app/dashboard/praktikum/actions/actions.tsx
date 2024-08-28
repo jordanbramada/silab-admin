@@ -12,7 +12,7 @@ export type Subject = {
 };
 
 export type Class = {
-  id: string;
+  _id: string;
   subject: string;
   name: string;
   quota: number;
