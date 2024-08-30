@@ -7,6 +7,7 @@ import SubjectList from "@/app/components/subject-list";
 import { fetchSubjectData } from "@/app/actions/dashboard/praktikum/actions";
 import { SubjectBySemester } from "@/app/types/subject-by-semester";
 import { Subject } from "@/app/types/subject";
+import Link from "next/link";
 
 export type query = {
   query: string;
@@ -53,9 +54,12 @@ export default function Praktikum() {
             Ingin menambahkan praktikum baru? Klik tombol di bawah ini untuk
             memulai.
           </p>
-          <button className="h-[54px] w-[200px] rounded-[30px] bg-[#3272CA] text-white">
+          <Link
+            href={"praktikum/tambah-praktikum"}
+            className="flex h-[54px] w-[200px] flex-row items-center justify-center rounded-[30px] bg-[#3272CA] text-white"
+          >
             Tambah Praktikum
-          </button>
+          </Link>
         </div>
         <div className="relative h-[170px] w-[300px]">
           <Image

@@ -62,7 +62,6 @@ export default function ButtonGroup({
           onSemesterChange={handleSemesterChange}
         />
         <SubjectDropdownMenu
-          isShowAll={query.length === 0 ? true : false}
           query={query}
           isDisabled={query.length !== 0 ? false : true}
           onSubjectChange={handleSubjectChange}

@@ -20,7 +20,7 @@ interface menuItems {
 
 type SemesterDropdownMenuProps = {
   onSemesterChange: (value: number) => void;
-  isShowAll: boolean;
+  isShowAll: boolean | undefined;
 };
 
 export default function SemesterDropdownMenu({

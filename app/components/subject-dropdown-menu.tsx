@@ -10,14 +10,12 @@ import { SubjectBySemester } from "../types/subject-by-semester";
 interface SubjectDropdownMenuProps {
   query: query[];
   isDisabled: boolean;
-  isShowAll: boolean;
   onSubjectChange: (value: Subject | undefined) => void;
 }
 
 export default function SubjectDropdownMenu({
   query,
   isDisabled,
-  isShowAll,
   onSubjectChange,
 }: SubjectDropdownMenuProps) {
   const [subjectData, setSubjectData] = useState<SubjectBySemester[]>([]);
