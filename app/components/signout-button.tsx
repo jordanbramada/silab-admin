@@ -12,9 +12,9 @@ export default function SignOutButton() {
     <div className="group/sidebaritem">
       <Link
         href={"/"}
-        onClick={() => {
-          signOut();
-          router.push("/");
+        onClick={async () => {
+          await signOut();
+          setTimeout(() => router.replace("/"), 100);
         }}
         className={`flex w-full flex-row space-x-3 rounded-full px-4 py-3 font-semibold text-[#FE2F60] transition-all duration-300 group-hover/sidebaritem:bg-[#FFD9D9] group-hover/sidebaritem:bg-opacity-10`}
       >

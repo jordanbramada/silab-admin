@@ -1,7 +1,4 @@
-import Link from "next/link";
 import SideBarItem, { SideBarProps } from "./sidebar-item";
-import Image from "next/image";
-import { signOut } from "@/app/lib/sessions";
 import SignOutButton from "./signout-button";
 
 const sideBarItems: SideBarProps[] = [

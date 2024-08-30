@@ -2,12 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  usePathname,
-  useSearchParams,
-  useRouter,
-  redirect,
-} from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { handleFormSubmitLogin } from "../actions/auth/actions";
 
@@ -30,7 +25,7 @@ export default function Authentication() {
     try {
       await handleFormSubmitLogin(new FormData(event.currentTarget));
 
-      redirect("/dashboard");
+      router.push("/dashboard");
     } catch (error) {
       console.log(error);
     } finally {

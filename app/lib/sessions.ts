@@ -46,5 +46,5 @@ export async function setCookies(session: any, expiry: Object) {
 }
 
 export async function signOut() {
-  cookies().set("session", "", { expires: new Date(0) });
+  cookies().delete("session");
 }
