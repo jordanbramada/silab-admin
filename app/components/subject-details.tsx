@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Subject } from "../actions/actions";
+import { Subject } from "../types/subject";
 
 interface SubjectDetailsProps {
   subjectDetails: Subject;

@@ -2,9 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { encrypt, setCookies } from "../lib/sessions";
+import {
+  usePathname,
+  useSearchParams,
+  useRouter,
+  redirect,
+} from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { handleFormSubmitLogin } from "../actions/auth/actions";
 
 export default function Authentication() {
   const searchParams = useSearchParams();
@@ -18,36 +23,20 @@ export default function Authentication() {
   const [visible, setVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  async function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
-
     try {
-      const response = await fetch("https://silab-dev.vercel.app/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const responseData = await response.json();
-      const nim = responseData["data"]["nim"];
+      await handleFormSubmitLogin(new FormData(event.currentTarget));
 
-      const expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
-      const session = await encrypt({ nim, expires });
-
-      setCookies(session, { expires, httpOnly: true });
-      router.push("/dashboard");
+      redirect("/dashboard");
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-row justify-between px-[60px] pb-4">
@@ -87,7 +76,7 @@ export default function Authentication() {
           </p>
         </div>
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={handleSubmit}
           className="flex w-full flex-col items-center space-y-[32px]"
         >
           <fieldset

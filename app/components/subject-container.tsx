@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Subject } from "../actions/actions";
+import { Subject } from "../dashboard/praktikum/actions/actions";
 
 interface SubjectContainerProps {
   subject: Subject;

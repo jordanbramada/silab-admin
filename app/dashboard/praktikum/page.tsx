@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import ButtonGroup from "./components/button-group";
 import { useEffect, useState } from "react";
-import { Subject, SubjectBySemester } from "./actions/actions";
-import { fetchSubjectData } from "./actions/actions";
-import SubjectList from "./components/subject-list";
+import ButtonGroup from "@/app/components/button-group";
+import SubjectList from "@/app/components/subject-list";
+import { fetchSubjectData } from "@/app/actions/dashboard/praktikum/actions";
+import { SubjectBySemester } from "@/app/types/subject-by-semester";
+import { Subject } from "@/app/types/subject";
 
 export type query = {
   query: string;

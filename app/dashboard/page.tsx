@@ -1,84 +1,12 @@
-import { cookies } from "next/headers";
 import Image from "next/image";
+import {
+  getAllStudents,
+  getPaidStudents,
+  getTotalMatkul,
+  getTotalRegisteredStudents,
+} from "../actions/dashboard/actions";
 
-export default function Dashboard() {
-  async function getTotalMatkul(): Promise<number | undefined> {
-    const cookie = cookies().get("session")?.value;
-
-    try {
-      const response = await fetch("https://silab-dev.vercel.app/subject/", {
-        cache: "no-cache",
-        headers: {
-          Authorization: `Bearer ${cookie}`,
-        },
-      });
-      const responseData = await response.json();
-      return responseData["data"].length;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getTotalRegisteredStudents(): Promise<number | undefined> {
-    const cookie = cookies().get("session")?.value;
-
-    try {
-      const response = await fetch(
-        "https://silab-dev.vercel.app/selected-subject/?registered=1",
-        {
-          cache: "no-cache",
-          headers: {
-            Authorization: `Bearer ${cookie}`,
-          },
-        },
-      );
-      const responseData = await response.json();
-      return responseData["data"].length;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getPaidStudents(): Promise<number | undefined> {
-    const cookie = cookies().get("session")?.value;
-
-    try {
-      const response = await fetch(
-        "https://silab-dev.vercel.app/user/?paid=false",
-        {
-          cache: "no-cache",
-          headers: {
-            Authorization: `Bearer ${cookie}`,
-          },
-        },
-      );
-      const responseData = await response.json();
-      return responseData["data"].length;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getAllStudents(): Promise<number | undefined> {
-    const cookie = cookies().get("session")?.value;
-
-    try {
-      const response = await fetch(
-        "https://silab-dev.vercel.app/user/?role=mahasiswa",
-        {
-          cache: "no-cache",
-          headers: {
-            Authorization: `Bearer ${cookie}`,
-          },
-        },
-      );
-      const responseData = await response.json();
-      return responseData["data"].length;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
+export default async function Dashboard() {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div className="flex h-[300px] w-full flex-row items-start justify-between">

@@ -1,5 +1,7 @@
-import { cookies } from "next/headers";
-import { Class, Subject } from "./actions/actions";
+import { fetchClassDetails } from "@/app/actions/dashboard/praktikum/[classId]/actions";
+import { Class } from "@/app/types/class-details-class";
+import { Subject } from "@/app/types/class-details-subject";
+
 import Image from "next/image";
 
 export default async function ClassDetails({
@@ -7,18 +9,10 @@ export default async function ClassDetails({
 }: {
   params: { classId: string };
 }) {
-  const token = cookies().get("session")?.value;
-  const response = await fetch(
-    `https://silab-dev.vercel.app/class/${params.classId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-  const data = await response.json();
-  const classDetails = data["data"] as Class;
-  const subject = data["data"]["subject"] as Subject;
+  const responseData = await fetchClassDetails(params.classId);
+
+  const classDetails = responseData["data"] as Class;
+  const subject = responseData["data"]["subject"] as Subject;
 
   return (
     <div className="flex h-full w-full flex-col space-y-10">

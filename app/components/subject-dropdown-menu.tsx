@@ -1,12 +1,11 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import {
-  Subject,
-  SubjectBySemester,
-  fetchSubjectData,
-} from "../actions/actions";
-import { query } from "../page";
+
+import { query } from "../dashboard/praktikum/page";
 import Image from "next/image";
+import { fetchSubjectData } from "../actions/dashboard/praktikum/actions";
+import { Subject } from "../types/subject";
+import { SubjectBySemester } from "../types/subject-by-semester";
 
 interface SubjectDropdownMenuProps {
   query: query[];

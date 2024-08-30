@@ -4,7 +4,8 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import Image from "next/image";
-import { Subject, SubjectBySemester } from "../actions/actions";
+import { SubjectBySemester } from "../types/subject-by-semester";
+import { Subject } from "../types/subject";
 
 interface SubjectDiscolureProps {
   subjectSemesterId: string;
@@ -40,6 +41,7 @@ export default function SubjectDisclosure({
           {subjects.subjects.map((subject) => {
             return (
               <button
+                key={subject.id}
                 onClick={() => onSubjectPanelClicked(subject)}
                 className="flex flex-row items-center justify-between rounded-lg px-4 py-4 hover:bg-[#BFD9EF] hover:text-[#3272CA]"
               >

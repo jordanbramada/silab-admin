@@ -1,8 +1,9 @@
-import { Subject, SubjectBySemester } from "../actions/actions";
-import { query } from "../page";
+import { query } from "../dashboard/praktikum/page";
+import { Subject } from "../types/subject";
+import { SubjectBySemester } from "../types/subject-by-semester";
 import SubjectContainer from "./subject-container";
-import SubjectDisclosure from "./subjects-disclosure";
 import SubjectDetails from "./subject-details";
+import SubjectDisclosure from "./subjects-disclosure";
 
 interface SubjectListProps {
   subjectData: SubjectBySemester[];
@@ -30,6 +31,7 @@ export default function SubjectList({
         subjectData.map((subject) => {
           return (
             <SubjectDisclosure
+              key={subject._id}
               subjectSemesterId={subject._id}
               subjects={subject}
               onSubjectPanelClicked={onSubjectSelected}
@@ -50,6 +52,7 @@ export default function SubjectList({
                 return subject.subjects.map((subject) => {
                   return (
                     <SubjectContainer
+                      key={subject.id}
                       subject={subject}
                       onSubjectSelected={onSubjectSelected}
                     />

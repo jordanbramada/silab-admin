@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import SemesterDropdownMenu from "./semester-dropdown-menu";
-import { query } from "../page";
-import SubjectDropdownMenu from "./subject-dropdown-menu";
+import { query } from "../dashboard/praktikum/page";
 import ClassesDropdownMenu from "./classes-dropdown-menu";
-import { useRouter } from "next/navigation";
-import { Subject } from "../actions/actions";
+import SubjectDropdownMenu from "./subject-dropdown-menu";
+import { Subject } from "../types/subject";
 
 type ButtonGroupProps = {
   onQueryChanges: (query: query[]) => void;

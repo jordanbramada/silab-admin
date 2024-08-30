@@ -1,7 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Class } from "../actions/actions";
+
 import { useState } from "react";
 import Image from "next/image";
+import { Class } from "../types/class";
 
 interface ClassesDropdownMenuProps {
   isDisabled: boolean;
@@ -37,12 +38,12 @@ export default function ClassesDropdownMenu({
       >
         {classes.map((classItem) => {
           return (
-            <MenuItem key={classItem.id}>
+            <MenuItem key={classItem._id}>
               <p
                 className="block px-[15px] py-2 data-[focus]:bg-[#3272CA] data-[focus]:text-white"
                 onClick={() => {
                   setSelectedClass(classItem.name);
-                  onClassChange(classItem.id);
+                  onClassChange(classItem._id);
                 }}
               >
                 {classItem.name}
