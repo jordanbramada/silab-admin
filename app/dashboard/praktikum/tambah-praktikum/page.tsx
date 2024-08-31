@@ -10,21 +10,18 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import TimeField from "@/app/components/time-field";
 import { day } from "@/app/types/day";
 import { Class } from "@/app/types/add-class";
-
-const days: day[] = [
-  { title: "Senin", value: "Senin" },
-  { title: "Selasa", value: "Selasa" },
-  { title: "Rabu", value: "Rabu" },
-  { title: "Kamis", value: "Kamis" },
-  { title: "Jumat", value: "Jumat" },
-];
+import ClassNameField from "@/app/components/class-name-field";
+import ClassQuotaField from "@/app/components/class-quota-field";
+import ClassDayDropdown from "@/app/components/class-day-dropdown";
+import ClassRoomDropdown from "@/app/components/class-room-dropdown";
+import ClassAssistants from "@/app/components/class-assistants";
+import ClassAssistantsComboBox from "@/app/components/class-assistants";
 
 export default function TambahPraktikum() {
   const [selectedSemester, setSelectedSemester] = useState<number>(0);
   const [selectedSubject, setSelectedSubject] = useState<Subject>();
   const [query, setQuery] = useState<query[]>([]);
   const [newClass, setNewClass] = useState<Class[]>([]);
-  const [selectedDay, setSelectedDay] = useState<string>("");
   const [addClassDisabled, setAddClassDisabled] = useState<boolean>(true);
 
   const handleSemesterChange = (value: number) => {
@@ -49,21 +46,30 @@ export default function TambahPraktikum() {
     }
   };
 
-  const maxLengthCheck = (object: any) => {
-    if (object.target.value.length > object.target.maxLength) {
-      object.target.value = object.target.value.slice(
-        0,
-        object.target.maxLength,
-      );
+  const handleClassAssistantsChange = (value: User[], index: number) => {
+    if (value.length !== 0) {
+      setNewClass((prevClasses) => {
+        const updatedClasses = [...prevClasses];
+        updatedClasses[index] = {
+          ...updatedClasses[index],
+          assistants: value.map((asisten) => asisten.id),
+        };
+        return updatedClasses;
+      });
     }
   };
 
-  const handleStartTimeField = (value: string) => {
-    console.log(value);
+  const handleClassChange = (index: number, field: keyof Class, value: any) => {
+    setNewClass((prevClasses) => {
+      const updatedClasses = [...prevClasses];
+
+      updatedClasses[index] = { ...updatedClasses[index], [field]: value };
+      return updatedClasses;
+    });
   };
 
-  const handleEndTimeField = (value: string) => {
-    console.log(value);
+  const deleteNewClass = (index: number) => {
+    setNewClass((prevClasses) => prevClasses.filter((_, i) => i !== index));
   };
 
   return (
@@ -79,7 +85,10 @@ export default function TambahPraktikum() {
         <div className="flex h-full flex-col space-y-3">
           <p>Mata Kuliah</p>
           <SubjectDropdownMenu
-            isDisabled={selectedSemester !== 0 ? false : true}
+            isDisabled={
+              (selectedSemester !== 0 ? false : true) ||
+              (newClass.length > 0 ? true : false)
+            }
             onSubjectChange={handleSubjectChange}
             query={query}
           />
@@ -120,118 +129,87 @@ export default function TambahPraktikum() {
           Tambah Kelas
         </p>
       </button>
-      {newClass.map((addNewClass) => {
+      {newClass.map((addNewClass, i) => {
         return (
           <div
-            key={newClass.indexOf(addNewClass)}
+            key={i}
             className="mt-10 flex h-[650px] w-full flex-col rounded-[20px] border-[1px] border-[#5E6278]/30 p-5"
           >
-            <div className="mt-10 flex h-[90px] w-full flex-row space-x-8">
-              <fieldset className="flex h-full w-[75px] flex-col space-y-3">
-                <label className="text-base font-semibold text-[#5E6278]">
-                  Kelas
-                </label>
-                <input
-                  className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
-                  maxLength={1}
-                  minLength={1}
-                  type="text"
-                  onChange={(event) => {
-                    newClass[newClass.indexOf(addNewClass)].name =
-                      event.target.value;
-                  }}
-                />
-              </fieldset>
-              <fieldset className="flex h-full w-[75px] flex-col space-y-3">
-                <label className="text-base font-semibold text-[#5E6278]">
-                  Kuota
-                </label>
-                <input
-                  className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
-                  maxLength={2}
-                  minLength={1}
-                  type="number"
-                  onInput={maxLengthCheck}
-                  onChange={(event) =>
-                    (newClass[newClass.indexOf(addNewClass)].quota =
-                      Number.parseInt(event.target.value))
+            <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
+              <ClassNameField
+                value={addNewClass.name}
+                onClassNameChange={(value) =>
+                  handleClassChange(i, "name", value)
+                }
+              />
+              <ClassQuotaField
+                value={
+                  addNewClass.quota !== undefined
+                    ? addNewClass.quota.toString()
+                    : "0"
+                }
+                onClassQuotaChange={(value) => {
+                  if (Number.parseInt(value) > 0) {
+                    handleClassChange(i, "quota", Number.parseInt(value));
+                  } else {
+                    handleClassChange(i, "quota", Number.parseInt("0"));
                   }
-                />
-              </fieldset>
-              <fieldset className="flex h-full w-full flex-col space-y-3">
-                <label className="text-base font-semibold text-[#5E6278]">
-                  Dosen
-                </label>
-                <input className="relative h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]" />
-                <span className="absolute -translate-x-4 translate-y-10 self-end">
-                  <Image
-                    alt="search icon"
-                    src={"/search.png"}
-                    width={24}
-                    height={24}
-                  />
-                </span>
-              </fieldset>
+                }}
+              />
+              <ClassRoomDropdown
+                value={addNewClass.ruang}
+                onClassRoomChange={(value) =>
+                  handleClassChange(i, "ruang", value)
+                }
+              />
             </div>
-            <div className="mt-10 flex h-[90px] w-full flex-row justify-between">
-              <div className="flex h-full flex-col justify-between space-y-3">
-                <p className="text-base font-semibold text-[#5E6278]">Hari</p>
-                <Menu>
-                  <MenuButton
-                    className={`flex h-full w-[300px] flex-row items-center justify-between rounded-2xl bg-white px-[15px] font-semibold text-[#1D1D1D]`}
-                  >
-                    {selectedDay === "" ? "Hari" : selectedDay}
-                    <div className="relative h-[24px] w-[24px]">
-                      <Image src={"/down.png"} alt="chevron down" fill />
-                    </div>
-                  </MenuButton>
-                  <MenuItems
-                    anchor="bottom"
-                    className={`w-[300px] space-y-3 rounded-lg bg-white`}
-                  >
-                    {days.map((day) => (
-                      <MenuItem key={day.value}>
-                        <p
-                          onClick={() => {
-                            setSelectedDay(day.value);
-                            newClass[newClass.indexOf(addNewClass)].day =
-                              day.value;
-                          }}
-                          className="block px-[15px] py-2 font-semibold text-[#1D1D1D] data-[focus]:bg-[#3272CA] data-[focus]:text-white"
-                        >
-                          {day.title}
-                        </p>
-                      </MenuItem>
-                    ))}
-                  </MenuItems>
-                </Menu>
-              </div>
+            <div className="mt-10 flex h-[90px] w-full flex-row space-x-8">
+              <ClassDayDropdown
+                value={addNewClass.day}
+                onDayChange={(value) => handleClassChange(i, "day", value)}
+              />
               <TimeField
                 label="Jam Mulai"
-                onTimeFieldFilled={handleStartTimeField}
+                value={
+                  addNewClass.startAt !== undefined
+                    ? addNewClass.startAt
+                    : "00:00"
+                }
+                onTimeChange={(value) => handleClassChange(i, "startAt", value)}
               />
-
               <TimeField
                 label="Jam Selesai"
-                onTimeFieldFilled={handleEndTimeField}
+                value={
+                  addNewClass.endAt !== undefined ? addNewClass.endAt : "00:00"
+                }
+                onTimeChange={(value) => handleClassChange(i, "endAt", value)}
               />
             </div>
-            <div className="mt-10 flex h-full w-full flex-col">
-              <fieldset className="flex h-full w-full flex-col space-y-3">
-                <label className="text-base font-semibold text-[#5E6278]">
-                  Asisten Praktikum
-                </label>
-                <input className="relative h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]" />
-                <span className="absolute -translate-x-4 translate-y-10 self-end">
-                  <Image
-                    alt="search icon"
-                    src={"/search.png"}
-                    width={24}
-                    height={24}
-                  />
-                </span>
-              </fieldset>
+            <div className="mt-10 flex h-[280px] w-full flex-col">
+              <ClassAssistantsComboBox
+                value={addNewClass.assistants}
+                onClassAssistantsChange={(value) =>
+                  handleClassAssistantsChange(value, i)
+                }
+              />
             </div>
+            <button
+              onClick={() => deleteNewClass(i)}
+              className="flex flex-row items-center space-x-2 self-end"
+            >
+              <div className="flex h-[44px] w-[44px] flex-row items-center justify-center rounded-full bg-[#FFD9D9]">
+                <Image
+                  src={"/trash.png"}
+                  alt="delete class icon"
+                  width={24}
+                  height={24}
+                  className="self-center"
+                />
+              </div>
+              <p className="text-[16px] font-bold text-[#FE2F60]">
+                Hapus Kelas
+              </p>
+            </button>
           </div>
         );
       })}

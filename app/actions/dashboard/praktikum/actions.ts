@@ -16,7 +16,7 @@ export async function fetchSubjectData(query: query[] | []) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        cache: "no-cache",
+        cache: "no-store",
       },
     );
   } else {
@@ -25,7 +25,7 @@ export async function fetchSubjectData(query: query[] | []) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      cache: "no-cache",
+      cache: "no-store",
     });
   }
 
