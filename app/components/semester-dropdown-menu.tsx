@@ -21,18 +21,21 @@ interface menuItems {
 type SemesterDropdownMenuProps = {
   onSemesterChange: (value: number) => void;
   isShowAll: boolean | undefined;
+  isDisabled: boolean | undefined;
 };
 
 export default function SemesterDropdownMenu({
   onSemesterChange,
   isShowAll,
+  isDisabled,
 }: SemesterDropdownMenuProps) {
   const [selectedSemester, setSelectedSemester] = useState<String>("");
 
   return (
     <Menu>
       <MenuButton
-        className={`flex h-full w-[150px] flex-row items-center justify-between rounded-full bg-white px-[15px]`}
+        disabled={isDisabled}
+        className={`flex h-full w-[150px] flex-row items-center justify-between rounded-full bg-white px-[15px] ${isDisabled ? "border border-gray-300 bg-opacity-50 text-gray-500" : "bg-opacity-100 text-black"}`}
       >
         {selectedSemester === "" || isShowAll ? "Semester" : selectedSemester}
         <div className="relative h-[24px] w-[24px]">

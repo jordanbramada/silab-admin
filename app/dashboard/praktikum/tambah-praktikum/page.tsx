@@ -6,16 +6,15 @@ import { Subject } from "@/app/types/subject";
 import { useState } from "react";
 import { query } from "../page";
 import Image from "next/image";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import TimeField from "@/app/components/time-field";
-import { day } from "@/app/types/day";
 import { Class } from "@/app/types/add-class";
 import ClassNameField from "@/app/components/class-name-field";
 import ClassQuotaField from "@/app/components/class-quota-field";
 import ClassDayDropdown from "@/app/components/class-day-dropdown";
 import ClassRoomDropdown from "@/app/components/class-room-dropdown";
-import ClassAssistants from "@/app/components/class-assistants";
 import ClassAssistantsComboBox from "@/app/components/class-assistants";
+import { addClasses } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
 
 export default function TambahPraktikum() {
   const [selectedSemester, setSelectedSemester] = useState<number>(0);
@@ -23,6 +22,34 @@ export default function TambahPraktikum() {
   const [query, setQuery] = useState<query[]>([]);
   const [newClass, setNewClass] = useState<Class[]>([]);
   const [addClassDisabled, setAddClassDisabled] = useState<boolean>(true);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const open = () => {
+    setDialogOpen(true);
+  };
+
+  const close = () => {
+    setDialogOpen(false);
+  };
+
+  const handleAddNewClass = async () => {
+    try {
+      setLoading(true);
+      const response = await addClasses(newClass);
+
+      console.log(response);
+
+      if (response["status"] === 200) {
+        open();
+        setNewClass([]);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSemesterChange = (value: number) => {
     setSelectedSubject(undefined);
@@ -80,6 +107,7 @@ export default function TambahPraktikum() {
           <SemesterDropdownMenu
             onSemesterChange={handleSemesterChange}
             isShowAll={undefined}
+            isDisabled={newClass.length > 0 ? true : false}
           />
         </div>
         <div className="flex h-full flex-col space-y-3">
@@ -223,11 +251,53 @@ export default function TambahPraktikum() {
           Hapus
         </button>
         <button
-          onClick={() => console.log(newClass)}
+          onClick={() => handleAddNewClass()}
           className="rounded-full bg-[#D2E3F1] px-[16px] py-[8px] text-[16px] font-semibold text-[#3272CA]"
         >
-          Simpan
+          {!loading ? (
+            "Simpan"
+          ) : (
+            <span className="loading loading-dots loading-sm" />
+          )}
         </button>
+        <Dialog
+          onClose={close}
+          open={dialogOpen}
+          as="div"
+          className={`relative z-10 focus:outline-none`}
+        >
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <DialogPanel
+                transition
+                className={`data-[closed]:transform-[scale(95%)] flex w-full max-w-md flex-col items-center justify-center rounded-3xl bg-[#E8FFF3] p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:opacity-0`}
+              >
+                <div className="relative h-[100px] w-full self-center">
+                  <Image
+                    src={"/success.png"}
+                    alt="success"
+                    fill
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+                <DialogTitle
+                  as="h3"
+                  className="mt-3 w-full self-center text-center text-xl font-extrabold text-[#1D1D1D]"
+                >
+                  Kelas Ditambahkan
+                </DialogTitle>
+                <div className="mt-4">
+                  <Button
+                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
+                    onClick={close}
+                  >
+                    Tutup
+                  </Button>
+                </div>
+              </DialogPanel>
+            </div>
+          </div>
+        </Dialog>
       </div>
     </div>
   );
