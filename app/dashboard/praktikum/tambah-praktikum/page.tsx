@@ -15,6 +15,7 @@ import ClassDayDropdown from "@/app/components/class-day-dropdown";
 import ClassRoomDropdown from "@/app/components/class-room-dropdown";
 import ClassAssistantsComboBox from "@/app/components/class-assistants";
 import { addClasses } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
+import SuccessDialog from "@/app/components/success-dialog";
 
 export default function TambahPraktikum() {
   const [selectedSemester, setSelectedSemester] = useState<number>(0);
@@ -37,8 +38,6 @@ export default function TambahPraktikum() {
     try {
       setLoading(true);
       const response = await addClasses(newClass);
-
-      console.log(response);
 
       if (response["status"] === 200) {
         open();
@@ -260,44 +259,7 @@ export default function TambahPraktikum() {
             <span className="loading loading-dots loading-sm" />
           )}
         </button>
-        <Dialog
-          onClose={close}
-          open={dialogOpen}
-          as="div"
-          className={`relative z-10 focus:outline-none`}
-        >
-          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
-              <DialogPanel
-                transition
-                className={`data-[closed]:transform-[scale(95%)] flex w-full max-w-md flex-col items-center justify-center rounded-3xl bg-[#E8FFF3] p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:opacity-0`}
-              >
-                <div className="relative h-[100px] w-full self-center">
-                  <Image
-                    src={"/success.png"}
-                    alt="success"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-                <DialogTitle
-                  as="h3"
-                  className="mt-3 w-full self-center text-center text-xl font-extrabold text-[#1D1D1D]"
-                >
-                  Kelas Ditambahkan
-                </DialogTitle>
-                <div className="mt-4">
-                  <Button
-                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
-                    onClick={close}
-                  >
-                    Tutup
-                  </Button>
-                </div>
-              </DialogPanel>
-            </div>
-          </div>
-        </Dialog>
+        <SuccessDialog dialogOpen={dialogOpen} onClose={close} />
       </div>
     </div>
   );

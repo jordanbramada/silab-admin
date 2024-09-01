@@ -1,24 +1,140 @@
 "use client";
 
+import { addNewAnnouncement } from "@/app/actions/dashboard/pengumuman/actions";
+import AnnouncementTypeDropdown from "@/app/components/announcement-type-dropdown";
 import DatePicker from "@/app/components/date-picker";
+import SuccessDialog from "@/app/components/success-dialog";
 import TimeField from "@/app/components/time-field";
+import { Announcement, AnnouncementTypeEnum } from "@/app/types/announcement";
 import { Field, Label, Radio, RadioGroup } from "@headlessui/react";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export default function Pengumuman() {
+  const [postTime, setPostTime] = useState<string | null>(null);
+  const [postDate, setPostDate] = useState<string | null>(null);
+  const [dueTime, setDueTime] = useState<string | null>(null);
+  const [dueDate, setDueDate] = useState<string | null>(null);
   const [selectedPoster, setSelectedPoster] = useState<File | undefined>();
   const [post, setPost] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const open = () => {
+    setDialogOpen(true);
+  };
+
+  const close = () => {
+    setDialogOpen(false);
+  };
+
+  const initialAnnouncement: Announcement = {
+    desc: "",
+    detail: "",
+    dueDate: "",
+    postDate: "",
+    posterUrl: null,
+    title: "",
+    type: AnnouncementTypeEnum.pengumuman,
+  };
+
+  const [announcement, setAnnouncement] =
+    useState<Announcement>(initialAnnouncement);
 
   const imageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedPoster(e.target.files[0]);
-      console.log(selectedPoster);
+      handleValueChange("posterUrl", e.target.files[0]);
+    }
+  };
+
+  const handlePostDateChange = (date: string) => {
+    setPostDate(date);
+    if (postDate) {
+      const combinedDateTime = `${date}T${postTime}`;
+      handleValueChange("postDate", combinedDateTime);
+    }
+  };
+
+  const handlePostTimeChange = (time: string) => {
+    setPostTime(time);
+    if (postTime) {
+      const combinedDateTime = `${postDate}T${time}`;
+      handleValueChange("postDate", combinedDateTime);
+    }
+  };
+
+  const handleDueDateChange = (date: string) => {
+    setDueDate(date);
+    if (dueTime) {
+      const combinedDateTime = `${date}T${dueTime}`;
+      handleValueChange("dueDate", combinedDateTime);
+    }
+  };
+
+  const handleDueTimeChange = (time: string) => {
+    setDueTime(time);
+    if (dueDate) {
+      const combinedDateTime = `${dueDate}T${time}`;
+      handleValueChange("dueDate", combinedDateTime);
     }
   };
 
   const removeSelectedImage = () => {
+    setSelectedPoster(undefined);
+  };
+
+  const handleValueChange = (field: keyof Announcement, value: any) => {
+    setAnnouncement((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (post === "now") {
+      const now = new Date(Date.now());
+      handleValueChange("postDate", now.toISOString());
+    }
+  }, [post]);
+
+  const handleAddNewAnnnouncement = async () => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+
+      formData.append("title", announcement.title);
+      formData.append("desc", announcement.desc);
+      formData.append("type", announcement.type.toString());
+      formData.append("postDate", announcement.postDate);
+      formData.append("dueDate", announcement.dueDate);
+
+      if (announcement.detail) {
+        formData.append("detail", announcement.detail);
+      }
+      if (selectedPoster) {
+        formData.append("file", selectedPoster);
+      }
+
+      const response = await addNewAnnouncement(formData);
+
+      if (response["status"] === 200) {
+        resetAnnouncement();
+        open();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetAnnouncement = () => {
+    handleValueChange("title", "");
+    handleValueChange("desc", "");
+    handleValueChange("detail", "");
+    setPost("");
     setSelectedPoster(undefined);
   };
 
@@ -36,10 +152,21 @@ export default function Pengumuman() {
             Judul Pengumuman
           </label>
           <input
+            required
             className="h-[46px] w-full rounded-2xl bg-[#F5F5F5] px-5 placeholder:text-base placeholder:font-semibold placeholder:text-[#1D1D1D]/30 focus:outline-[#3272CA]"
             placeholder="Judul pengumuman"
+            onChange={(e) => handleValueChange("title", e.target.value)}
+            value={announcement.title ?? ""}
           />
         </fieldset>
+        <div className="h-[85px]">
+          <AnnouncementTypeDropdown
+            onAnnouncementTypeChange={(value) =>
+              handleValueChange("type", value)
+            }
+            value={announcement.type}
+          />
+        </div>
         <fieldset className="w-full space-y-3">
           <label className="text-base font-semibold text-[#5E6278]">
             Deskripsi Pengumuman{" "}
@@ -48,10 +175,13 @@ export default function Pengumuman() {
             </span>
           </label>
           <textarea
+            required
             className="h-[140px] w-full resize-none rounded-2xl bg-[#F5F5F5] pl-5 pt-5 placeholder:text-base placeholder:font-semibold placeholder:text-[#1D1D1D]/30 focus:outline-[#3272CA]"
             placeholder="Deskripsi pengumuman"
             maxLength={200}
             inputMode="text"
+            onChange={(e) => handleValueChange("desc", e.target.value)}
+            value={announcement.desc ?? ""}
           />
         </fieldset>
         <fieldset className="w-full space-y-3">
@@ -62,6 +192,8 @@ export default function Pengumuman() {
             className="h-[140px] w-full resize-none rounded-2xl bg-[#F5F5F5] pl-5 pt-5 placeholder:text-base placeholder:font-semibold placeholder:text-[#1D1D1D]/30 focus:outline-[#3272CA]"
             placeholder="Detail pengumuman"
             inputMode="text"
+            onChange={(e) => handleValueChange("detail", e.target.value)}
+            value={announcement.detail ?? ""}
           />
         </fieldset>
         <fieldset className="flex w-full flex-col space-y-3">
@@ -133,10 +265,13 @@ export default function Pengumuman() {
             <div
               className={`${post === "now" ? "visible" : "hidden"} mt-8 flex w-full flex-row space-x-10 pl-2`}
             >
-              <DatePicker label="Tenggat Hari" onDateChanges={(value) => {}} />
+              <DatePicker
+                label="Tenggat Hari"
+                onDateChanges={(value) => handleDueDateChange(value)}
+              />
               <TimeField
                 label="Tenggat Waktu"
-                onTimeChange={() => {}}
+                onTimeChange={(e) => handleDueTimeChange(e)}
                 value=""
               />
             </div>
@@ -162,11 +297,11 @@ export default function Pengumuman() {
               >
                 <DatePicker
                   label="Tanggal Posting"
-                  onDateChanges={(value) => {}}
+                  onDateChanges={(value) => handlePostDateChange(value)}
                 />
                 <TimeField
                   label="Waktu Posting"
-                  onTimeChange={() => {}}
+                  onTimeChange={(e) => handlePostTimeChange(e)}
                   value=""
                 />
               </div>
@@ -175,11 +310,11 @@ export default function Pengumuman() {
               >
                 <DatePicker
                   label="Tenggat Hari"
-                  onDateChanges={(value) => {}}
+                  onDateChanges={(value) => handleDueDateChange(value)}
                 />
                 <TimeField
                   label="Tenggat Waktu"
-                  onTimeChange={() => {}}
+                  onTimeChange={(e) => handleDueTimeChange(e)}
                   value=""
                 />
               </div>
@@ -189,13 +324,13 @@ export default function Pengumuman() {
         <div className="my-10 h-[1px] w-full bg-[#1D1D1D]/30" />
         <div className="flex w-full flex-row justify-end space-x-6">
           <button
-            onClick={() => {}}
+            onClick={() => resetAnnouncement()}
             className="rounded-full bg-[#FFD9D9] px-[16px] py-[8px] text-[16px] font-semibold text-[#FE2F60]"
           >
             Hapus
           </button>
           <button
-            onClick={() => {}}
+            onClick={() => handleAddNewAnnnouncement()}
             className="rounded-full bg-[#D2E3F1] px-[16px] py-[8px] text-[16px] font-semibold text-[#3272CA]"
           >
             {!loading ? (
@@ -206,6 +341,7 @@ export default function Pengumuman() {
           </button>
         </div>
       </div>
+      <SuccessDialog dialogOpen={dialogOpen} onClose={close} />
     </div>
   );
 }
