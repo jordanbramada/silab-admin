@@ -32,7 +32,7 @@ export default function ClassDayDropdown({
       <Menu>
         <MenuButton
           value={value}
-          className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-white px-[15px] font-semibold text-[#1D1D1D]`}
+          className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px] font-semibold text-[#1D1D1D]`}
         >
           {selectedDay === "" ? "Hari" : selectedDay}
           <div className="relative h-[24px] w-[24px]">
@@ -41,7 +41,7 @@ export default function ClassDayDropdown({
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className={`w-[480px] space-y-3 rounded-lg bg-white`}
+          className={`w-[480px] space-y-3 rounded-lg bg-[#f5f5f5]`}
         >
           {days.map((day) => (
             <MenuItem key={day.value}>

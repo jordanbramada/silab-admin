@@ -91,7 +91,7 @@ export default function ClassAssistantsComboBox({
             className="absolute inset-y-3.5 left-4"
           />
           <ComboboxInput
-            className={`h-[54px] w-full rounded-2xl pl-14 focus:outline-[#3272CA]`}
+            className={`h-[54px] w-full rounded-2xl bg-[#f5f5f5] pl-14 focus:outline-[#3272CA]`}
             onChange={(event) => setQuery(event.target.value)}
           />
           <ComboboxButton>
@@ -109,7 +109,7 @@ export default function ClassAssistantsComboBox({
             <ComboboxOption
               key={asisten.id}
               value={asisten}
-              className={`flex w-full flex-row items-start bg-white p-4 data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
+              className={`flex w-full flex-row items-start bg-[#f5f5f5] p-4 data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
             >
               <button
                 className="h-full w-full hover:bg-[#3272CA] hover:text-white"

@@ -26,7 +26,7 @@ export default function ClassRoomDropdown({
       <Menu>
         <MenuButton
           value={value}
-          className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-white px-[15px] font-semibold text-[#1D1D1D]`}
+          className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px] font-semibold text-[#1D1D1D]`}
         >
           {selectedRoom === "" ? "Ruang" : selectedRoom}
           <div className="relative h-[24px] w-[24px]">
@@ -35,7 +35,7 @@ export default function ClassRoomDropdown({
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className={`w-[865px] space-y-3 rounded-lg bg-white`}
+          className={`w-[865px] space-y-3 rounded-lg bg-[#f5f5f5]`}
         >
           {classRoom.map((room) => (
             <MenuItem key={room.name}>

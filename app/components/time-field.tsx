@@ -69,7 +69,7 @@ export default function TimeField({
         <fieldset className="flex h-full w-[54px] flex-col space-y-3">
           <input
             ref={HourRef1}
-            className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
+            className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
             maxLength={1}
             minLength={1}
             value={hour1}
@@ -85,7 +85,7 @@ export default function TimeField({
         <fieldset className="flex h-full w-[54px] flex-col space-y-3">
           <input
             ref={HourRef2}
-            className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
+            className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
             maxLength={1}
             minLength={1}
             value={hour2}
@@ -106,7 +106,7 @@ export default function TimeField({
         <fieldset className="flex h-full w-[54px] flex-col space-y-3">
           <input
             ref={MinuteRef1}
-            className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
+            className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
             maxLength={1}
             minLength={1}
             value={minute1}
@@ -123,7 +123,7 @@ export default function TimeField({
         <fieldset className="flex h-full w-[54px] flex-col space-y-3">
           <input
             ref={MinuteRef2}
-            className="h-[54px] w-full rounded-2xl p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
+            className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
             maxLength={1}
             minLength={1}
             value={minute2}

@@ -161,7 +161,7 @@ export default function TambahPraktikum() {
         return (
           <div
             key={i}
-            className="mt-10 flex h-[650px] w-full flex-col rounded-[20px] border-[1px] border-[#5E6278]/30 p-5"
+            className="mt-10 flex h-[650px] w-full flex-col rounded-[20px] bg-[#FFFFFF] p-5"
           >
             <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
               <ClassNameField

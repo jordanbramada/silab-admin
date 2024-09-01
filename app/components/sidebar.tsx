@@ -23,6 +23,11 @@ const sideBarItems: SideBarProps[] = [
     route: "/dashboard/master-data",
     title: "Master Data",
   },
+  {
+    imageSrc: "/master-data.png",
+    route: "/dashboard/pengumuman",
+    title: "Pengumuman",
+  },
 ];
 
 export default function SideBar() {
