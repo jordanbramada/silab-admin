@@ -1,6 +1,7 @@
 "use server";
 
 import { encrypt, setCookies } from "@/app/lib/sessions";
+import { redirect } from "next/navigation";
 
 export async function handleFormSubmitLogin(formData: FormData) {
   try {
@@ -23,5 +24,7 @@ export async function handleFormSubmitLogin(formData: FormData) {
     setCookies(session, { expires, httpOnly: true });
   } catch (error) {
     console.log(error);
+  } finally {
+    redirect("/dashboard");
   }
 }

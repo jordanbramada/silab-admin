@@ -6,7 +6,7 @@ import {
   getTotalRegisteredStudents,
 } from "../actions/dashboard/actions";
 
-export default async function Dashboard() {
+export default function Dashboard() {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div className="flex h-[300px] w-full flex-row items-start justify-between">
