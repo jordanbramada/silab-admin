@@ -1,11 +1,11 @@
 "use server";
 
+import { getToken } from "@/app/lib/sessions";
 import { cookies } from "next/headers";
-
-const token = cookies().get("session")?.value;
 
 export async function getTotalMatkul(): Promise<number | undefined> {
   try {
+    const token = await getToken();
     const response = await fetch("https://silab-dev.vercel.app/subject/", {
       cache: "no-store",
       headers: {
@@ -23,6 +23,7 @@ export async function getTotalRegisteredStudents(): Promise<
   number | undefined
 > {
   try {
+    const token = await getToken();
     const response = await fetch(
       "https://silab-dev.vercel.app/selected-subject/?registered=1",
       {
@@ -41,6 +42,7 @@ export async function getTotalRegisteredStudents(): Promise<
 
 export async function getPaidStudents(): Promise<number | undefined> {
   try {
+    const token = await getToken();
     const response = await fetch(
       "https://silab-dev.vercel.app/user/?paid=false",
       {
@@ -59,6 +61,7 @@ export async function getPaidStudents(): Promise<number | undefined> {
 
 export async function getAllStudents(): Promise<number | undefined> {
   try {
+    const token = await getToken();
     const response = await fetch(
       "https://silab-dev.vercel.app/user/?role=mahasiswa",
       {

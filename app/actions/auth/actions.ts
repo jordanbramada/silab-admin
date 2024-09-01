@@ -1,7 +1,6 @@
 "use server";
 
 import { encrypt, setCookies } from "@/app/lib/sessions";
-import { FormEvent } from "react";
 
 export async function handleFormSubmitLogin(formData: FormData) {
   try {

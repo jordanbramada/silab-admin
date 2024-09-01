@@ -45,6 +45,10 @@ export async function setCookies(session: any, expiry: Object) {
   cookies().set("session", session, expiry);
 }
 
+export async function getToken() {
+  return cookies().get("session")?.value;
+}
+
 export async function signOut() {
   cookies().delete("session");
 }

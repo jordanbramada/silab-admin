@@ -1,11 +1,10 @@
 "use server";
 
-import { cookies } from "next/headers";
-
-const token = cookies().get("session")?.value;
+import { getToken } from "@/app/lib/sessions";
 
 export async function addNewAnnouncement(formData: FormData) {
   try {
+    const token = await getToken();
     const response = await fetch("https://silab-dev.vercel.app/announcement/", {
       method: "POST",
       headers: {
