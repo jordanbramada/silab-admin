@@ -16,12 +16,15 @@ export async function handleFormSubmitLogin(formData: FormData) {
       body: JSON.stringify({ email, password }),
     });
     const responseData = await response.json();
-    const nim = responseData["data"]["nim"];
 
-    const expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
-    const session = await encrypt({ nim, expires });
+    if (responseData["status"] === 200) {
+      const nim = responseData["data"]["nim"];
 
-    setCookies(session, { expires, httpOnly: true });
+      const expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
+      const session = await encrypt({ nim, expires });
+
+      setCookies(session, { expires, httpOnly: true });
+    }
   } catch (error) {
     console.log(error);
   } finally {
