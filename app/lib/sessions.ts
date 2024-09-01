@@ -2,6 +2,7 @@
 
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 const secretKey = process.env.TOKEN_SECRET;
@@ -45,6 +46,11 @@ export async function setCookies(session: any, expiry: Object) {
   cookies().set("session", session, expiry);
 }
 
+export async function getToken() {
+  return cookies().get("session")?.value;
+}
+
 export async function signOut() {
   cookies().delete("session");
+  redirect("/");
 }

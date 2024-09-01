@@ -58,6 +58,7 @@ export default function ButtonGroup({
       <div className="mr-4 inline-block h-full w-[1px] self-stretch rounded-full bg-[#1d1d1d]/30"></div>
       <div className="flex h-full w-full flex-row space-x-5">
         <SemesterDropdownMenu
+          isDisabled={undefined}
           isShowAll={query.length === 0 ? true : false}
           onSemesterChange={handleSemesterChange}
         />
