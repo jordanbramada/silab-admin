@@ -139,13 +139,13 @@ export default function Pengumuman() {
   };
 
   return (
-    <div className="flex w-full flex-col space-y-10">
-      <p className="text-[32px] font-semibold text-[#1D1D1D]">
+    <div className="flex h-full w-full flex-col space-y-10">
+      <p className="w-full text-[32px] font-semibold text-[#1D1D1D]">
         Buat dan jadwalkan <span className="font-extrabold">pengumuman</span>{" "}
         yang akan disebarkan ke mahasiswa
       </p>
 
-      <div className="flex h-full w-full flex-col space-y-10 rounded-[20px] bg-white p-5">
+      <div className="flex h-screen w-full flex-col space-y-10 overflow-auto overscroll-contain rounded-[20px] bg-white p-5">
         <p className="text-[22px] font-bold text-[#1D1D1D]">Buat Pengumuman</p>
         <fieldset className="w-full space-y-3">
           <label className="text-base font-semibold text-[#5E6278]">

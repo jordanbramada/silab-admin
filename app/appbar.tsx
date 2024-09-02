@@ -21,6 +21,7 @@ export default function Appbar() {
           src={"/logo.svg"}
           fill
           style={{ objectFit: "contain" }}
+          priority
         />
       </div>
       <div
@@ -33,6 +34,7 @@ export default function Appbar() {
             fill
             style={{ objectFit: "contain" }}
             className="static"
+            priority
           />
         </div>
         <p className="self-center text-[#5E6278]">
@@ -50,6 +52,7 @@ export default function Appbar() {
               fill
               style={{ objectFit: "contain" }}
               className="static"
+              priority
             />
           </div>
           <input

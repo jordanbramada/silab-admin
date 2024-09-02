@@ -17,7 +17,7 @@ export default function SideBarItem({ route, imageSrc, title }: SideBarProps) {
     <div className="group/sidebaritem">
       <Link
         href={route}
-        className={`flex w-full flex-row space-x-3 rounded-full px-4 py-3 font-semibold text-[#5E6278] ${pathName == route ? "bg-[#3285CA] bg-opacity-30" : ""} transition-all duration-300 group-hover/sidebaritem:bg-[#3285CA] group-hover/sidebaritem:bg-opacity-10`}
+        className={`flex w-full flex-row space-x-3 rounded-full px-4 py-3 font-semibold text-[#5E6278] ${(route !== "/dashboard" && pathName.match(route)) || (route === "/dashboard" && pathName === "/dashboard") ? "bg-[#3285CA] bg-opacity-30" : ""} transition-all duration-300 group-hover/sidebaritem:bg-[#3285CA] group-hover/sidebaritem:bg-opacity-10`}
       >
         <Image
           className="transition-all duration-300 group-hover/sidebaritem:translate-x-3"
@@ -25,7 +25,7 @@ export default function SideBarItem({ route, imageSrc, title }: SideBarProps) {
           height={24}
           width={24}
           alt={title}
-          sizes="100vw"
+          priority
         />
         <p className="transition-all duration-300 group-hover/sidebaritem:translate-x-3">
           {title}

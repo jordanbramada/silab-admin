@@ -15,7 +15,7 @@ export default async function ClassDetails({
   const subject = responseData["data"]["subject"] as Subject;
 
   return (
-    <div className="flex h-full w-full flex-col space-y-10">
+    <div className="flex h-full w-full flex-col space-y-10 overflow-auto overscroll-contain">
       <div className="flex w-full flex-col">
         <p className="text-[18px] font-semibold text-[#5E6278]">
           Semester {subject.semester}

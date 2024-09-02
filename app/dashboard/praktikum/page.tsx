@@ -47,7 +47,7 @@ export default function Praktikum() {
   }, [query]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full overflow-auto overscroll-contain">
       <div className="flex h-[215px] w-full flex-row justify-between rounded-3xl bg-white p-5">
         <div className="flex w-[593px] flex-col justify-between">
           <p className="text-[30px] font-bold text-black">
