@@ -341,7 +341,11 @@ export default function Pengumuman() {
           </button>
         </div>
       </div>
-      <SuccessDialog dialogOpen={dialogOpen} onClose={close} />
+      <SuccessDialog
+        dialogOpen={dialogOpen}
+        onClose={close}
+        title="Pengumuman Ditambahkan"
+      />
     </div>
   );
 }

@@ -4,11 +4,13 @@ import Image from "next/image";
 interface SuccessDialogProps {
   dialogOpen: boolean;
   onClose: () => void;
+  title: string;
 }
 
 export default function SuccessDialog({
   dialogOpen,
   onClose,
+  title,
 }: SuccessDialogProps) {
   return (
     <Dialog
@@ -35,7 +37,7 @@ export default function SuccessDialog({
               as="h3"
               className="mt-3 w-full self-center text-center text-xl font-extrabold text-[#1D1D1D]"
             >
-              Kelas Ditambahkan
+              {title}
             </DialogTitle>
             <div className="mt-4">
               <Button

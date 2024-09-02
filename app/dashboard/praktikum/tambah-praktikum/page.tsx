@@ -259,7 +259,11 @@ export default function TambahPraktikum() {
             <span className="loading loading-dots loading-sm" />
           )}
         </button>
-        <SuccessDialog dialogOpen={dialogOpen} onClose={close} />
+        <SuccessDialog
+          dialogOpen={dialogOpen}
+          onClose={close}
+          title="Kelas Ditambahkan"
+        />
       </div>
     </div>
   );

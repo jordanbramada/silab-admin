@@ -1,5 +1,13 @@
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import SideBarItem, { SideBarProps } from "./sidebar-item";
 import SignOutButton from "./signout-button";
+import Image from "next/image";
+import Link from "next/link";
+import PengumumanSidebarDisclosure from "./pengumuman-sidebar-disclosure";
 
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.png", route: "/dashboard", title: "Dashboard" },
@@ -23,11 +31,6 @@ const sideBarItems: SideBarProps[] = [
     route: "/dashboard/master-data",
     title: "Master Data",
   },
-  {
-    imageSrc: "/master-data.png",
-    route: "/dashboard/pengumuman",
-    title: "Pengumuman",
-  },
 ];
 
 export default function SideBar() {
@@ -44,6 +47,7 @@ export default function SideBar() {
             />
           );
         })}
+        <PengumumanSidebarDisclosure />
       </div>
       <SignOutButton />
     </div>
