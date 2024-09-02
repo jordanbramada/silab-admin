@@ -55,7 +55,7 @@ export default function PengumumanSidebarDisclosure() {
             </p>
           </Link>
           <Link
-            href={"pengumuman/list-pengumuman"}
+            href={"/dashboard/pengumuman/list-pengumuman"}
             className={`flex h-full w-full flex-row items-center space-x-2 rounded-full px-3 py-2 hover:bg-[#3285CA] hover:bg-opacity-10 ${pathName.match("/dashboard/pengumuman/list-pengumuman") ? "bg-[#3285CA] bg-opacity-30" : ""}`}
           >
             <div className="relative h-[20px] w-[20px]">

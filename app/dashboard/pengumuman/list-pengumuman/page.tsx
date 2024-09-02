@@ -126,9 +126,7 @@ export default function ListPengumuman() {
                   className={`flex flex-col space-y-4 rounded-2xl bg-white p-4 shadow-[#1D1D1D]/10 drop-shadow-md`}
                 >
                   <AnnouncementSettingsDropdownItem
-                    hoverBgColor="D1E7FB"
                     hoverIcon="/details-hovered.png"
-                    hoverTextColor="3272CA"
                     icon="/details.png"
                     title="Lihat Detail"
                     id={announcement.id}
@@ -136,9 +134,7 @@ export default function ListPengumuman() {
                   />
                   <div className="h-[1px] w-full bg-[#1D1D1D]/10" />
                   <AnnouncementSettingsDropdownItem
-                    hoverBgColor="D1E7FB"
                     hoverIcon="/edit-hovered.png"
-                    hoverTextColor="3272CA"
                     icon="/edit.png"
                     title="Edit"
                     id={announcement.id}
@@ -146,9 +142,7 @@ export default function ListPengumuman() {
                   />
                   <div className="h-[1px] w-full bg-[#1D1D1D]/10" />
                   <AnnouncementSettingsDropdownItem
-                    hoverBgColor="FFD9D9"
                     hoverIcon="/delete-hovered.png"
-                    hoverTextColor="FF0000"
                     icon="/delete.png"
                     title="Hapus"
                     id={announcement.id}
