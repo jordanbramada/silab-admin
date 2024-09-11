@@ -8,6 +8,7 @@ import SignOutButton from "./signout-button";
 import Image from "next/image";
 import Link from "next/link";
 import PengumumanSidebarDisclosure from "./pengumuman-sidebar-disclosure";
+import MasterDataSidebarDisclosure from "./master-data-sidebar-disclosure";
 
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.png", route: "/dashboard", title: "Dashboard" },
@@ -26,11 +27,6 @@ const sideBarItems: SideBarProps[] = [
     route: "/dashboard/presensi-asisten",
     title: "Presensi Asisten",
   },
-  {
-    imageSrc: "/master-data.png",
-    route: "/dashboard/master-data",
-    title: "Master Data",
-  },
 ];
 
 export default function SideBar() {
@@ -47,6 +43,7 @@ export default function SideBar() {
             />
           );
         })}
+        <MasterDataSidebarDisclosure />
         <PengumumanSidebarDisclosure />
       </div>
       <SignOutButton />

@@ -103,10 +103,10 @@ export default function Authentication() {
             <fieldset>
               <label htmlFor="login" />
               <input
-                type="email"
-                name="email"
+                type="nim"
+                name="nim"
                 className="h-[56px] w-[400px] rounded-[30px] border border-[#E1E3EA] px-4 py-6 focus:outline-[#3272CA]"
-                placeholder="Email"
+                placeholder="NIM"
                 required
               />
             </fieldset>

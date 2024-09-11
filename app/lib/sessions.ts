@@ -1,56 +1,55 @@
 "use server";
 
-import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = process.env.TOKEN_SECRET;
-const key = new TextEncoder().encode(secretKey);
-
-export async function encrypt(payload: any) {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("1 day")
-    .sign(key);
-}
-
-export async function decrypt(input: string | undefined): Promise<any> {
-  if (input !== undefined) {
-    const { payload } = await jwtVerify(input, key, {
-      algorithms: ["HS256"],
-    });
-    return payload;
-  }
-  return;
-}
-
-export async function updateSession(request: NextRequest) {
-  const session = request.cookies.get("session")?.value;
-  if (!session) return;
-
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
-  const res = NextResponse.next();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
+export async function setAccessToken(accessToken: string, expiry: Date) {
+  cookies().set({
+    name: "accessToken",
+    value: accessToken,
+    secure: true,
     httpOnly: true,
-    expires: parsed.expires,
+    expires: expiry,
   });
-  return res;
 }
 
-export async function setCookies(session: any, expiry: Object) {
-  cookies().set("session", session, expiry);
+export async function setRefreshToken(refreshToken: string, expiry: Date) {
+  cookies().set({
+    name: "refreshToken",
+    value: refreshToken,
+    secure: true,
+    httpOnly: true,
+    expires: expiry,
+  });
+}
+
+export async function getAccessToken() {
+  return cookies().get("accessToken")?.value;
+}
+
+export async function getRefreshToken() {
+  return cookies().get("refreshToken")?.value;
 }
 
 export async function getToken() {
-  return cookies().get("session")?.value;
+  return cookies().get("accessToken")?.value;
+}
+
+export async function getRole() {
+  let role;
+
+  const accessToken = cookies().get("accessToken")?.value;
+  if (accessToken) {
+    const arrayToken = accessToken.split(".");
+    role = JSON.parse(atob(arrayToken[1]));
+  }
+
+  return role;
 }
 
 export async function signOut() {
-  cookies().delete("session");
+  cookies().delete("accessToken");
+  cookies().delete("refreshToken");
   redirect("/");
 }
