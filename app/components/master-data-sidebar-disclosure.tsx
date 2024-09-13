@@ -55,8 +55,8 @@ export default function MasterDataSidebarDisclosure() {
             </p>
           </Link>
           <Link
-            href={"/dashboard/pengumuman/list-pengumuman"}
-            className={`flex h-full w-full flex-row items-center space-x-2 rounded-full px-3 py-2 hover:bg-[#3285CA] hover:bg-opacity-10 ${pathName.match("/dashboard/pengumuman/list-pengumuman") ? "bg-[#3285CA] bg-opacity-30" : ""}`}
+            href={"/dashboard/master-data/session"}
+            className={`flex h-full w-full flex-row items-center space-x-2 rounded-full px-3 py-2 hover:bg-[#3285CA] hover:bg-opacity-10 ${pathName.match("/dashboard/master-data/session") ? "bg-[#3285CA] bg-opacity-30" : ""}`}
           >
             <div className="relative h-[20px] w-[20px]">
               <Image
@@ -66,9 +66,7 @@ export default function MasterDataSidebarDisclosure() {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <p className="text-base font-medium text-[#5E6278]">
-              List Pengumuman
-            </p>
+            <p className="text-base font-medium text-[#5E6278]">Sesi Kelas</p>
           </Link>
         </DisclosurePanel>
       </Disclosure>

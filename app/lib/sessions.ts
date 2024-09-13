@@ -42,8 +42,10 @@ export async function getRole() {
   const accessToken = cookies().get("accessToken")?.value;
   if (accessToken) {
     const arrayToken = accessToken.split(".");
-    role = JSON.parse(atob(arrayToken[1]));
+    role = JSON.parse(atob(arrayToken[1]))["role"];
   }
+
+  console.log(role);
 
   return role;
 }
