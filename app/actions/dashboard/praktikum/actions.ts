@@ -10,7 +10,7 @@ export async function fetchSubjectData(query: query[] | []) {
 
     if (query.length !== 0) {
       response = await fetch(
-        `https://silab-dev.vercel.app/subject/semesters?${query[0].query}=${query[0].value}`,
+        `${process.env.BASE_URL}/subjects/semesters?${query[0].query}=${query[0].value}`,
         {
           method: "GET",
           headers: {
@@ -20,7 +20,7 @@ export async function fetchSubjectData(query: query[] | []) {
         },
       );
     } else {
-      response = await fetch("https://silab-dev.vercel.app/subject/semesters", {
+      response = await fetch(`${process.env.BASE_URL}/subjects`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

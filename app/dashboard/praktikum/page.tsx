@@ -34,8 +34,9 @@ export default function Praktikum() {
       setSubjectData([]);
       setLoading(true);
       try {
-        const data = await fetchSubjectData(query);
-        setSubjectData(data.data);
+        const response = await fetchSubjectData(query);
+
+        setSubjectData(response["data"]);
       } catch (error) {
         console.error("Error fetching subject data:", error);
       } finally {
@@ -71,7 +72,11 @@ export default function Praktikum() {
           />
         </div>
       </div>
-      <ButtonGroup
+      {subjectData &&
+        subjectData.map((subject) => (
+          <p key={subject.id}>{subject.subject_name}</p>
+        ))}
+      {/* <ButtonGroup
         onQueryChanges={handleQueryChanges}
         onSubjectQueryChanges={handleSubjectChanges}
       />
@@ -81,7 +86,7 @@ export default function Praktikum() {
         subjectData={subjectData}
         subjectDetails={subjectDetails}
         onSubjectSelected={handleSubjectChanges}
-      />
+      /> */}
     </div>
   );
 }

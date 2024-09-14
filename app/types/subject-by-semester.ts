@@ -1,6 +1,5 @@
-import { Subject } from "./subject";
-
 export type SubjectBySemester = {
-  _id: string;
-  subjects: Subject[];
+  id: string;
+  subject_code: string;
+  subject_name: string;
 };

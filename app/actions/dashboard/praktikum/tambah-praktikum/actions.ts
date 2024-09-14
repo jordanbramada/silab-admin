@@ -45,3 +45,23 @@ export async function addClasses(classes: Class[]) {
     console.log(error);
   }
 }
+
+export async function getClassSessions() {
+  try {
+    const token = await getToken();
+    const response = await fetch(`${process.env.BASE_URL}/sessions`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}

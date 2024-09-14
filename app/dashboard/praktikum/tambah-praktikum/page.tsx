@@ -16,6 +16,7 @@ import ClassRoomDropdown from "@/app/components/class-room-dropdown";
 import ClassAssistantsComboBox from "@/app/components/class-assistants";
 import { addClasses } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
 import SuccessDialog from "@/app/components/success-dialog";
+import ClassSessionListbox from "@/app/components/class-sessions-listbox";
 
 export default function TambahPraktikum() {
   const [selectedSemester, setSelectedSemester] = useState<number>(0);
@@ -99,28 +100,79 @@ export default function TambahPraktikum() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col overflow-auto overscroll-contain">
       <div className="flex h-[82px] w-full flex-row space-x-4">
-        <div className="flex h-full flex-col space-y-3">
+        {/* <div className="flex h-full flex-col space-y-3">
           <p>Semester</p>
           <SemesterDropdownMenu
             onSemesterChange={handleSemesterChange}
             isShowAll={undefined}
             isDisabled={newClass.length > 0 ? true : false}
           />
-        </div>
+        </div> */}
         <div className="flex h-full flex-col space-y-3">
           <p>Mata Kuliah</p>
           <SubjectDropdownMenu
-            isDisabled={
-              (selectedSemester !== 0 ? false : true) ||
-              (newClass.length > 0 ? true : false)
-            }
+            isDisabled={false}
             onSubjectChange={handleSubjectChange}
             query={query}
           />
         </div>
       </div>
+
+      {newClass.map((addNewClass, i) => {
+        return (
+          <div
+            key={i}
+            className="mt-10 flex w-full flex-col space-y-6 rounded-[20px] bg-[#FFFFFF] p-5"
+          >
+            <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
+              <ClassNameField
+                value={addNewClass.name}
+                onClassNameChange={(value) =>
+                  handleClassChange(i, "name", value)
+                }
+              />
+              <ClassQuotaField
+                value={
+                  addNewClass.quota !== undefined
+                    ? addNewClass.quota.toString()
+                    : "0"
+                }
+                onClassQuotaChange={(value) => {
+                  if (Number.parseInt(value) > 0) {
+                    handleClassChange(i, "quota", Number.parseInt(value));
+                  } else {
+                    handleClassChange(i, "quota", Number.parseInt("0"));
+                  }
+                }}
+              />
+              <ClassDayDropdown
+                value={addNewClass.day}
+                onDayChange={(value) => handleClassChange(i, "day", value)}
+              />
+              <ClassSessionListbox />
+            </div>
+            <button
+              onClick={() => deleteNewClass(i)}
+              className="flex flex-row items-center space-x-2 self-end"
+            >
+              <div className="flex h-[44px] w-[44px] flex-row items-center justify-center rounded-full bg-[#FFD9D9]">
+                <Image
+                  src={"/trash.png"}
+                  alt="delete class icon"
+                  width={24}
+                  height={24}
+                  className="self-center"
+                />
+              </div>
+              <p className="text-[16px] font-bold text-[#FE2F60]">
+                Hapus Kelas
+              </p>
+            </button>
+          </div>
+        );
+      })}
       <button
         disabled={addClassDisabled}
         onClick={() => {
@@ -156,90 +208,6 @@ export default function TambahPraktikum() {
           Tambah Kelas
         </p>
       </button>
-      {newClass.map((addNewClass, i) => {
-        return (
-          <div
-            key={i}
-            className="mt-10 flex h-[650px] w-full flex-col rounded-[20px] bg-[#FFFFFF] p-5"
-          >
-            <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
-              <ClassNameField
-                value={addNewClass.name}
-                onClassNameChange={(value) =>
-                  handleClassChange(i, "name", value)
-                }
-              />
-              <ClassQuotaField
-                value={
-                  addNewClass.quota !== undefined
-                    ? addNewClass.quota.toString()
-                    : "0"
-                }
-                onClassQuotaChange={(value) => {
-                  if (Number.parseInt(value) > 0) {
-                    handleClassChange(i, "quota", Number.parseInt(value));
-                  } else {
-                    handleClassChange(i, "quota", Number.parseInt("0"));
-                  }
-                }}
-              />
-              <ClassRoomDropdown
-                value={addNewClass.ruang}
-                onClassRoomChange={(value) =>
-                  handleClassChange(i, "ruang", value)
-                }
-              />
-            </div>
-            <div className="mt-10 flex h-[90px] w-full flex-row space-x-8">
-              <ClassDayDropdown
-                value={addNewClass.day}
-                onDayChange={(value) => handleClassChange(i, "day", value)}
-              />
-              <TimeField
-                label="Jam Mulai"
-                value={
-                  addNewClass.startAt !== undefined
-                    ? addNewClass.startAt
-                    : "00:00"
-                }
-                onTimeChange={(value) => handleClassChange(i, "startAt", value)}
-              />
-              <TimeField
-                label="Jam Selesai"
-                value={
-                  addNewClass.endAt !== undefined ? addNewClass.endAt : "00:00"
-                }
-                onTimeChange={(value) => handleClassChange(i, "endAt", value)}
-              />
-            </div>
-            <div className="mt-10 flex h-[280px] w-full flex-col">
-              <ClassAssistantsComboBox
-                value={addNewClass.assistants}
-                onClassAssistantsChange={(value) =>
-                  handleClassAssistantsChange(value, i)
-                }
-              />
-            </div>
-            <button
-              onClick={() => deleteNewClass(i)}
-              className="flex flex-row items-center space-x-2 self-end"
-            >
-              <div className="flex h-[44px] w-[44px] flex-row items-center justify-center rounded-full bg-[#FFD9D9]">
-                <Image
-                  src={"/trash.png"}
-                  alt="delete class icon"
-                  width={24}
-                  height={24}
-                  className="self-center"
-                />
-              </div>
-              <p className="text-[16px] font-bold text-[#FE2F60]">
-                Hapus Kelas
-              </p>
-            </button>
-          </div>
-        );
-      })}
       <div className="mt-14 flex w-full flex-row justify-end space-x-4">
         <button
           onClick={() => {
