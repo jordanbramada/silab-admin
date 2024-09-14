@@ -2,7 +2,11 @@
 
 import { getAccessToken } from "@/app/lib/sessions";
 
-export async function addSubjectFormSubmit(formData: FormData) {
+export async function addSubjectFormSubmit(
+  formData: FormData,
+  semester: string,
+  lecturer: string,
+) {
   try {
     const accessToken = await getAccessToken();
 
@@ -14,6 +18,8 @@ export async function addSubjectFormSubmit(formData: FormData) {
       subject_code: subjectCode,
       subject_name: subjectName,
       credit: credit,
+      semester: semester,
+      lecturer: lecturer,
     });
 
     const response = await fetch(`http://10.4.52.201:3001/subjects`, {
