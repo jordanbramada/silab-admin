@@ -67,7 +67,7 @@ export default function SubjectDropdownMenu({
               className={`data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
             >
               <button
-                className="block px-[15px] py-2"
+                className="block w-full px-[15px] py-2 text-start"
                 onClick={() => {
                   setSelectedSubject(subject.subject_name);
                   onSubjectChange(subject);

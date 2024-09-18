@@ -14,18 +14,28 @@ import ClassQuotaField from "@/app/components/class-quota-field";
 import ClassDayDropdown from "@/app/components/class-day-dropdown";
 import ClassRoomDropdown from "@/app/components/class-room-dropdown";
 import ClassAssistantsComboBox from "@/app/components/class-assistants";
-import { addClasses } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
+import {
+  addClasses,
+  getSubjectClasses,
+} from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
 import SuccessDialog from "@/app/components/success-dialog";
 import ClassSessionListbox from "@/app/components/class-sessions-listbox";
 
 export default function TambahPraktikum() {
-  const [selectedSemester, setSelectedSemester] = useState<number>(0);
   const [selectedSubject, setSelectedSubject] = useState<Subject>();
   const [query, setQuery] = useState<query[]>([]);
-  const [newClass, setNewClass] = useState<Class[]>([]);
+  const [newClass, setNewClass] = useState<Class>({
+    day: "",
+    quota: 0,
+    session: "",
+    subject_class: "",
+    subject_id: "",
+  });
   const [addClassDisabled, setAddClassDisabled] = useState<boolean>(true);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedSession, setSelectedSession] = useState<Sessions | null>(null);
+  const [subjectClasses, setSubjectClasses] = useState<SubjectClass[]>([]);
 
   const open = () => {
     setDialogOpen(true);
@@ -40,26 +50,20 @@ export default function TambahPraktikum() {
       setLoading(true);
       const response = await addClasses(newClass);
 
-      if (response["status"] === 200) {
+      if (response["status"] === "success") {
         open();
-        setNewClass([]);
+        setNewClass({
+          day: "",
+          quota: 0,
+          session: "",
+          subject_class: "",
+          subject_id: "",
+        });
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSemesterChange = (value: number) => {
-    setSelectedSubject(undefined);
-    setAddClassDisabled(true);
-    if (value !== undefined) {
-      setQuery([{ query: "semester", value: value.toString() }, ...query]);
-      setSelectedSemester(value);
-    } else {
-      setSelectedSemester(0);
-      setQuery([]);
     }
   };
 
@@ -73,30 +77,28 @@ export default function TambahPraktikum() {
     }
   };
 
-  const handleClassAssistantsChange = (value: User[], index: number) => {
-    if (value.length !== 0) {
-      setNewClass((prevClasses) => {
-        const updatedClasses = [...prevClasses];
-        updatedClasses[index] = {
-          ...updatedClasses[index],
-          assistants: value.map((asisten) => asisten.id),
-        };
-        return updatedClasses;
-      });
+  const handleClassChange = (key: string, value: any) => {
+    setNewClass((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSessionChange = (value: Sessions | null) => {
+    setSelectedSession(value);
+  };
+
+  const handleSubjectClass = async (subject: Subject | undefined) => {
+    try {
+      const response = await getSubjectClasses();
+
+      if (response["status"] === "success") {
+        const subjectClasses = response["data"] as SubjectClass[];
+        const filteredSubjectClasses = subjectClasses.filter(
+          (value) => value.subject_name === subject?.subject_name,
+        );
+        setSubjectClasses(filteredSubjectClasses);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  };
-
-  const handleClassChange = (index: number, field: keyof Class, value: any) => {
-    setNewClass((prevClasses) => {
-      const updatedClasses = [...prevClasses];
-
-      updatedClasses[index] = { ...updatedClasses[index], [field]: value };
-      return updatedClasses;
-    });
-  };
-
-  const deleteNewClass = (index: number) => {
-    setNewClass((prevClasses) => prevClasses.filter((_, i) => i !== index));
   };
 
   return (
@@ -114,124 +116,114 @@ export default function TambahPraktikum() {
           <p>Mata Kuliah</p>
           <SubjectDropdownMenu
             isDisabled={false}
-            onSubjectChange={handleSubjectChange}
+            onSubjectChange={(value) => {
+              handleClassChange("subject_id", value?.id);
+              setSelectedSubject(value);
+              handleSubjectClass(value);
+            }}
             query={query}
           />
         </div>
       </div>
-
-      {newClass.map((addNewClass, i) => {
-        return (
+      <div className="mt-10 flex h-[120px] w-full flex-row items-center space-x-2 overflow-auto overscroll-x-contain">
+        {subjectClasses.map((subjectClass) => (
           <div
-            key={i}
-            className="mt-10 flex w-full flex-col space-y-6 rounded-[20px] bg-[#FFFFFF] p-5"
+            key={subjectClass.id}
+            className="flex h-full w-[250px] flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
           >
-            <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
-              <ClassNameField
-                value={addNewClass.name}
-                onClassNameChange={(value) =>
-                  handleClassChange(i, "name", value)
-                }
-              />
-              <ClassQuotaField
-                value={
-                  addNewClass.quota !== undefined
-                    ? addNewClass.quota.toString()
-                    : "0"
-                }
-                onClassQuotaChange={(value) => {
-                  if (Number.parseInt(value) > 0) {
-                    handleClassChange(i, "quota", Number.parseInt(value));
-                  } else {
-                    handleClassChange(i, "quota", Number.parseInt("0"));
-                  }
-                }}
-              />
-              <ClassDayDropdown
-                value={addNewClass.day}
-                onDayChange={(value) => handleClassChange(i, "day", value)}
-              />
-              <ClassSessionListbox />
-            </div>
-            <button
-              onClick={() => deleteNewClass(i)}
-              className="flex flex-row items-center space-x-2 self-end"
-            >
-              <div className="flex h-[44px] w-[44px] flex-row items-center justify-center rounded-full bg-[#FFD9D9]">
-                <Image
-                  src={"/trash.png"}
-                  alt="delete class icon"
-                  width={24}
-                  height={24}
-                  className="self-center"
-                />
-              </div>
-              <p className="text-[16px] font-bold text-[#FE2F60]">
-                Hapus Kelas
+            <div className="flex flex-row justify-between">
+              <p className="text-3xl font-bold text-[#FFBF01]">
+                {subjectClass.subject_class}
               </p>
-            </button>
+              <div className="flex flex-row">
+                <p className="text-3xl font-bold text-[#FFBF01]">
+                  {subjectClass.registered_students}
+                </p>
+                <p className="text-3xl font-bold text-[#FFBF01]">/</p>
+                <p className="text-3xl font-bold text-[#FFBF01]">
+                  {subjectClass.quota}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col text-white">
+              <p className="text-lg">{subjectClass.subject_name}</p>
+              <p className="text-sm">
+                {subjectClass.day}, Sesi ke - {subjectClass.session}
+              </p>
+            </div>
           </div>
-        );
-      })}
-      <button
-        disabled={addClassDisabled}
-        onClick={() => {
-          if (selectedSubject !== undefined) {
-            setNewClass([
-              ...newClass,
-              {
-                day: "",
-                endAt: "",
-                isFull: false,
-                learningModule: [],
-                name: "",
-                participants: [],
-                assistants: [],
-                quota: 0,
-                ruang: "",
-                startAt: "",
-                subjectId: selectedSubject.id,
-              },
-            ]);
-          }
-        }}
-        className="mt-10 flex w-[180px] flex-row items-center space-x-3 self-end p-2"
+        ))}
+      </div>
+      <div
+        className={`mt-10 w-full flex-col space-y-6 rounded-[20px] bg-[#FFFFFF] p-5 ${selectedSubject !== undefined ? "flex" : "hidden"}`}
       >
-        <div
-          className={`relative rounded-full p-2 ${addClassDisabled ? "bg-gray-300" : "bg-[#D2E3F1]"}`}
-        >
-          <Image src={"/plus.png"} height={16} width={16} alt="tambah kelas" />
+        <div className="mt-5 flex h-[90px] w-full flex-row space-x-8">
+          <ClassNameField
+            value={newClass?.subject_class}
+            onClassNameChange={(value) =>
+              handleClassChange("subject_class", value)
+            }
+          />
+          <ClassQuotaField
+            value={
+              newClass?.quota !== undefined ? newClass?.quota.toString() : "0"
+            }
+            onClassQuotaChange={(value) => {
+              if (Number.parseInt(value) > 0) {
+                handleClassChange("quota", Number.parseInt(value));
+              } else {
+                handleClassChange("quota", 0);
+              }
+            }}
+          />
+          <ClassDayDropdown
+            value={newClass?.day}
+            onDayChange={(value) => handleClassChange("day", value)}
+          />
+          <ClassSessionListbox
+            value={selectedSession}
+            onClassSessionChange={(value) => {
+              handleClassChange("session", value.id);
+              handleSessionChange(value);
+            }}
+          />
         </div>
-        <p
-          className={`text-[16px] ${addClassDisabled ? "font-normal text-gray-500" : "font-bold text-[#3272CA]"}`}
-        >
-          Tambah Kelas
-        </p>
-      </button>
-      <div className="mt-14 flex w-full flex-row justify-end space-x-4">
-        <button
-          onClick={() => {
-            setNewClass([]);
-          }}
-          className="rounded-full bg-[#FFD9D9] px-[16px] py-[8px] text-[16px] font-semibold text-[#FE2F60]"
-        >
-          Hapus
-        </button>
-        <button
-          onClick={() => handleAddNewClass()}
-          className="rounded-full bg-[#D2E3F1] px-[16px] py-[8px] text-[16px] font-semibold text-[#3272CA]"
-        >
-          {!loading ? (
-            "Simpan"
-          ) : (
-            <span className="loading loading-dots loading-sm" />
-          )}
-        </button>
-        <SuccessDialog
-          dialogOpen={dialogOpen}
-          onClose={close}
-          title="Kelas Ditambahkan"
-        />
+
+        <div className="mt-14 flex w-full flex-row justify-end space-x-4">
+          <button
+            onClick={() => {
+              setNewClass({
+                subject_id: "",
+                subject_class: "",
+                day: "",
+                session: "",
+                quota: 0,
+              });
+              handleSessionChange(null);
+              handleSubjectChange(undefined);
+            }}
+            className="rounded-full bg-[#FFD9D9] px-[16px] py-[8px] text-[16px] font-semibold text-[#FE2F60]"
+          >
+            Hapus
+          </button>
+          <button
+            onClick={() => {
+              handleAddNewClass();
+            }}
+            className="rounded-full bg-[#D2E3F1] px-[16px] py-[8px] text-[16px] font-semibold text-[#3272CA]"
+          >
+            {!loading ? (
+              "Simpan"
+            ) : (
+              <span className="loading loading-dots loading-sm" />
+            )}
+          </button>
+          <SuccessDialog
+            dialogOpen={dialogOpen}
+            onClose={close}
+            title="Kelas Ditambahkan"
+          />
+        </div>
       </div>
     </div>
   );

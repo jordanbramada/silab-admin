@@ -8,9 +8,17 @@ import { useEffect, useState } from "react";
 import { getClassSessions } from "../actions/dashboard/praktikum/tambah-praktikum/actions";
 import Image from "next/image";
 
-export default function ClassSessionListbox() {
+interface ClassSessionListboxProps {
+  value: Sessions | null;
+  onClassSessionChange: (value: Sessions) => void;
+}
+
+export default function ClassSessionListbox({
+  value,
+  onClassSessionChange,
+}: ClassSessionListboxProps) {
   const [sessionsData, setSessionsData] = useState<Sessions[]>([]);
-  const [selectedSession, setSelectedSession] = useState<Sessions>();
+  const [selectedSession, setSelectedSession] = useState<Sessions | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +34,8 @@ export default function ClassSessionListbox() {
     };
 
     fetchData();
-  }, []);
+    setSelectedSession(value);
+  }, [value]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between space-y-3">
@@ -36,8 +45,8 @@ export default function ClassSessionListbox() {
           className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px] font-semibold text-[#1D1D1D]`}
         >
           <p>
-            {selectedSession && selectedSession.session}{" "}
-            {!selectedSession && "Sesi Kelas"}
+            {selectedSession && value && selectedSession.session}{" "}
+            {!selectedSession && !value && "Sesi Kelas"}
           </p>
           <div className="relative h-[24px] w-[24px]">
             <Image src={"/down.png"} alt="chevron down" fill />
@@ -54,7 +63,10 @@ export default function ClassSessionListbox() {
                 key={session.id}
                 className={`text-[#1d1d1d] data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
               >
-                <button className="flex h-[54px] w-full flex-row items-center justify-center px-[15px] py-2 font-semibold">
+                <button
+                  onClick={() => onClassSessionChange(session)}
+                  className="flex h-[54px] w-full flex-row items-center justify-center px-[15px] py-2 font-semibold"
+                >
                   Sesi ke - {session.session}, {session.start_time} -{" "}
                   {session.end_time}
                 </button>
