@@ -12,13 +12,11 @@ import { Subject } from "../types/subject";
 import { SubjectBySemester } from "../types/subject-by-semester";
 
 interface SubjectDropdownMenuProps {
-  query: query[];
   isDisabled: boolean;
   onSubjectChange: (value: Subject | undefined) => void;
 }
 
 export default function SubjectDropdownMenu({
-  query,
   isDisabled,
   onSubjectChange,
 }: SubjectDropdownMenuProps) {
@@ -32,7 +30,7 @@ export default function SubjectDropdownMenu({
       setLoading(true);
 
       try {
-        const data = await fetchSubjectData(query);
+        const data = await fetchSubjectData();
         setSubjectData(data.data);
       } catch (error) {
         console.log(error);
@@ -42,7 +40,7 @@ export default function SubjectDropdownMenu({
     };
 
     fetchData();
-  }, [query]);
+  }, []);
 
   return (
     <Listbox>

@@ -31,8 +31,8 @@ export default function SubjectList({
         subjectData.map((subject) => {
           return (
             <SubjectDisclosure
-              key={subject._id}
-              subjectSemesterId={subject._id}
+              key={subject.id}
+              subjectSemesterId={subject.id}
               subjects={subject}
               onSubjectPanelClicked={onSubjectSelected}
             />

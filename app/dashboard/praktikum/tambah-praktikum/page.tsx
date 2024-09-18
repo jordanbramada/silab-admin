@@ -102,7 +102,7 @@ export default function TambahPraktikum() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-auto overscroll-contain">
+    <div className="flex h-full w-full flex-col overflow-x-auto overflow-y-auto overscroll-contain">
       <div className="flex h-[82px] w-full flex-row space-x-4">
         {/* <div className="flex h-full flex-col space-y-3">
           <p>Semester</p>
@@ -121,15 +121,15 @@ export default function TambahPraktikum() {
               setSelectedSubject(value);
               handleSubjectClass(value);
             }}
-            query={query}
           />
         </div>
       </div>
-      <div className="mt-10 flex h-[120px] w-full flex-row items-center space-x-2 overflow-auto overscroll-x-contain">
+
+      <div className="mt-10 flex w-full flex-row flex-wrap gap-4">
         {subjectClasses.map((subjectClass) => (
           <div
             key={subjectClass.id}
-            className="flex h-full w-[250px] flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
+            className="flex h-[140px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
           >
             <div className="flex flex-row justify-between">
               <p className="text-3xl font-bold text-[#FFBF01]">
