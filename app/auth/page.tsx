@@ -32,8 +32,8 @@ export default function Authentication() {
 
   return (
     <Suspense>
-      <div className="flex flex-row justify-between px-[60px] pb-4">
-        <div className="flex w-1/2 flex-col items-center justify-center">
+      <div className="flex w-full flex-row items-center justify-between px-[60px] pb-4">
+        <div className="flex w-2/3 flex-col items-center justify-center">
           <div className="relative h-[300px] w-[250px]">
             <Image
               alt="illustration"
@@ -52,54 +52,12 @@ export default function Authentication() {
             </p>
           </div>
         </div>
-        <div className="flex w-1/2 flex-col items-center space-y-[60px]">
-          <div className="flex flex-col items-center">
-            <p className="text-[42px] font-extrabold text-[#3272CA]">
-              {auth == "login" ? "Log In" : "Sign Up"}
-            </p>
-            <p className="text-[24px] font-semibold text-[#5E6278]">
-              Sebagai
-              <span className="font-extrabold">
-                {role == "laboran"
-                  ? " Laboran"
-                  : role == "dosen"
-                    ? " Dosen"
-                    : " Asisten"}
-              </span>
-            </p>
-          </div>
+        <div className="flex w-1/3 flex-col items-center space-y-[32px] rounded-2xl border border-[#1d1d1d]/30 p-6">
+          <p className="text-[42px] font-extrabold text-[#3272CA]">Log In</p>
           <form
             onSubmit={handleSubmit}
-            className="flex w-full flex-col items-center space-y-[32px]"
+            className="flex w-full flex-col items-center space-y-[20px]"
           >
-            <fieldset
-              className={`${
-                auth != "signup" && role != "dosen" ? "hidden" : "visible"
-              }`}
-            >
-              <label htmlFor="login" />
-              <input
-                type="text"
-                name="nama"
-                className="h-[56px] w-[400px] rounded-[30px] border border-[#E1E3EA] px-4 py-6 focus:outline-[#3272CA]"
-                placeholder="Nama Lengkap"
-                required={auth == "signup" && role == "dosen" ? true : false}
-              />
-            </fieldset>
-            <fieldset
-              className={`${
-                auth != "signup" && role != "dosen" ? "hidden" : "visible"
-              }`}
-            >
-              <label htmlFor="login" />
-              <input
-                type="text"
-                name="nip"
-                className="h-[56px] w-[400px] rounded-[30px] border border-[#E1E3EA] px-4 py-6 focus:outline-[#3272CA]"
-                placeholder="NIP"
-                required={auth == "signup" && role == "dosen" ? true : false}
-              />
-            </fieldset>
             <fieldset>
               <label htmlFor="login" />
               <input
@@ -130,12 +88,12 @@ export default function Authentication() {
                   />
                 </span>
               </fieldset>
-              <Link
+              {/* <Link
                 href={""}
                 className="w-1/2 text-end font-semibold text-[#3272CA]"
               >
                 Forgot password?
-              </Link>
+              </Link> */}
             </div>
             <button
               type="submit"
@@ -143,32 +101,11 @@ export default function Authentication() {
             >
               {isLoading ? (
                 <span className="loading loading-dots loading-md" />
-              ) : auth == "login" ? (
-                "Log In"
               ) : (
-                "Sign Up"
+                "Log In"
               )}
             </button>
           </form>
-          <div
-            className={`flex flex-row space-x-1 ${
-              role == "laboran" || role == "asisten" ? "hidden" : "visible"
-            }`}
-          >
-            <p className="text-[18px] font-semibold text-[#5E6278]">
-              {auth == "login" ? "Belum punya akun?" : "Sudah punya akun?"}
-            </p>
-            <button
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                params.set("auth", auth == "login" ? "signup" : "login");
-                replace(`${pathname}?${params.toString()}`);
-              }}
-              className="text-[18px] font-extrabold text-[#3272CA]"
-            >
-              {auth == "login" ? "Sign Up" : "Log In"}
-            </button>
-          </div>
         </div>
       </div>
     </Suspense>

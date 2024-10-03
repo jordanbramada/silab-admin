@@ -31,7 +31,7 @@ const sideBarItems: SideBarProps[] = [
 
 export default function SideBar() {
   return (
-    <div className="mt-8 flex w-1/4 flex-col justify-between px-8 pb-4">
+    <div className="mt-8 flex h-full w-1/4 flex-col justify-between px-8 py-4">
       <div className="flex h-full w-full flex-col space-y-5">
         {sideBarItems.map((item) => {
           return (

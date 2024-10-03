@@ -1,16 +1,12 @@
 export enum AnnouncementTypeEnum {
-  "asprak",
-  "praktikum",
-  "inhal",
-  "pengumuman",
+  "Assistant",
+  "Practicum",
+  "Inhall",
+  "Basic",
 }
 
 export type Announcement = {
-  title: string;
   type: AnnouncementTypeEnum;
-  desc: string;
-  detail: string | null;
-  posterUrl: string | null;
-  postDate: string;
-  dueDate: string;
+  title: string;
+  body: string;
 };

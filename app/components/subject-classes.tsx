@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSubjectClasses } from "../actions/dashboard/praktikum/tambah-praktikum/actions";
+import Link from "next/link";
 
 interface SubjectClassesCardProps {
   subject_name: string;
@@ -33,7 +34,8 @@ export default function SubjectClassesCard({
   return (
     <div className="mt-10 flex h-full w-full flex-row flex-wrap gap-4">
       {subjectClasses.map((subjectClass) => (
-        <div
+        <Link
+          href={`praktikum/${subjectClass.id}`}
           key={subjectClass.id}
           className="flex h-[150px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
         >
@@ -57,7 +59,7 @@ export default function SubjectClassesCard({
               {subjectClass.day}, Sesi ke - {subjectClass.session}
             </p>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

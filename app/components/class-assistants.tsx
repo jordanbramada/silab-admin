@@ -7,11 +7,11 @@ import {
 } from "@headlessui/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { searchAsisten } from "../actions/dashboard/praktikum/tambah-praktikum/actions";
+import { fetchUsers } from "../actions/dashboard/praktikum/[classId]/actions";
 
 interface ClassAssistantsComboBoxProps {
   onClassAssistantsChange: (value: User[]) => void;
-  value: string[];
+  value: User[];
 }
 
 export default function ClassAssistantsComboBox({
@@ -26,12 +26,11 @@ export default function ClassAssistantsComboBox({
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
       try {
-        const data = await searchAsisten(query);
-        setAsistenData(data["data"]);
+        const data = await fetchUsers(query);
+        setAsistenData(data.data || []);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -41,43 +40,35 @@ export default function ClassAssistantsComboBox({
   }, [query]);
 
   useEffect(() => {
-    const selectedUsers = asistenData.filter((user) => value.includes(user.id));
+    const selectedUsers = asistenData.filter((user) => value.includes(user));
     setSelected(selectedUsers);
   }, [value, asistenData]);
 
-  const handleOnAsistenChange = useCallback(
-    (value: User) => {
-      setSelected((prevSelected) => {
-        if (!prevSelected.some((item) => item.id === value.id)) {
-          const updatedSelection = [...prevSelected, value];
+  const handleOnAsistenChange = (selected: User) => {
+    const isExist = value.find((user) => user.id === selected.id);
 
-          setTimeout(() => onClassAssistantsChange(updatedSelection), 0);
-          return updatedSelection;
-        }
-        return prevSelected;
-      });
-    },
-    [onClassAssistantsChange],
-  );
+    if (!isExist) {
+      onClassAssistantsChange([...value, selected]);
+    } else {
+      return;
+    }
+  };
 
   const removeAsisten = useCallback(
-    (user: User) => {
-      setSelected((prevSelected) => {
-        const updatedSelection = prevSelected.filter(
-          (item) => item.id !== user.id,
-        );
+    (selected: User) => {
+      const updatedCollaboratorsList = value.filter(
+        (user) => user.id !== selected.id,
+      );
 
-        setTimeout(() => onClassAssistantsChange(updatedSelection), 0);
-        return updatedSelection;
-      });
+      if (updatedCollaboratorsList.length !== value.length) {
+        onClassAssistantsChange(updatedCollaboratorsList);
+      }
     },
-    [onClassAssistantsChange],
+    [onClassAssistantsChange, value],
   );
+
   return (
     <div className="block w-full">
-      <p className="mb-3 text-base font-semibold text-[#5E6278]">
-        Asisten Praktikum
-      </p>
       <Combobox
         onChange={(value: User) => handleOnAsistenChange(value)}
         onClose={() => setQuery("")}
@@ -104,10 +95,13 @@ export default function ClassAssistantsComboBox({
             />
           </ComboboxButton>
         </div>
-        <ComboboxOptions anchor="bottom" className={`w-[1060px] rounded-2xl`}>
+        <ComboboxOptions
+          anchor="bottom"
+          className={`w-[var(--input-width)] rounded-2xl`}
+        >
           {asistenData.map((asisten) => (
             <ComboboxOption
-              key={asisten.id}
+              key={asisten?.id}
               value={asisten}
               className={`flex w-full flex-row items-start bg-[#f5f5f5] p-4 data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
             >
@@ -123,12 +117,12 @@ export default function ClassAssistantsComboBox({
           ))}
         </ComboboxOptions>
       </Combobox>
-      <div className="mt-6 flex h-full w-full flex-col space-y-6 px-10">
-        {selected.length !== 0 &&
-          selected.map((asisten) => (
+      <div className={`mt-6 flex h-full w-full flex-col space-y-6 px-10`}>
+        {value.length !== 0 &&
+          value.map((asisten) => (
             <div
               className={`h-[56px] w-full flex-row items-center justify-between ${asisten !== undefined ? "flex" : "hidden"}`}
-              key={asisten.id}
+              key={asisten?.id}
             >
               <div className="flex flex-col">
                 <p>{asisten?.fullname}</p>
