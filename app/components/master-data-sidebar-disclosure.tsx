@@ -55,6 +55,20 @@ export default function MasterDataSidebarDisclosure() {
             </p>
           </Link>
           <Link
+            href={"/dashboard/master-data/pembayaran"}
+            className={`flex h-full w-full flex-row items-center space-x-2 rounded-full px-3 py-2 hover:bg-[#3285CA] hover:bg-opacity-10 ${pathName.match("/dashboard/master-data/pembayaran") ? "bg-[#3285CA] bg-opacity-30" : ""}`}
+          >
+            <div className="relative h-[20px] w-[20px]">
+              <Image
+                src={"/information.png"}
+                alt="information"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+            <p className="text-base font-medium text-[#5E6278]">Pembayaran</p>
+          </Link>
+          <Link
             href={"/dashboard/master-data/session"}
             className={`flex h-full w-full flex-row items-center space-x-2 rounded-full px-3 py-2 hover:bg-[#3285CA] hover:bg-opacity-10 ${pathName.match("/dashboard/master-data/session") ? "bg-[#3285CA] bg-opacity-30" : ""}`}
           >

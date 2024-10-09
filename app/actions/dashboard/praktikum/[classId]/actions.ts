@@ -113,3 +113,26 @@ export async function postMeeting(
     console.log(error);
   }
 }
+
+export async function getMeetings(classId: string | undefined) {
+  try {
+    const token = await getAccessToken();
+
+    const response = await fetch(
+      `${process.env.BASE_URL}/subject/classes/${classId}/meetings`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-cache",
+      },
+    );
+
+    const responseData = await response.json();
+    console.log(responseData["students"]);
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}
