@@ -10,6 +10,7 @@ import ClassAssistantsComboBox from "@/app/components/class-assistants";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Class } from "@/app/types/class-details-class";
 import { Meeting } from "@/app/types/meeting";
+import { Students } from "@/app/types/students";
 import {
   Dialog,
   DialogBackdrop,
@@ -19,6 +20,7 @@ import {
   ListboxButton,
   ListboxOption,
   ListboxOptions,
+  Switch,
 } from "@headlessui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -44,6 +46,13 @@ export default function ClassDetails({
   const [message, setMessage] = useState<string>("");
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
+  const [selectedStudent, setSelectedStudent] = useState<Students | null>();
+  const [selectedStudentPresenceStatus, setSelectedStudentPresenceStatus] =
+    useState<boolean | null>();
+  const [
+    IsUpdateStudentPresenceDialogOpen,
+    setIsUpdateStudentPresenceDialogOpen,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -265,16 +274,15 @@ export default function ClassDetails({
                     meetingData
                       .map((meeting) => (
                         <ListboxOption
+                          as="button"
+                          onClick={() => setSelectedMeeting(meeting.id)}
                           key={meeting.id}
                           value={meeting.id}
                           className={`w-full p-3 hover:bg-[#3272CA] hover:text-white`}
                         >
-                          <button
-                            onClick={() => setSelectedMeeting(meeting.id)}
-                            className="w-full items-center"
-                          >
+                          <p className="w-full items-center">
                             {meeting.meeting_name}
-                          </button>
+                          </p>
                         </ListboxOption>
                       ))
                       .reverse()}
@@ -283,7 +291,7 @@ export default function ClassDetails({
             </div>
             <div className="flex h-1/6 flex-row space-x-4">
               <button className="h-fit content-center rounded-full bg-[#3272CA] p-3 text-sm font-semibold text-white">
-                Tambah Pertemuan
+                Buka Presensi
               </button>
               <button className="h-fit content-center rounded-full bg-[#3272CA] p-3 text-sm font-semibold text-white">
                 Tambah Pertemuan
@@ -310,30 +318,70 @@ export default function ClassDetails({
                   <p>Total Mahasiswa Presensi</p>
                 </div>
               </div>
-              <table className="min-w-full table-fixed border-collapse border border-gray-300">
-                <thead>
-                  <tr>
-                    <th>Nama</th>
-                    <th>Waktu</th>
-                    <th>Kehadiran</th>
-                  </tr>
-                </thead>
-                <tbody className="w-full">
-                  {meetingData &&
-                    selectedMeeting &&
-                    meetingData
-                      .find((meeting) => meeting.id === selectedMeeting)
-                      ?.students.map((student) => (
-                        <tr key={student.student_id}>
-                          <td>{student.student_name}</td>
-                          <td>{student.submitted_at ?? "-"}</td>
-                          <td>
-                            {student.is_attended ? "Hadir" : "Tidak Hadir"}
-                          </td>
-                        </tr>
-                      ))}
-                </tbody>
-              </table>
+              <div className="flex w-full flex-row text-base font-bold text-[#5E6278]">
+                <p className="flex w-2/12 items-center justify-center">NIM</p>
+                <p className="flex w-5/12 items-center justify-center">Nama</p>
+                <p className="flex w-3/12 items-center justify-center">
+                  Presensi
+                </p>
+                <div className="flex w-2/12 items-center justify-center" />
+              </div>
+              {meetingData
+                ?.find((meeting) => meeting.id === selectedMeeting)
+                ?.students.map((student) => (
+                  <div
+                    key={student.student_id}
+                    className="flex w-full flex-row text-base font-semibold text-[#5E6278]"
+                  >
+                    <p className="flex w-2/12 items-center justify-center">
+                      {student.nim}
+                    </p>
+                    <p className="flex w-5/12 items-center justify-center">
+                      {student.student_name}
+                    </p>
+                    <div className={`flex w-3/12 items-center justify-center`}>
+                      <p
+                        className={`rounded-md p-2 text-sm font-semibold ${
+                          student.is_attended !== null &&
+                          student.submitted_at === null
+                            ? "bg-[#FFF5F8] text-[#F1416C]"
+                            : student.is_attended !== null &&
+                                student.submitted_at !== null
+                              ? "bg-[#E8FFF3] text-[#50CD89]"
+                              : "bg-[#F1F1F2] text-[#181C32]"
+                        }`}
+                      >
+                        {student.is_attended !== null &&
+                        student.submitted_at === null
+                          ? "Tidak Hadir"
+                          : student.is_attended !== null &&
+                              student.submitted_at !== null
+                            ? "Hadir"
+                            : "Belum Presensi"}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setIsUpdateStudentPresenceDialogOpen(true);
+                        setSelectedStudent(student);
+                        setSelectedStudentPresenceStatus(
+                          student.is_attended !== null &&
+                            student.submitted_at !== null
+                            ? true
+                            : false,
+                        );
+                      }}
+                      className="relative flex h-6 w-2/12 items-center justify-center"
+                    >
+                      <Image
+                        src={"/edit-blue.png"}
+                        alt="action"
+                        fill
+                        style={{ objectFit: "contain" }}
+                      />
+                    </button>
+                  </div>
+                ))}
             </div>
           )}
           <Dialog
@@ -415,6 +463,73 @@ export default function ClassDetails({
               </DialogPanel>
             </div>
           </Dialog>
+          <Dialog
+            onClose={() => setIsUpdateStudentPresenceDialogOpen(false)}
+            open={IsUpdateStudentPresenceDialogOpen}
+            className={"relative z-50 h-full w-full"}
+          >
+            <DialogBackdrop className="fixed inset-0 bg-black/30" />
+            <div className="fixed inset-0 flex h-full w-screen items-center justify-center p-4">
+              <DialogPanel className="flex h-3/5 w-[500px] flex-col space-y-4 rounded-2xl bg-white p-10">
+                <DialogTitle className="font-bold text-[#1d1d1d]">
+                  Ubah Status Presensi Mahasiswa
+                </DialogTitle>
+                <div className="flex h-full w-full flex-col justify-between">
+                  <div className="flex h-full w-full flex-col space-y-8">
+                    <div className="flex flex-col">
+                      <p className="text-xs font-semibold text-[#5E6278]">
+                        NIM
+                      </p>
+                      <p className="text-sm font-bold text-[#1D1D1D]">
+                        {selectedStudent?.nim}
+                      </p>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-xs font-semibold text-[#5E6278]">
+                        Nama Lengkap
+                      </p>
+                      <p className="text-sm font-bold text-[#1D1D1D]">
+                        {selectedStudent?.student_name}
+                      </p>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-xs font-semibold text-[#5E6278]">
+                        Status Presensi
+                      </p>
+                      <div className="mt-2 flex flex-row items-center space-x-3">
+                        <p className="text-sm font-bold text-[#1D1D1D]">
+                          Belum Hadir / Tidak Hadir
+                        </p>
+                        <Switch
+                          checked={
+                            selectedStudentPresenceStatus === true
+                              ? true
+                              : false
+                          }
+                          onChange={(checked) =>
+                            setSelectedStudentPresenceStatus(checked)
+                          }
+                          className="group relative flex h-7 w-14 cursor-pointer rounded-full bg-[#D9D9D9] p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[checked]:bg-[#3272CA] data-[focus]:outline-1 data-[focus]:outline-white"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-[white] shadow-lg ring-0 transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
+                          />
+                        </Switch>
+                        <p className="text-sm font-bold text-[#1D1D1D]">
+                          Hadir
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <button className="w-full rounded-full bg-[#D2E3F1] p-4 font-semibold text-[#3272CA]">
+                    Simpan Perubahan
+                  </button>
+                </div>
+              </DialogPanel>
+            </div>
+          </Dialog>
+
           <SuccessDialog
             dialogOpen={isSuccessDialogOpen}
             onClose={() => setIsSuccessDialogOpen(false)}
