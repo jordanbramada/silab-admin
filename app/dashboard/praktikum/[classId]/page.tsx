@@ -24,6 +24,7 @@ import {
 } from "@headlessui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import QRCode from "react-qr-code";
 
 export default function ClassDetails({
   params,
@@ -53,6 +54,8 @@ export default function ClassDetails({
     IsUpdateStudentPresenceDialogOpen,
     setIsUpdateStudentPresenceDialogOpen,
   ] = useState<boolean>(false);
+  const [isQrDialogOpen, setIsQrDialogOpen] = useState<boolean>(false);
+  const [qrToken, setQrToken] = useState<string | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -305,14 +308,34 @@ export default function ClassDetails({
           )}
           {selectedMeeting && (
             <div className="h-full w-full space-y-14 bg-white p-5">
-              <div className="flex flex-row justify-between">
-                <p className="text-base font-bold">
-                  {
-                    meetingData?.find(
-                      (meeting) => meeting.id === selectedMeeting,
-                    )?.meeting_name
-                  }
-                </p>
+              <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center space-x-4">
+                  <button
+                    onClick={() => {
+                      setQrToken(
+                        meetingData?.find(
+                          (meeting) => meeting.id === selectedMeeting,
+                        )?.token,
+                      );
+                      setIsQrDialogOpen(true);
+                    }}
+                    className="flex flex-row items-center space-x-3 rounded-2xl bg-[#FFBF01] p-3"
+                  >
+                    <Image
+                      alt="QR Code Icon"
+                      src={"/qr.png"}
+                      width={32}
+                      height={32}
+                    />
+                  </button>
+                  <p className="text-base font-bold">
+                    {
+                      meetingData?.find(
+                        (meeting) => meeting.id === selectedMeeting,
+                      )?.meeting_name
+                    }
+                  </p>
+                </div>
                 <div className="flex flex-col items-end">
                   <p>Tanggal Meeting</p>
                   <p>Total Mahasiswa Presensi</p>
@@ -459,6 +482,23 @@ export default function ClassDetails({
                       "Simpan"
                     )}
                   </button>
+                </div>
+              </DialogPanel>
+            </div>
+          </Dialog>
+          <Dialog
+            onClose={() => setIsQrDialogOpen(false)}
+            open={isQrDialogOpen}
+            className={"relative z-50 h-full w-full"}
+          >
+            <DialogBackdrop className="fixed inset-0 bg-black/30" />
+            <div className="fixed inset-0 flex h-full w-screen items-center justify-center p-4">
+              <DialogPanel className="flex h-3/4 w-[500px] flex-col space-y-4 rounded-2xl bg-white p-10">
+                <DialogTitle className="font-bold text-[#1d1d1d]">
+                  Kode QR Presensi
+                </DialogTitle>
+                <div className="flex h-full w-full items-center justify-center">
+                  <QRCode value={qrToken ?? ""} />
                 </div>
               </DialogPanel>
             </div>
