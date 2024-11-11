@@ -1,29 +1,29 @@
 "use server";
 
-import { encrypt, setCookies } from "@/app/lib/sessions";
+import { setAccessToken, setRefreshToken } from "@/app/lib/sessions";
 import { redirect } from "next/navigation";
 
 export async function handleFormSubmitLogin(formData: FormData) {
   try {
-    const email = formData.get("email");
+    const nim = formData.get("nim");
     const password = formData.get("password");
 
-    const response = await fetch("https://silab-dev.vercel.app/auth/login", {
+    const response = await fetch(`http://10.4.52.201:3001/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ nim, password }),
     });
+
     const responseData = await response.json();
 
-    if (responseData["status"] === 200) {
-      const nim = responseData["data"]["nim"];
+    if (responseData["status"] === "success") {
+      const accessTokenExpiry = new Date(Date.now() + 60 * 60 * 1 * 1000);
+      setAccessToken(responseData["data"]["accessToken"], accessTokenExpiry);
 
-      const expires = new Date(Date.now() + 60 * 60 * 24 * 1000);
-      const session = await encrypt({ nim, expires });
-
-      setCookies(session, { expires, httpOnly: true });
+      const refreshTokenExpiry = new Date(Date.now() + 60 * 60 * 8 * 1000);
+      setRefreshToken(responseData["data"]["refreshToken"], refreshTokenExpiry);
     }
   } catch (error) {
     console.log(error);

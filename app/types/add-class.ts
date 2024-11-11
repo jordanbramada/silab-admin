@@ -1,13 +1,7 @@
 export type Class = {
-  subjectId: string;
-  name: string;
+  subject_id: string;
+  subject_class: string;
   day: string;
-  startAt: string;
-  endAt: string;
-  ruang: string;
-  assistants: string[] | [];
+  session: string;
   quota: number;
-  isFull: boolean;
-  participants: string[] | [];
-  learningModule: string[] | [];
 };

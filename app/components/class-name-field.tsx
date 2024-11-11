@@ -8,7 +8,7 @@ export default function ClassNameField({
   value,
 }: ClassNameFieldProps) {
   return (
-    <fieldset className="flex h-full w-[75px] flex-col space-y-3">
+    <fieldset className="flex h-full w-fit flex-col space-y-3">
       <label className="text-base font-semibold text-[#5E6278]">Kelas</label>
       <input
         className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"

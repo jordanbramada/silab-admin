@@ -1,4 +1,10 @@
-import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import {
+  Button,
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
 import Image from "next/image";
 
 interface SuccessDialogProps {
@@ -19,6 +25,7 @@ export default function SuccessDialog({
       as="div"
       className={`relative z-10 focus:outline-none`}
     >
+      <DialogBackdrop className="fixed inset-0 bg-black/30" />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <DialogPanel

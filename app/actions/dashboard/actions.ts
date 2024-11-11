@@ -1,11 +1,11 @@
 "use server";
 
-import { getToken } from "@/app/lib/sessions";
+import { getAccessToken, getToken } from "@/app/lib/sessions";
 
 export async function getTotalMatkul() {
   try {
-    const token = await getToken();
-    const response = await fetch("https://silab-dev.vercel.app/subject/", {
+    const token = await getAccessToken();
+    const response = await fetch(`${process.env.BASE_URL}/subject/`, {
       cache: "no-store",
       headers: {
         Authorization: `Bearer ${token}`,

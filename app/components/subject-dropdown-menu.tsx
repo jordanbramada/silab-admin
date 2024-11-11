@@ -1,20 +1,20 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/react";
 import { useEffect, useState } from "react";
-
-import { query } from "../dashboard/praktikum/page";
 import Image from "next/image";
 import { fetchSubjectData } from "../actions/dashboard/praktikum/actions";
-import { Subject } from "../types/subject";
 import { SubjectBySemester } from "../types/subject-by-semester";
 
 interface SubjectDropdownMenuProps {
-  query: query[];
   isDisabled: boolean;
-  onSubjectChange: (value: Subject | undefined) => void;
+  onSubjectChange: (value: SubjectBySemester | undefined) => void;
 }
 
 export default function SubjectDropdownMenu({
-  query,
   isDisabled,
   onSubjectChange,
 }: SubjectDropdownMenuProps) {
@@ -28,7 +28,7 @@ export default function SubjectDropdownMenu({
       setLoading(true);
 
       try {
-        const data = await fetchSubjectData(query);
+        const data = await fetchSubjectData();
         setSubjectData(data.data);
       } catch (error) {
         console.log(error);
@@ -38,41 +38,43 @@ export default function SubjectDropdownMenu({
     };
 
     fetchData();
-  }, [query]);
+  }, []);
 
   return (
-    <Menu>
-      <MenuButton
+    <Listbox>
+      <ListboxButton
         disabled={isDisabled}
-        className={`flex h-full w-[300px] flex-row items-center justify-between rounded-full bg-white px-[15px] ${isDisabled ? "border border-gray-300 bg-opacity-50 text-gray-500" : "bg-opacity-100 text-black"}`}
+        className={`flex h-[54px] w-[300px] flex-row items-center justify-between rounded-full bg-white px-[15px] ${isDisabled ? "border border-gray-300 bg-opacity-50 text-gray-500" : "bg-opacity-100 text-black"}`}
       >
         {selectedSubject === "" ? "Praktikum" : selectedSubject}
         <div className="relative h-[24px] w-[24px]">
           <Image src={"/down.png"} alt="chevron down" fill />
         </div>
-      </MenuButton>
-      <MenuItems
+      </ListboxButton>
+      <ListboxOptions
         anchor="bottom"
-        className={`w-[300px] space-y-3 rounded-lg bg-white`}
+        className={`w-[var(--button-width)] space-y-3 rounded-lg bg-white`}
       >
-        {subjectData.map((subjects) => {
-          return subjects.subjects.map((subject) => {
-            return (
-              <MenuItem key={subject.id}>
-                <p
-                  className="block px-[15px] py-2 data-[focus]:bg-[#3272CA] data-[focus]:text-white"
-                  onClick={() => {
-                    setSelectedSubject(subject.name);
-                    onSubjectChange(subject);
-                  }}
-                >
-                  {subject.name}
-                </p>
-              </MenuItem>
-            );
-          });
+        {subjectData.map((subject) => {
+          return (
+            <ListboxOption
+              value={subject}
+              key={subject.id}
+              className={`data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
+            >
+              <button
+                className="block w-full px-[15px] py-2 text-start"
+                onClick={() => {
+                  setSelectedSubject(subject.subject_name);
+                  onSubjectChange(subject);
+                }}
+              >
+                {subject.subject_name}
+              </button>
+            </ListboxOption>
+          );
         })}
-      </MenuItems>
-    </Menu>
+      </ListboxOptions>
+    </Listbox>
   );
 }

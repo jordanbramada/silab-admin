@@ -1,18 +1,15 @@
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Subject } from "../types/subject";
+import { SubjectBySemester } from "../types/subject-by-semester";
 
 interface SubjectContainerProps {
-  subject: Subject;
-  onSubjectSelected: (value: Subject) => void;
+  subject: SubjectBySemester;
+  onSubjectSelected: (value: SubjectBySemester) => void;
 }
 
 export default function SubjectContainer({
   subject,
   onSubjectSelected,
 }: SubjectContainerProps) {
-  const router = useRouter();
-
   return (
     <button
       onClick={() => {
@@ -20,7 +17,7 @@ export default function SubjectContainer({
       }}
       className="flex flex-row items-center justify-between rounded-lg bg-white p-[15px] hover:bg-[#BFD9EF] hover:text-[#3272CA]"
     >
-      <p className="text-[16px] font-semibold">{subject.name}</p>
+      <p className="text-[16px] font-semibold">{subject.subject_name}</p>
       <div className="relative h-4 w-4">
         <Image
           src={"/down.png"}

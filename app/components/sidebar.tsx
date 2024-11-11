@@ -8,6 +8,8 @@ import SignOutButton from "./signout-button";
 import Image from "next/image";
 import Link from "next/link";
 import PengumumanSidebarDisclosure from "./pengumuman-sidebar-disclosure";
+import MasterDataSidebarDisclosure from "./master-data-sidebar-disclosure";
+import { getRole } from "../lib/sessions";
 
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.png", route: "/dashboard", title: "Dashboard" },
@@ -26,16 +28,13 @@ const sideBarItems: SideBarProps[] = [
     route: "/dashboard/presensi-asisten",
     title: "Presensi Asisten",
   },
-  {
-    imageSrc: "/master-data.png",
-    route: "/dashboard/master-data",
-    title: "Master Data",
-  },
 ];
 
-export default function SideBar() {
+export default async function SideBar() {
+  const role = await getRole();
+
   return (
-    <div className="mt-8 flex w-1/4 flex-col justify-between px-8 pb-4">
+    <div className="mt-8 flex h-full w-1/4 flex-col justify-between px-8 py-4">
       <div className="flex h-full w-full flex-col space-y-5">
         {sideBarItems.map((item) => {
           return (
@@ -47,6 +46,8 @@ export default function SideBar() {
             />
           );
         })}
+        {role === "laborant" && <MasterDataSidebarDisclosure />}
+
         <PengumumanSidebarDisclosure />
       </div>
       <SignOutButton />

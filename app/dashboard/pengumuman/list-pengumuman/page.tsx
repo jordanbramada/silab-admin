@@ -16,27 +16,19 @@ const pengumumanQuery: PengumumanQuery[] = [
 ];
 
 export default function ListPengumuman() {
-  const [query, setQuery] = useState<PengumumanQuery>(pengumumanQuery[2]);
   const [announcementData, setAnnouncementData] = useState<Pengumuman[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async (query: boolean | null) => {
+    const fetchData = async () => {
       try {
         setAnnouncementData([]);
         setLoading(true);
 
-        if (query !== null) {
-          const responseData = await getAnnouncementList(query);
-          if (responseData["status"] === 200) {
-            setAnnouncementData(responseData["data"]);
-          }
-        } else {
-          const responseData = await getAnnouncementList("");
-          if (responseData["status"] === 200) {
-            setAnnouncementData(responseData["data"]);
-          }
+        const responseData = await getAnnouncementList();
+        if (responseData["status"] === "success") {
+          setAnnouncementData(responseData["data"]);
         }
       } catch (error) {
         console.log(error);
@@ -45,55 +37,15 @@ export default function ListPengumuman() {
       }
     };
 
-    fetchData(query.value);
-  }, [query.value]);
+    fetchData();
+  }, []);
 
   return (
     <div className="flex h-full w-full flex-col overflow-auto overscroll-contain">
       <div className="flex flex-row items-baseline justify-between">
-        {query.value === true && (
-          <p className="text-3xl font-semibold text-[#1D1D1D]">
-            Pengumuman yang{" "}
-            <span className="font-extrabold">telah diposting.</span>
-          </p>
-        )}
-        {query.value === false && (
-          <p className="text-3xl font-semibold text-[#1D1D1D]">
-            Pengumuman yang <span className="font-extrabold">terjadwal</span>
-          </p>
-        )}
-        {query.value === null && (
-          <p className="text-3xl font-semibold text-[#1D1D1D]">
-            <span className="font-extrabold">Semua</span> pengumuman.
-          </p>
-        )}
-        <Menu>
-          <MenuButton
-            className={`flex h-full w-[200px] flex-row items-center justify-between rounded-full bg-white px-[15px] text-[14px] font-semibold text-[#3272CA]`}
-          >
-            {query.title}
-            <div className="relative h-[24px] w-[24px]">
-              <Image src={"/down-blue.png"} alt="chevron down" fill />
-            </div>
-          </MenuButton>
-          <MenuItems
-            anchor="bottom"
-            className={`w-[200px] space-y-3 rounded-lg bg-white`}
-          >
-            {pengumumanQuery.map((item, i) => (
-              <MenuItem key={i}>
-                <p
-                  className="block px-[15px] py-2 text-[14px] font-medium data-[focus]:bg-[#3272CA] data-[focus]:text-white"
-                  onClick={() => {
-                    setQuery(item);
-                  }}
-                >
-                  {item.title}
-                </p>
-              </MenuItem>
-            ))}
-          </MenuItems>
-        </Menu>
+        <p className="text-3xl font-semibold text-[#1D1D1D]">
+          <span className="font-extrabold">Semua</span> pengumuman.
+        </p>
       </div>
       <div className="mt-10 flex flex-col space-y-10">
         {loading && (
@@ -106,8 +58,14 @@ export default function ListPengumuman() {
               className="flex w-full flex-row space-x-3"
             >
               <div className="flex h-[210px] w-full flex-col space-y-8 rounded-2xl bg-white p-8 text-[#1d1d1d]">
-                <p className="text-[22px] font-bold">{announcement.title}</p>
-                <p className="text-[18px] font-semibold">{announcement.desc}</p>
+                <div className="flex flex-col">
+                  <p className="text-[22px] font-bold">{announcement.title}</p>
+                  <p className="text-[16px] font-light">
+                    {new Date(announcement.created_at).toUTCString()} by{" "}
+                    {announcement.author}
+                  </p>
+                </div>
+                <p className="text-[18px] font-semibold">{announcement.body}</p>
               </div>
               <Menu>
                 <MenuButton className="relative h-[24px] w-[24px]">

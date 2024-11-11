@@ -40,7 +40,7 @@ export default function AnnouncementTypeDropdown({
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className={`w-[1050px] space-y-3 rounded-lg bg-[#f5f5f5]`}
+          className={`w-[var(--button-width)] space-y-3 rounded-lg bg-[#f5f5f5]`}
         >
           {announcementTypeList.map((announcement) => (
             <MenuItem key={announcement.value}>
