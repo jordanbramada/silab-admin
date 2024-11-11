@@ -1,11 +1,13 @@
-import SubjectList from "@/app/components/subject-list";
-import AddPracticumBanner from "@/app/components/add-practicum-banner";
-import SubjectsList from "@/app/components/subjects-list";
+import Image from "next/image";
+import Link from "next/link";
+import { getRole } from "../lib/sessions";
 
-export default async function Praktikum() {
-  return (
-    <div className="h-full w-full space-y-10 overflow-auto overscroll-contain">
-      {/* <div className="flex h-[215px] w-full flex-row justify-between rounded-3xl bg-white p-5">
+export default async function AddPracticumBanner() {
+  const role = await getRole();
+
+  if (role === "laborant") {
+    return (
+      <div className="flex h-[215px] w-full flex-row justify-between rounded-3xl bg-white p-5">
         <div className="flex w-[593px] flex-col justify-between">
           <p className="text-[30px] font-bold text-black">
             Ingin menambahkan praktikum baru? Klik tombol di bawah ini untuk
@@ -27,9 +29,7 @@ export default async function Praktikum() {
             className="bg-re self-end"
           />
         </div>
-      </div> */}
-      <AddPracticumBanner />
-      <SubjectsList />
-    </div>
-  );
+      </div>
+    );
+  }
 }
