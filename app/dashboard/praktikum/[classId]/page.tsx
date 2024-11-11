@@ -5,6 +5,7 @@ import {
   getMeetings,
   postCollaborators,
   postMeeting,
+  updateAttendancesStatus,
 } from "@/app/actions/dashboard/praktikum/[classId]/actions";
 import ClassAssistantsComboBox from "@/app/components/class-assistants";
 import SuccessDialog from "@/app/components/success-dialog";
@@ -41,7 +42,7 @@ export default function ClassDetails({
     useState<boolean>(false);
   const [isAddMeetingOpen, setIsAddMeetingOpen] = useState<boolean>(false);
   const [selectedCollaborators, setSelectedCollaborators] = useState<User[]>(
-    [],
+    []
   );
   const [meetingName, setMeetingName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -94,7 +95,7 @@ export default function ClassDetails({
 
   const addMeeting = async (
     meetingName: string,
-    classId: string | undefined,
+    classId: string | undefined
   ) => {
     setLoading(true);
     try {
@@ -114,7 +115,7 @@ export default function ClassDetails({
 
   const addCollaborators = async (
     collaborators: string[],
-    classId: string | undefined,
+    classId: string | undefined
   ) => {
     setLoading(true);
     try {
@@ -134,7 +135,7 @@ export default function ClassDetails({
 
   const handleCollaboratorsChange = (value: User[]) => {
     const validCollaborators = value.filter(
-      (collaborator): collaborator is User => collaborator != null,
+      (collaborator): collaborator is User => collaborator != null
     );
 
     setSelectedCollaborators(validCollaborators);
@@ -142,6 +143,30 @@ export default function ClassDetails({
 
   const handleMeetingNameChange = (value: string) => {
     setMeetingName(value);
+  };
+
+  const handleUpdateAttendancesStatus = async (
+    classId: string | undefined,
+    meetingId: string | undefined,
+    meetingToken: string | undefined
+  ) => {
+    setLoading(true);
+    try {
+      const response: any = await updateAttendancesStatus(
+        classId,
+        meetingId,
+        meetingToken
+      );
+
+      if (response["status"] === "success") {
+        setMessage(response["message"]);
+        setIsSuccessDialogOpen(true);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -256,7 +281,7 @@ export default function ClassDetails({
                   <p>
                     {selectedMeeting &&
                       meetingData?.find(
-                        (meeting) => meeting.id === selectedMeeting,
+                        (meeting) => meeting.id === selectedMeeting
                       )?.meeting_name}
                     {!selectedMeeting && "Pilih Pertemuan"}
                   </p>
@@ -293,7 +318,20 @@ export default function ClassDetails({
               </Listbox>
             </div>
             <div className="flex h-1/6 flex-row space-x-4">
-              <button className="h-fit content-center rounded-full bg-[#3272CA] p-3 text-sm font-semibold text-white">
+              <button
+                onClick={() =>
+                  handleUpdateAttendancesStatus(
+                    data?.id,
+                    meetingData?.find(
+                      (meeting) => meeting.id === selectedMeeting
+                    )?.id,
+                    meetingData?.find(
+                      (meeting) => meeting.id === selectedMeeting
+                    )?.token
+                  )
+                }
+                className="h-fit content-center rounded-full bg-[#3272CA] p-3 text-sm font-semibold text-white"
+              >
                 Buka Presensi
               </button>
               <button className="h-fit content-center rounded-full bg-[#3272CA] p-3 text-sm font-semibold text-white">
@@ -314,8 +352,8 @@ export default function ClassDetails({
                     onClick={() => {
                       setQrToken(
                         meetingData?.find(
-                          (meeting) => meeting.id === selectedMeeting,
-                        )?.token,
+                          (meeting) => meeting.id === selectedMeeting
+                        )?.token
                       );
                       setIsQrDialogOpen(true);
                     }}
@@ -331,7 +369,7 @@ export default function ClassDetails({
                   <p className="text-base font-bold">
                     {
                       meetingData?.find(
-                        (meeting) => meeting.id === selectedMeeting,
+                        (meeting) => meeting.id === selectedMeeting
                       )?.meeting_name
                     }
                   </p>
@@ -391,7 +429,7 @@ export default function ClassDetails({
                           student.is_attended !== null &&
                             student.submitted_at !== null
                             ? true
-                            : false,
+                            : false
                         );
                       }}
                       className="relative flex h-6 w-2/12 items-center justify-center"
@@ -470,7 +508,7 @@ export default function ClassDetails({
                     disabled={selectedCollaborators.length === 0 ? true : false}
                     onClick={() => {
                       const collaboratorsId = selectedCollaborators.map(
-                        (collaborator) => collaborator.id,
+                        (collaborator) => collaborator.id
                       );
                       addCollaborators(collaboratorsId, data?.id);
                     }}
