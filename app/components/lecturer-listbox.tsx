@@ -8,18 +8,40 @@ import {
 } from "@headlessui/react";
 import Image from "next/image";
 import { Lecturer } from "../types/lecturer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getLecturers } from "../actions/dashboard/master-data/add-subject/action";
 
 interface LecturerListBoxProps {
-  lecturers: Lecturer[];
   onLecturerChange: (value: string) => void;
 }
 
 export default function LecturerListBox({
-  lecturers,
   onLecturerChange,
 }: LecturerListBoxProps) {
   const [selectedLecturer, setSelectedLecturer] = useState<Lecturer>();
+  const [lecturersData, setLecturersData] = useState<Lecturer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const responseData = await getLecturers();
+
+        if (responseData["status"] === "success") {
+          setLecturersData(responseData["data"]);
+        } else if (responseData["error"] === true) {
+          console.log(responseData["message"]);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <fieldset className="flex h-fit w-full flex-col space-y-3">
@@ -37,7 +59,7 @@ export default function LecturerListBox({
           className={`relative flex h-[54px] w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px]`}
         >
           <p>
-            {selectedLecturer && selectedLecturer.name}
+            {selectedLecturer && selectedLecturer.fullname}
             {!selectedLecturer && "Dosen Pengampu"}
           </p>
           <div className="relative h-[24px] w-[24px]">
@@ -48,13 +70,15 @@ export default function LecturerListBox({
           anchor="bottom"
           className={`mt-2 h-fit w-[var(--button-width)] rounded-lg bg-[#f5f5f5]`}
         >
-          {lecturers.map((lecturer) => (
+          {lecturersData.map((lecturer) => (
             <ListboxOption
               className={`flex h-[54px] w-full items-center justify-center data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
               key={lecturer.id}
               value={lecturer}
             >
-              <button className="h-full w-full">{lecturer.name}</button>
+              <button className="h-full w-full pl-4 text-start">
+                {lecturer.fullname}
+              </button>
             </ListboxOption>
           ))}
         </ListboxOptions>

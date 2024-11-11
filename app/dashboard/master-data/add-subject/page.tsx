@@ -1,16 +1,12 @@
 "use client";
 
 import { addSubjectFormSubmit } from "@/app/actions/dashboard/master-data/add-subject/action";
+import ErrorDialog from "@/app/components/error-dialog";
 import LecturerListBox from "@/app/components/lecturer-listbox";
 import SemestersListBox from "@/app/components/semesters-listbox";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Lecturer } from "@/app/types/lecturer";
 import { FormEvent, useState } from "react";
-
-const lecturers: Lecturer[] = [
-  { id: "user-K4B6p1e8_M", name: "Imam Riyadi" },
-  { id: "user-105_FpWjIk", name: "Imam Azhari" },
-];
 
 export default function AddSubject() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,10 +99,7 @@ export default function AddSubject() {
               />
             </fieldset>
           </div>
-          <LecturerListBox
-            lecturers={lecturers}
-            onLecturerChange={handleLecturerChange}
-          />
+          <LecturerListBox onLecturerChange={handleLecturerChange} />
         </div>
         <button
           type="submit"
@@ -116,6 +109,13 @@ export default function AddSubject() {
           {!loading && "Simpan"}
           {!error && (
             <SuccessDialog
+              dialogOpen={dialogOpen}
+              onClose={close}
+              title={message}
+            />
+          )}
+          {error && (
+            <ErrorDialog
               dialogOpen={dialogOpen}
               onClose={close}
               title={message}

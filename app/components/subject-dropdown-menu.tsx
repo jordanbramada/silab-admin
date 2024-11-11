@@ -5,15 +5,13 @@ import {
   ListboxOptions,
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { query } from "../dashboard/praktikum/page";
 import Image from "next/image";
 import { fetchSubjectData } from "../actions/dashboard/praktikum/actions";
-import { Subject } from "../types/subject";
 import { SubjectBySemester } from "../types/subject-by-semester";
 
 interface SubjectDropdownMenuProps {
   isDisabled: boolean;
-  onSubjectChange: (value: Subject | undefined) => void;
+  onSubjectChange: (value: SubjectBySemester | undefined) => void;
 }
 
 export default function SubjectDropdownMenu({

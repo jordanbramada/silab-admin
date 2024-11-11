@@ -130,7 +130,35 @@ export async function getMeetings(classId: string | undefined) {
     );
 
     const responseData = await response.json();
-    console.log(responseData["students"]);
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateAttendancesStatus(
+  classId: string | undefined,
+  meetingId: string | undefined,
+  meetingToken: string | undefined,
+) {
+  try {
+    const token = await getAccessToken();
+
+    const response = await fetch(
+      `${process.env.BASE_URL}/subject/classes/${classId}/meetings/${meetingId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-cache",
+        body: JSON.stringify({
+          token: meetingToken,
+        }),
+      },
+    );
+
+    const responseData = await response.json();
     return responseData;
   } catch (error) {
     console.log(error);

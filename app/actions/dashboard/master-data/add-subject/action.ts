@@ -2,6 +2,25 @@
 
 import { getAccessToken } from "@/app/lib/sessions";
 
+export async function getLecturers() {
+  try {
+    const accessToken = await getAccessToken();
+
+    const response = await fetch(`${process.env.BASE_URL}/lecturers`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function addSubjectFormSubmit(
   formData: FormData,
   semester: string,
@@ -22,7 +41,7 @@ export async function addSubjectFormSubmit(
       lecturer: lecturer,
     });
 
-    const response = await fetch(`http://10.4.52.201:3001/subjects`, {
+    const response = await fetch(`${process.env.BASE_URL}/subjects`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,9 +52,7 @@ export async function addSubjectFormSubmit(
 
     const responseData = await response.json();
 
-    if (responseData["status"] === "Success") {
-      return responseData;
-    }
+    return responseData;
   } catch (error) {
     console.log(error);
   }

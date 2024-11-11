@@ -20,9 +20,10 @@ import {
 } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
 import SuccessDialog from "@/app/components/success-dialog";
 import ClassSessionListbox from "@/app/components/class-sessions-listbox";
+import { SubjectBySemester } from "@/app/types/subject-by-semester";
 
 export default function TambahPraktikum() {
-  const [selectedSubject, setSelectedSubject] = useState<Subject>();
+  const [selectedSubject, setSelectedSubject] = useState<SubjectBySemester>();
   const [query, setQuery] = useState<query[]>([]);
   const [newClass, setNewClass] = useState<Class>({
     day: "",
@@ -85,7 +86,7 @@ export default function TambahPraktikum() {
     setSelectedSession(value);
   };
 
-  const handleSubjectClass = async (subject: Subject | undefined) => {
+  const handleSubjectClass = async (subject: SubjectBySemester | undefined) => {
     try {
       const response = await getSubjectClasses();
 
