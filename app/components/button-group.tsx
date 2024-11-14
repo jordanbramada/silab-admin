@@ -8,28 +8,24 @@ import SubjectDropdownMenu from "./subject-dropdown-menu";
 import { Subject } from "../types/subject";
 
 type ButtonGroupProps = {
-  onQueryChanges: (query: query[]) => void;
+  onSemesterChanges: (semester: string) => void;
   onSubjectQueryChanges: (subject: Subject | undefined) => void;
 };
 
 export default function ButtonGroup({
-  onQueryChanges,
+  onSemesterChanges,
   onSubjectQueryChanges,
 }: ButtonGroupProps) {
-  const [query, setQuery] = useState<query[]>([]);
   const [subjectQuery, setSubjectQuery] = useState<Subject>();
+  const [semester, setSemester] = useState<string>("");
 
   const handleSemesterChange = (value: number) => {
     if (value !== undefined) {
-      onQueryChanges([
-        { query: "semester", value: value.toString() },
-        ...query,
-      ]);
-      setQuery([{ query: "semester", value: value.toString() }, ...query]);
+      setSemester(value.toString());
+      onSemesterChanges(value.toString());
       setSubjectQuery(undefined);
     } else {
       setSubjectQuery(undefined);
-      setQuery([]);
     }
   };
 
@@ -43,13 +39,11 @@ export default function ButtonGroup({
   const handleClassChange = (value: string) => {};
 
   return (
-    <div className="mt-[40px] flex h-[44px] w-full flex-row">
+    <div className="mt-[40px] flex h-[54px] w-full flex-row">
       <button
-        className={`py-15 px-15 mr-4 h-full w-[90px] rounded-[30px] bg-white ${query.length !== 0 ? "border" : "border border-[#BFD9EF] font-semibold text-[#3272CA]"}`}
+        className={`py-15 px-15 h- mr-4 w-[90px] rounded-[30px] bg-white ${semester !== "" ? "border" : "border border-[#BFD9EF] font-semibold text-[#3272CA]"}`}
         onClick={() => {
-          setQuery([]);
           setSubjectQuery(undefined);
-          onQueryChanges([]);
           onSubjectQueryChanges(undefined);
         }}
       >
@@ -59,18 +53,17 @@ export default function ButtonGroup({
       <div className="flex h-full w-full flex-row space-x-5">
         <SemesterDropdownMenu
           isDisabled={undefined}
-          isShowAll={query.length === 0 ? true : false}
+          isShowAll={semester === "" ? true : false}
           onSemesterChange={handleSemesterChange}
         />
         <SubjectDropdownMenu
-          query={query}
-          isDisabled={query.length !== 0 ? false : true}
+          isDisabled={semester !== "" ? false : true}
           onSubjectChange={handleSubjectChange}
         />
         <ClassesDropdownMenu
           classes={[]}
           isDisabled={true}
-          isShowAll={query.length === 0 ? true : false}
+          isShowAll={semester === "" ? true : false}
           onClassChange={handleClassChange}
         />
         <button className="h-full rounded-[30px] bg-[#BFD9EF] px-[15px] text-[#3272CA]">

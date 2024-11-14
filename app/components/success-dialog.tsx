@@ -1,14 +1,22 @@
-import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import {
+  Button,
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
 import Image from "next/image";
 
 interface SuccessDialogProps {
   dialogOpen: boolean;
   onClose: () => void;
+  title: string;
 }
 
 export default function SuccessDialog({
   dialogOpen,
   onClose,
+  title,
 }: SuccessDialogProps) {
   return (
     <Dialog
@@ -17,6 +25,7 @@ export default function SuccessDialog({
       as="div"
       className={`relative z-10 focus:outline-none`}
     >
+      <DialogBackdrop className="fixed inset-0 bg-black/30" />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <DialogPanel
@@ -35,7 +44,7 @@ export default function SuccessDialog({
               as="h3"
               className="mt-3 w-full self-center text-center text-xl font-extrabold text-[#1D1D1D]"
             >
-              Kelas Ditambahkan
+              {title}
             </DialogTitle>
             <div className="mt-4">
               <Button

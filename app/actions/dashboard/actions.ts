@@ -1,27 +1,24 @@
 "use server";
 
-import { getToken } from "@/app/lib/sessions";
-import { cookies } from "next/headers";
+import { getAccessToken, getToken } from "@/app/lib/sessions";
 
-export async function getTotalMatkul(): Promise<number | undefined> {
+export async function getTotalMatkul() {
   try {
-    const token = await getToken();
-    const response = await fetch("https://silab-dev.vercel.app/subject/", {
+    const token = await getAccessToken();
+    const response = await fetch(`${process.env.BASE_URL}/subject/`, {
       cache: "no-store",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     const responseData = await response.json();
-    return responseData["data"].length;
+    return responseData;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function getTotalRegisteredStudents(): Promise<
-  number | undefined
-> {
+export async function getTotalRegisteredStudents() {
   try {
     const token = await getToken();
     const response = await fetch(
@@ -34,13 +31,13 @@ export async function getTotalRegisteredStudents(): Promise<
       },
     );
     const responseData = await response.json();
-    return responseData["data"].length;
+    return responseData;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function getPaidStudents(): Promise<number | undefined> {
+export async function getUnpaidStudents() {
   try {
     const token = await getToken();
     const response = await fetch(
@@ -53,13 +50,13 @@ export async function getPaidStudents(): Promise<number | undefined> {
       },
     );
     const responseData = await response.json();
-    return responseData["data"].length;
+    return responseData;
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function getAllStudents(): Promise<number | undefined> {
+export async function getAllStudents() {
   try {
     const token = await getToken();
     const response = await fetch(
@@ -72,7 +69,7 @@ export async function getAllStudents(): Promise<number | undefined> {
       },
     );
     const responseData = await response.json();
-    return responseData["data"].length;
+    return responseData;
   } catch (error) {
     console.log(error);
   }

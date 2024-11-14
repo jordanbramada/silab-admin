@@ -1,33 +1,41 @@
 "use server";
 
-import { query } from "@/app/dashboard/praktikum/page";
-import { getToken } from "@/app/lib/sessions";
+import { getAccessToken } from "@/app/lib/sessions";
 
-export async function fetchSubjectData(query: query[] | []) {
+export async function fetchSubjectData() {
   try {
-    const token = await getToken();
-    let response;
+    const token = await getAccessToken();
 
-    if (query.length !== 0) {
-      response = await fetch(
-        `https://silab-dev.vercel.app/subject/semesters?${query[0].query}=${query[0].value}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: "no-store",
-        },
-      );
-    } else {
-      response = await fetch("https://silab-dev.vercel.app/subject/semesters", {
+    const response = await fetch(`${process.env.BASE_URL}/subjects`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const responseData = await response.json();
+
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function fetchSubjectById(subjectId: string) {
+  try {
+    const token = await getAccessToken();
+
+    const response = await fetch(
+      `${process.env.BASE_URL}/subjects/${subjectId}`,
+      {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         cache: "no-store",
-      });
-    }
+      },
+    );
 
     const responseData = await response.json();
 

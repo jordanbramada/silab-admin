@@ -31,7 +31,7 @@ export default function AnnouncementTypeDropdown({
       <Menu>
         <MenuButton
           value={value}
-          className={`flex h-full w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px] font-semibold text-[#1D1D1D]`}
+          className={`flex h-[64px] w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px] font-semibold text-[#1D1D1D]`}
         >
           {selected === undefined ? "Pengumuman" : selected}
           <div className="relative h-[24px] w-[24px]">
@@ -40,7 +40,7 @@ export default function AnnouncementTypeDropdown({
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className={`w-[1050px] space-y-3 rounded-lg bg-[#f5f5f5]`}
+          className={`w-[var(--button-width)] space-y-3 rounded-lg bg-[#f5f5f5]`}
         >
           {announcementTypeList.map((announcement) => (
             <MenuItem key={announcement.value}>
