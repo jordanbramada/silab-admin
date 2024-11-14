@@ -2,8 +2,14 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { UserDetails } from "./types/user-details";
 
-export default function Appbar() {
+interface AppbarProps {
+  role: string;
+  data: UserDetails;
+}
+
+export default function Appbar({ role, data }: AppbarProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
   const breadcrumbPath = isDashboard
@@ -47,7 +53,10 @@ export default function Appbar() {
         <p className="text-[16px] font-semibold text-[#5E6278] text-opacity-50">
           You logged in as a
         </p>
-        <p className="text-[24px] font-bold text-[#3272CA]">Laboran</p>
+        <p className="text-[24px] font-bold text-[#3272CA]">
+          {data && data.fullname.split(" ").slice(0, 2).join(" ")} -{" "}
+          {role && role === "student" ? "Assisstant" : "Laboran"}
+        </p>
       </div>
     </div>
   );
