@@ -4,6 +4,7 @@ import {
   getStudentPaymentStatus,
   updateStudentPaymentStatus,
 } from "@/app/actions/dashboard/master-data/pembayaran/actions";
+import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
 import { StudentPaymentStatus } from "@/app/types/student-payment-status";
 import {
@@ -30,6 +31,8 @@ export default function Pembayaran() {
     useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,8 +67,12 @@ export default function Pembayaran() {
       );
 
       if (response["status"] === "success") {
+        setError(false);
         setMessage(response["message"]);
         setSuccessDialogOpen(true);
+      } else {
+        setError(true);
+        setMessage(response["message"]);
       }
     } catch (error) {
       console.log(error);
@@ -284,11 +291,20 @@ export default function Pembayaran() {
           </DialogPanel>
         </div>
       </Dialog>
-      <SuccessDialog
-        dialogOpen={successDialogOpen}
-        onClose={() => setSuccessDialogOpen(false)}
-        title={message}
-      />
+      {!error && (
+        <SuccessDialog
+          dialogOpen={successDialogOpen}
+          onClose={() => setSuccessDialogOpen(false)}
+          title={message}
+        />
+      )}
+      {error && (
+        <ErrorDialog
+          dialogOpen={errorDialogOpen}
+          onClose={() => setErrorDialogOpen(false)}
+          title={message}
+        />
+      )}
     </div>
   );
 }
