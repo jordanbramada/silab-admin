@@ -1,18 +1,18 @@
 "use client";
 
-import SubjectDropdownMenu from "@/app/components/subject-dropdown-menu";
+import SubjectDropdownMenu from "@/app/components/praktikum/subject-dropdown-menu";
 import { Subject } from "@/app/types/subject";
 import { useState } from "react";
 import { Class } from "@/app/types/add-class";
-import ClassNameField from "@/app/components/class-name-field";
-import ClassQuotaField from "@/app/components/class-quota-field";
-import ClassDayDropdown from "@/app/components/class-day-dropdown";
+import ClassNameField from "@/app/components/praktikum/class-name-field";
+import ClassQuotaField from "@/app/components/praktikum/class-quota-field";
+import ClassDayDropdown from "@/app/components/praktikum/class-day-dropdown";
 import {
   addClasses,
   getSubjectClasses,
 } from "@/app/actions/dashboard/praktikum/tambah-praktikum/actions";
 import SuccessDialog from "@/app/components/success-dialog";
-import ClassSessionListbox from "@/app/components/class-sessions-listbox";
+import ClassSessionListbox from "@/app/components/praktikum/class-sessions-listbox";
 import { SubjectBySemester } from "@/app/types/subject-by-semester";
 import ErrorDialog from "@/app/components/error-dialog";
 import ClassesPreview from "./components/classes-preview";
@@ -97,7 +97,7 @@ export default function TambahPraktikum() {
       if (response["status"] === "success") {
         const subjectClasses = response["data"] as SubjectClass[];
         const filteredSubjectClasses = subjectClasses.filter(
-          (value) => value.subject_name === subject?.subject_name,
+          (value) => value.subject_name === subject?.subject_name
         );
         setSubjectClasses(filteredSubjectClasses);
       }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import SemesterDropdownMenu from "./semester-dropdown-menu";
 import { query } from "../dashboard/praktikum/page";
 import ClassesDropdownMenu from "./classes-dropdown-menu";
-import SubjectDropdownMenu from "./subject-dropdown-menu";
+import SubjectDropdownMenu from "./praktikum/subject-dropdown-menu";
 import { Subject } from "../types/subject";
 
 type ButtonGroupProps = {
