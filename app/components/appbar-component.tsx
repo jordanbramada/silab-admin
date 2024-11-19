@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { UserDetails } from "./types/user-details";
+import { UserDetails } from "../types/user-details";
 
-interface AppbarProps {
+interface AppbarComponentProps {
   role: string;
   data: UserDetails;
 }
 
-export default function Appbar({ role, data }: AppbarProps) {
+export default function AppbarComponent({ role, data }: AppbarComponentProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
   const breadcrumbPath = isDashboard
@@ -18,18 +18,8 @@ export default function Appbar({ role, data }: AppbarProps) {
         .split("/")
         .filter(Boolean)
     : [];
-
   return (
-    <div className="flex w-full flex-row justify-between px-8 pt-2">
-      <div className="relative h-[60px] w-[60px]">
-        <Image
-          alt="logo"
-          src={"/logo.svg"}
-          fill
-          style={{ objectFit: "contain" }}
-          priority
-        />
-      </div>
+    <>
       <div
         className={`flex-row align-middle ${isDashboard ? "flex" : "hidden"}`}
       >
@@ -54,10 +44,9 @@ export default function Appbar({ role, data }: AppbarProps) {
           You logged in as a
         </p>
         <p className="text-[24px] font-bold text-[#3272CA]">
-          {data && data.fullname.split(" ").slice(0, 2).join(" ")} -{" "}
-          {role && role === "student" ? "Assisstant" : "Laboran"}
+          {data ? data.fullname.split(" ").slice(0, 2).join(" ") : ""} - {role === "student" ? "Assistant" : "Laborant"}
         </p>
       </div>
-    </div>
+    </>
   );
 }
