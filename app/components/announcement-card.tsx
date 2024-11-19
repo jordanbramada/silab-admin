@@ -4,6 +4,8 @@ import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import AnnouncementSettingsDropdownItem from "./announcement-settings-dropdown-item";
 import Image from "next/image";
 import { Pengumuman } from "../types/pengumuman";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 interface AnnouncementCardProps {
   announcement: Pengumuman;
 }
@@ -39,20 +41,21 @@ export default function AnnouncementCard({
           anchor="bottom end"
           className={`flex flex-col space-y-4 rounded-2xl bg-white p-4 shadow-[#1D1D1D]/10 drop-shadow-md`}
         >
-          <AnnouncementSettingsDropdownItem
-            hoverIcon="/details-hovered.png"
-            icon="/details.png"
-            title="Lihat Detail"
-            id={announcement.id}
-            onMenuClick={(value) => console.log(value)}
-          />
+          <Link href={`${announcement.id}`}>
+            <AnnouncementSettingsDropdownItem
+              hoverIcon="/details-hovered.png"
+              icon="/details.png"
+              title="Lihat Detail"
+              id={announcement.id}
+            />
+          </Link>
+
           <div className="h-[1px] w-full bg-[#1D1D1D]/10" />
           <AnnouncementSettingsDropdownItem
             hoverIcon="/edit-hovered.png"
             icon="/edit.png"
             title="Edit"
             id={announcement.id}
-            onMenuClick={(value) => console.log(value)}
           />
           <div className="h-[1px] w-full bg-[#1D1D1D]/10" />
           <AnnouncementSettingsDropdownItem
@@ -60,7 +63,6 @@ export default function AnnouncementCard({
             icon="/delete.png"
             title="Hapus"
             id={announcement.id}
-            onMenuClick={(value) => console.log(value)}
           />
         </MenuItems>
       </Menu>
