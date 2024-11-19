@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getRole } from "../lib/sessions";
+import { getRole } from "../../lib/sessions";
 
 export default async function AddPracticumBanner() {
   const role = await getRole();

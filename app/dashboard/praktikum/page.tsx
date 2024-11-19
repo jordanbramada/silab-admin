@@ -1,4 +1,4 @@
-import AddPracticumBanner from "@/app/components/add-practicum-banner";
+import AddPracticumBanner from "@/app/components/praktikum/add-practicum-banner";
 import ClassCard from "@/app/components/class-card";
 import SubjectsList from "@/app/components/subjects-list";
 import { getAccessToken, getRole } from "@/app/lib/sessions";
