@@ -1,5 +1,5 @@
 import AddCollaboratorsButton from "@/app/components/praktikum/add-collaborators-button";
-import ClassMeetingsContent from "@/app/components/class-meetings-content";
+import ClassMeetingsContent from "@/app/components/praktikum/class-meetings-content";
 import { getAccessToken } from "@/app/lib/sessions";
 import { Class } from "@/app/types/class-details-class";
 import Image from "next/image";
