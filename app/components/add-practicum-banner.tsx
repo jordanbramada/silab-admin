@@ -31,5 +31,24 @@ export default async function AddPracticumBanner() {
         </div>
       </div>
     );
+  } else {
+    return (
+      <div className="flex h-[215px] w-full flex-row justify-between rounded-3xl bg-white p-5">
+        <div className="flex w-[593px] flex-col justify-between">
+          <p className="text-[30px] font-bold text-black">
+            Berikut adalah daftar kelas praktikum anda
+          </p>
+        </div>
+        <div className="relative h-[170px] w-[300px]">
+          <Image
+            src={"/praktikum.png"}
+            alt="illustration"
+            fill
+            style={{ objectFit: "contain" }}
+            className="bg-re self-end"
+          />
+        </div>
+      </div>
+    );
   }
 }
