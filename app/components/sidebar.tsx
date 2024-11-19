@@ -20,11 +20,6 @@ const sideBarItems: SideBarProps[] = [
   },
   {
     imageSrc: "/presensi.png",
-    route: "/dashboard/presensi-praktikan",
-    title: "Presensi Praktikan",
-  },
-  {
-    imageSrc: "/presensi.png",
     route: "/dashboard/presensi-asisten",
     title: "Presensi Asisten",
   },

@@ -2,6 +2,7 @@
 
 import { addNewAnnouncement } from "@/app/actions/dashboard/pengumuman/actions";
 import AnnouncementTypeDropdown from "@/app/components/announcement-type-dropdown";
+import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Announcement, AnnouncementTypeEnum } from "@/app/types/announcement";
 import { useState } from "react";
@@ -9,6 +10,8 @@ import { useState } from "react";
 export default function Pengumuman() {
   const [loading, setLoading] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
   const open = () => {
     setDialogOpen(true);
@@ -41,7 +44,13 @@ export default function Pengumuman() {
       const response = await addNewAnnouncement(announcement);
 
       if (response["status"] === "success") {
+        setError(false);
+        setMessage(response["message"]);
         resetAnnouncement();
+        open();
+      } else {
+        setError(true);
+        setMessage(response["message"]);
         open();
       }
     } catch (error) {
@@ -123,11 +132,16 @@ export default function Pengumuman() {
           </button>
         </div>
       </div>
-      <SuccessDialog
-        dialogOpen={dialogOpen}
-        onClose={close}
-        title="Pengumuman Ditambahkan"
-      />
+      {!error && (
+        <SuccessDialog
+          dialogOpen={dialogOpen}
+          onClose={close}
+          title={message}
+        />
+      )}
+      {error && (
+        <ErrorDialog dialogOpen={dialogOpen} onClose={close} title={message} />
+      )}
     </div>
   );
 }
