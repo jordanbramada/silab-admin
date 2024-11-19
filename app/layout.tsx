@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={manrope.className}>
-        <Appbar role={role} data={data} />
+        {role && <Appbar role={role} data={data} />}
         {children}
       </body>
     </html>
