@@ -20,7 +20,7 @@ export default async function ClassDetails({
         Authorization: `Bearer ${accessToken}`,
       },
       cache: "no-cache",
-    },
+    }
   );
   const responseData = await response.json();
   const data: Class = responseData["data"];
