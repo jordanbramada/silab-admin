@@ -1,7 +1,7 @@
 "use client";
 
 import { addNewAnnouncement } from "@/app/actions/dashboard/pengumuman/actions";
-import AnnouncementTypeDropdown from "@/app/components/announcement-type-dropdown";
+import AnnouncementTypeDropdown from "@/app/components/pengumuman/announcement-type-dropdown";
 import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Announcement, AnnouncementTypeEnum } from "@/app/types/announcement";

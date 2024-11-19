@@ -3,7 +3,7 @@
 import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import AnnouncementSettingsDropdownItem from "./announcement-settings-dropdown-item";
 import Image from "next/image";
-import { Pengumuman } from "../types/pengumuman";
+import { Pengumuman } from "../../types/pengumuman";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 interface AnnouncementCardProps {
