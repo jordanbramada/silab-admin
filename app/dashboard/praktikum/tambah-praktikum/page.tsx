@@ -58,6 +58,8 @@ export default function TambahPraktikum() {
           subject_class: "",
           subject_id: "",
         });
+
+        await handleSubjectClass(selectedSubject);
       } else {
         setError(true);
         setMessage(response["message"]);
