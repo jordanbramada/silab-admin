@@ -17,7 +17,7 @@ import {
   Switch,
 } from "@headlessui/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Pembayaran() {
   const [data, setData] = useState<StudentPaymentStatus[]>([]);
@@ -34,26 +34,30 @@ export default function Pembayaran() {
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getStudentPaymentStatus();
-        const data = response.data as StudentPaymentStatus[];
-        setData(data);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await getStudentPaymentStatus();
+      const fetchedData = response.data as StudentPaymentStatus[];
+      setData(fetchedData);
 
-        if (query) {
-          setFilteredData(data.filter((student) => student.status === query));
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+      if (query) {
+        setFilteredData(
+          fetchedData.filter((student) => student.status === query),
+        );
+      } else {
+        setFilteredData(fetchedData);
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }, [query]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const updatePaymentStatus = async (
     status: string,
@@ -70,6 +74,8 @@ export default function Pembayaran() {
         setError(false);
         setMessage(response["message"]);
         setSuccessDialogOpen(true);
+
+        await fetchData();
       } else {
         setError(true);
         setMessage(response["message"]);
