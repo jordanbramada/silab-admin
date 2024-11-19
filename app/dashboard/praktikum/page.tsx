@@ -1,6 +1,6 @@
 import AddPracticumBanner from "@/app/components/praktikum/add-practicum-banner";
-import ClassCard from "@/app/components/class-card";
-import SubjectsList from "@/app/components/subjects-list";
+import ClassCard from "@/app/components/praktikum/class-card";
+import SubjectsList from "@/app/components/praktikum/subjects-list";
 import { getAccessToken, getRole } from "@/app/lib/sessions";
 
 export default async function Praktikum() {
