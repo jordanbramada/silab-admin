@@ -1,5 +1,5 @@
 import { getAccessToken } from "../lib/sessions";
-import ClassCard from "./class-card";
+import ClassCard from "./praktikum/class-card";
 
 interface SubjectClassesCardProps {
   subject_name: string;
@@ -19,7 +19,7 @@ export default async function SubjectClasses({
   const responseData = await response.json();
   const subjectClasses = responseData["data"] as SubjectClass[];
   const filteredSubjectClasses = subjectClasses.filter(
-    (value) => value.subject_name === subject_name,
+    (value) => value.subject_name === subject_name
   );
 
   return (

@@ -1,12 +1,12 @@
-import { SubjectBySemester } from "../types/subject-by-semester";
+import { SubjectBySemester } from "../../types/subject-by-semester";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import SubjectDisclosureDetails from "./subject-disclosure-details";
-import SubjectClassesCard from "./subject-classes";
-import { getAccessToken } from "../lib/sessions";
+import SubjectDisclosureDetails from "../subject-disclosure-details";
+import SubjectClassesCard from "../subject-classes";
+import { getAccessToken } from "../../lib/sessions";
 
 export default async function SubjectsList() {
   const accessToken = await getAccessToken();
