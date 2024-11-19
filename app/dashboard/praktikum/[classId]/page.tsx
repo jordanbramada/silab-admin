@@ -1,4 +1,4 @@
-import AddCollaboratorsButton from "@/app/components/add-collaborators-button";
+import AddCollaboratorsButton from "@/app/components/praktikum/add-collaborators-button";
 import ClassMeetingsContent from "@/app/components/class-meetings-content";
 import { getAccessToken } from "@/app/lib/sessions";
 import { Class } from "@/app/types/class-details-class";
