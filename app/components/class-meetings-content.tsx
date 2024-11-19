@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddMeetingButton from "./add-meeting-button";
+import AddMeetingButton from "./praktikum/add-meeting-button";
 import MeetingsDropDown from "./meetings-dropdown";
 import OpenAttendancesButton from "./open-attendance-button";
 import ShowQrCodeButton from "./show-qr-code-button";
@@ -17,7 +17,7 @@ export default function ClassMeetingsContent({
 }: ClassMeetingsContentProps) {
   const [selectedMeeting, setSelectedMeeting] = useState<string>("");
   const [meetingData, setMeetingData] = useState<Meeting[] | undefined>(
-    undefined,
+    undefined
   );
 
   return (

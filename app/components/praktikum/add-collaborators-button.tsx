@@ -2,15 +2,15 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { postCollaborators } from "../actions/dashboard/praktikum/[classId]/actions";
+import { postCollaborators } from "../../actions/dashboard/praktikum/[classId]/actions";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import ClassAssistantsComboBox from "./class-assistants";
-import SuccessDialog from "./success-dialog";
+import ClassAssistantsComboBox from "../class-assistants";
+import SuccessDialog from "../success-dialog";
 
 interface AddCollaboratorsButtonProps {
   classId?: string;
@@ -26,12 +26,12 @@ export default function AddCollaboratorsButton({
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
   const [selectedCollaborators, setSelectedCollaborators] = useState<User[]>(
-    [],
+    []
   );
 
   const addCollaborators = async (
     collaborators: string[],
-    classId?: string,
+    classId?: string
   ) => {
     setLoading(true);
     try {
@@ -51,7 +51,7 @@ export default function AddCollaboratorsButton({
 
   const handleCollaboratorsChange = (value: User[]) => {
     const validCollaborators = value.filter(
-      (collaborator): collaborator is User => collaborator != null,
+      (collaborator): collaborator is User => collaborator != null
     );
 
     setSelectedCollaborators(validCollaborators);
@@ -90,7 +90,7 @@ export default function AddCollaboratorsButton({
                 disabled={selectedCollaborators.length === 0 ? true : false}
                 onClick={() => {
                   const collaboratorsId = selectedCollaborators.map(
-                    (collaborator) => collaborator.id,
+                    (collaborator) => collaborator.id
                   );
                   addCollaborators(collaboratorsId, classId);
                 }}
