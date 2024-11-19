@@ -15,6 +15,7 @@ import SuccessDialog from "@/app/components/success-dialog";
 import ClassSessionListbox from "@/app/components/class-sessions-listbox";
 import { SubjectBySemester } from "@/app/types/subject-by-semester";
 import ErrorDialog from "@/app/components/error-dialog";
+import ClassesPreview from "./components/classes-preview";
 
 export default function TambahPraktikum() {
   const [selectedSubject, setSelectedSubject] = useState<SubjectBySemester>();
@@ -118,36 +119,7 @@ export default function TambahPraktikum() {
           />
         </div>
       </div>
-
-      <div className="mt-10 flex w-full flex-row flex-wrap gap-4">
-        {subjectClasses.map((subjectClass) => (
-          <div
-            key={subjectClass.id}
-            className="flex h-[140px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
-          >
-            <div className="flex flex-row justify-between">
-              <p className="text-3xl font-bold text-[#FFBF01]">
-                {subjectClass.subject_class}
-              </p>
-              <div className="flex flex-row">
-                <p className="text-3xl font-bold text-[#FFBF01]">
-                  {subjectClass.registered_students}
-                </p>
-                <p className="text-3xl font-bold text-[#FFBF01]">/</p>
-                <p className="text-3xl font-bold text-[#FFBF01]">
-                  {subjectClass.quota}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col text-white">
-              <p className="text-lg">{subjectClass.subject_name}</p>
-              <p className="text-sm">
-                {subjectClass.day}, Sesi ke - {subjectClass.session}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ClassesPreview subjectClasses={subjectClasses} />
       <div
         className={`mt-10 w-full flex-col space-y-6 rounded-[20px] bg-[#FFFFFF] p-5 ${selectedSubject !== undefined ? "flex" : "hidden"}`}
       >
@@ -182,7 +154,6 @@ export default function TambahPraktikum() {
             }}
           />
         </div>
-
         <div className="mt-14 flex w-full flex-row justify-end space-x-4">
           <button
             onClick={() => {
