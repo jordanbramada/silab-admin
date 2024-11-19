@@ -1,19 +1,12 @@
 "use client";
 
-import SemesterDropdownMenu from "@/app/components/semester-dropdown-menu";
 import SubjectDropdownMenu from "@/app/components/subject-dropdown-menu";
 import { Subject } from "@/app/types/subject";
 import { useState } from "react";
-import { query } from "../page";
-import Image from "next/image";
-import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import TimeField from "@/app/components/time-field";
 import { Class } from "@/app/types/add-class";
 import ClassNameField from "@/app/components/class-name-field";
 import ClassQuotaField from "@/app/components/class-quota-field";
 import ClassDayDropdown from "@/app/components/class-day-dropdown";
-import ClassRoomDropdown from "@/app/components/class-room-dropdown";
-import ClassAssistantsComboBox from "@/app/components/class-assistants";
 import {
   addClasses,
   getSubjectClasses,
@@ -21,10 +14,10 @@ import {
 import SuccessDialog from "@/app/components/success-dialog";
 import ClassSessionListbox from "@/app/components/class-sessions-listbox";
 import { SubjectBySemester } from "@/app/types/subject-by-semester";
+import ErrorDialog from "@/app/components/error-dialog";
 
 export default function TambahPraktikum() {
   const [selectedSubject, setSelectedSubject] = useState<SubjectBySemester>();
-  const [query, setQuery] = useState<query[]>([]);
   const [newClass, setNewClass] = useState<Class>({
     day: "",
     quota: 0,
@@ -37,6 +30,8 @@ export default function TambahPraktikum() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedSession, setSelectedSession] = useState<Sessions | null>(null);
   const [subjectClasses, setSubjectClasses] = useState<SubjectClass[]>([]);
+  const [error, setError] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const open = () => {
     setDialogOpen(true);
@@ -52,6 +47,8 @@ export default function TambahPraktikum() {
       const response = await addClasses(newClass);
 
       if (response["status"] === "success") {
+        setError(false);
+        setMessage(response["message"]);
         open();
         setNewClass({
           day: "",
@@ -60,6 +57,10 @@ export default function TambahPraktikum() {
           subject_class: "",
           subject_id: "",
         });
+      } else {
+        setError(true);
+        setMessage(response["message"]);
+        open();
       }
     } catch (error) {
       console.log(error);
@@ -105,14 +106,6 @@ export default function TambahPraktikum() {
   return (
     <div className="flex h-full w-full flex-col overflow-x-auto overflow-y-auto overscroll-contain">
       <div className="flex h-[82px] w-full flex-row space-x-4">
-        {/* <div className="flex h-full flex-col space-y-3">
-          <p>Semester</p>
-          <SemesterDropdownMenu
-            onSemesterChange={handleSemesterChange}
-            isShowAll={undefined}
-            isDisabled={newClass.length > 0 ? true : false}
-          />
-        </div> */}
         <div className="flex h-full flex-col space-y-3">
           <p>Mata Kuliah</p>
           <SubjectDropdownMenu
@@ -219,11 +212,20 @@ export default function TambahPraktikum() {
               <span className="loading loading-dots loading-sm" />
             )}
           </button>
-          <SuccessDialog
-            dialogOpen={dialogOpen}
-            onClose={close}
-            title="Kelas Ditambahkan"
-          />
+          {!error && (
+            <SuccessDialog
+              dialogOpen={dialogOpen}
+              onClose={close}
+              title={message}
+            />
+          )}
+          {error && (
+            <ErrorDialog
+              dialogOpen={dialogOpen}
+              onClose={close}
+              title={message}
+            />
+          )}
         </div>
       </div>
     </div>
