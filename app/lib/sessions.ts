@@ -45,8 +45,6 @@ export async function getRole() {
     role = JSON.parse(atob(arrayToken[1]))["role"];
   }
 
-  console.log(role);
-
   return role;
 }
 
