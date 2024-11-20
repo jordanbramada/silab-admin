@@ -1,6 +1,6 @@
 import AddCollaboratorsButton from "@/app/components/praktikum/add-collaborators-button";
 import ClassMeetingsContent from "@/app/components/praktikum/class-meetings-content";
-import { getAccessToken } from "@/app/lib/sessions";
+import { getAccessToken, getRole } from "@/app/lib/sessions";
 import { Class } from "@/app/types/class-details-class";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -11,6 +11,7 @@ export default async function ClassDetails({
 }: {
   params: { classId: string };
 }) {
+  const role = await getRole();
   const accessToken = await getAccessToken();
   const response = await fetch(
     `${process.env.BASE_URL}/subject/classes/${params.classId}`,
@@ -58,7 +59,9 @@ export default async function ClassDetails({
               <p className="text-[16px] font-semibold text-[#5E6278]">
                 Asisten Praktikum
               </p>
-              <AddCollaboratorsButton classId={data.id} />
+              {role === "laborant" && (
+                <AddCollaboratorsButton classId={data.id} />
+              )}
             </div>
             <div className="flex flex-col space-y-2">
               {data.assistant.length !== 0 &&

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Meeting } from "../types/meeting";
+import { Meeting } from "../../types/meeting";
 import {
   Dialog,
   DialogBackdrop,
@@ -28,7 +28,7 @@ export default function ShowQrCodeButton({
       <button
         onClick={() => {
           setQrToken(
-            meetings?.find((meeting) => meeting.id === selectedMeeting)?.token,
+            meetings?.find((meeting) => meeting.id === selectedMeeting)?.token
           );
           setIsQrDialogOpen(true);
         }}

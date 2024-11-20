@@ -4,7 +4,7 @@ import { useState } from "react";
 import AddMeetingButton from "./add-meeting-button";
 import MeetingsDropDown from "../meetings-dropdown";
 import OpenAttendancesButton from "../open-attendance-button";
-import ShowQrCodeButton from "../show-qr-code-button";
+import ShowQrCodeButton from "./show-qr-code-button";
 import StudentAttendanceEditButton from "../student-attendance-edit-button";
 import { Meeting } from "../../types/meeting";
 
