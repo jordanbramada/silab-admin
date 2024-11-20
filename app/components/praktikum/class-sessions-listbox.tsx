@@ -5,7 +5,7 @@ import {
   ListboxOptions,
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import { getClassSessions } from "../actions/dashboard/praktikum/tambah-praktikum/actions";
+import { getClassSessions } from "../../actions/dashboard/praktikum/tambah-praktikum/actions";
 import Image from "next/image";
 
 interface ClassSessionListboxProps {

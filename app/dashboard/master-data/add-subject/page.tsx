@@ -2,7 +2,7 @@
 
 import { addSubjectFormSubmit } from "@/app/actions/dashboard/master-data/add-subject/action";
 import ErrorDialog from "@/app/components/error-dialog";
-import LecturerListBox from "@/app/components/lecturer-listbox";
+import LecturerListBox from "@/app/components/master-data/lecturer-listbox";
 import SemestersListBox from "@/app/components/semesters-listbox";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Lecturer } from "@/app/types/lecturer";
@@ -25,7 +25,7 @@ export default function AddSubject() {
   };
 
   const handleAddSubjectFormSubmit = async (
-    event: FormEvent<HTMLFormElement>,
+    event: FormEvent<HTMLFormElement>
   ) => {
     setLoading(true);
     event.preventDefault();
@@ -34,7 +34,7 @@ export default function AddSubject() {
       const response = await addSubjectFormSubmit(
         new FormData(event.currentTarget),
         semester,
-        lecturer,
+        lecturer
       );
 
       setMessage(response["message"]);

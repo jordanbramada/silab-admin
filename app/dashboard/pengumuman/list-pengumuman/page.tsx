@@ -1,6 +1,6 @@
 import { getAnnouncementList } from "@/app/actions/dashboard/pengumuman/actions";
-import AnnouncementCard from "@/app/components/announcement-card";
-import AnnouncementSettingsDropdownItem from "@/app/components/announcement-settings-dropdown-item";
+import AnnouncementCard from "@/app/components/pengumuman/announcement-card";
+import AnnouncementSettingsDropdownItem from "@/app/components/pengumuman/announcement-settings-dropdown-item";
 import { getAccessToken } from "@/app/lib/sessions";
 import { Pengumuman } from "@/app/types/pengumuman";
 import { PengumumanQuery } from "@/app/types/pengumuman-query";

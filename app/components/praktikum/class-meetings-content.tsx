@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import AddMeetingButton from "./add-meeting-button";
-import MeetingsDropDown from "./meetings-dropdown";
-import OpenAttendancesButton from "./open-attendance-button";
-import ShowQrCodeButton from "./show-qr-code-button";
-import StudentAttendanceEditButton from "./student-attendance-edit-button";
-import { Meeting } from "../types/meeting";
+import MeetingsDropDown from "../meetings-dropdown";
+import OpenAttendancesButton from "../open-attendance-button";
+import ShowQrCodeButton from "../show-qr-code-button";
+import StudentAttendanceEditButton from "../student-attendance-edit-button";
+import { Meeting } from "../../types/meeting";
 
 interface ClassMeetingsContentProps {
   classId?: string;
@@ -17,7 +17,7 @@ export default function ClassMeetingsContent({
 }: ClassMeetingsContentProps) {
   const [selectedMeeting, setSelectedMeeting] = useState<string>("");
   const [meetingData, setMeetingData] = useState<Meeting[] | undefined>(
-    undefined,
+    undefined
   );
 
   return (

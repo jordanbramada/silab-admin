@@ -7,8 +7,8 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { useState } from "react";
-import SuccessDialog from "./success-dialog";
-import { postMeeting } from "../actions/dashboard/praktikum/[classId]/actions";
+import SuccessDialog from "../success-dialog";
+import { postMeeting } from "../../actions/dashboard/praktikum/[classId]/actions";
 
 interface AddMeetingButtonProps {
   classId?: string;
@@ -28,7 +28,7 @@ export default function AddMeetingButton({ classId }: AddMeetingButtonProps) {
 
   const addMeeting = async (
     meetingName: string,
-    classId: string | undefined,
+    classId: string | undefined
   ) => {
     setLoading(true);
     try {

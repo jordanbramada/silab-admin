@@ -1,4 +1,4 @@
-import { maxLengthCheck } from "../helpers/helpers";
+import { maxLengthCheck } from "../../helpers/helpers";
 
 interface ClassQuotaFieldProps {
   onClassQuotaChange: (value: string) => void;

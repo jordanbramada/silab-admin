@@ -6,8 +6,8 @@ import {
 } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetchSubjectData } from "../actions/dashboard/praktikum/actions";
-import { SubjectBySemester } from "../types/subject-by-semester";
+import { fetchSubjectData } from "../../actions/dashboard/praktikum/actions";
+import { SubjectBySemester } from "../../types/subject-by-semester";
 
 interface SubjectDropdownMenuProps {
   isDisabled: boolean;

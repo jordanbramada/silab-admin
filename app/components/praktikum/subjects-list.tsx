@@ -1,37 +1,25 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { fetchSubjectData } from "../actions/dashboard/praktikum/actions";
-import { SubjectBySemester } from "../types/subject-by-semester";
+import { SubjectBySemester } from "../../types/subject-by-semester";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import SubjectDisclosureDetails from "./subject-disclosure-details";
-import SubjectClassesCard from "./subject-classes";
+import SubjectDisclosureDetails from "../subject-disclosure-details";
+import SubjectClassesCard from "../subject-classes";
+import { getAccessToken } from "../../lib/sessions";
 
-export default function SubjectsList() {
-  const [subjectData, setSubjectData] = useState<SubjectBySemester[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+export default async function SubjectsList() {
+  const accessToken = await getAccessToken();
+  const response = await fetch(`${process.env.BASE_URL}/subjects`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    cache: "no-store",
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setSubjectData([]);
-      setLoading(true);
-      try {
-        const response = await fetchSubjectData();
-
-        setSubjectData(response["data"]);
-      } catch (error) {
-        console.error("Error fetching subject data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const responseData = await response.json();
+  const subjectData: SubjectBySemester[] = responseData["data"];
 
   return (
     <div className="flex h-full w-full flex-col items-start space-y-4">

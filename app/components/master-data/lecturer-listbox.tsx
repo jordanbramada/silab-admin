@@ -7,9 +7,9 @@ import {
   ListboxOptions,
 } from "@headlessui/react";
 import Image from "next/image";
-import { Lecturer } from "../types/lecturer";
+import { Lecturer } from "../../types/lecturer";
 import { useEffect, useState } from "react";
-import { getLecturers } from "../actions/dashboard/master-data/add-subject/action";
+import { getLecturers } from "../../actions/dashboard/master-data/add-subject/action";
 
 interface LecturerListBoxProps {
   onLecturerChange: (value: string) => void;
