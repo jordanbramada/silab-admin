@@ -5,6 +5,7 @@ import { Class } from "@/app/types/class-details-class";
 import Image from "next/image";
 import { Suspense } from "react";
 import Loading from "./loading";
+import ClassTitleHeader from "@/app/components/class-title-header";
 
 export default async function ClassDetails({
   params,
@@ -29,14 +30,7 @@ export default async function ClassDetails({
   return (
     <div className="flex h-full w-full flex-col space-y-10 overflow-auto overscroll-contain">
       <Suspense fallback={<Loading />}>
-        <div className="flex w-full flex-col">
-          <p className="text-[18px] font-semibold text-[#5E6278]">
-            Semester {data.semester}
-          </p>
-          <p className="text-[32px] font-bold text-black">
-            Praktikum {data.subject_class}
-          </p>
-        </div>
+        <ClassTitleHeader data={data} />
         <div className="flex h-[150px] w-full flex-row justify-between space-x-6 rounded-[20px] bg-white p-5">
           <div className="flex h-full flex-col space-y-4">
             <p className="text-[16px] font-semibold text-[#5E6278]">
