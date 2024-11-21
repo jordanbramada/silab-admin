@@ -1,5 +1,5 @@
 import ClassMeetingsContent from "@/app/components/praktikum/class-meetings-content";
-import { getAccessToken} from "@/app/lib/sessions";
+import { getAccessToken } from "@/app/lib/sessions";
 import { Class } from "@/app/types/class-details-class";
 import { Suspense } from "react";
 import Loading from "./loading";
@@ -9,7 +9,7 @@ import ClassDetailsBox from "@/app/components/praktikum/class-details-box";
 export default async function ClassDetails({
   params,
 }: {
-  params: { classId: string };
+  params: { classId?: string };
 }) {
   const accessToken = await getAccessToken();
   const response = await fetch(
@@ -20,7 +20,7 @@ export default async function ClassDetails({
         Authorization: `Bearer ${accessToken}`,
       },
       cache: "no-cache",
-    }
+    },
   );
   const responseData = await response.json();
   const data: Class = responseData["data"];
