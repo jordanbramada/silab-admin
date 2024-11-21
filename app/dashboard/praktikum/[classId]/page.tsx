@@ -5,7 +5,7 @@ import { Class } from "@/app/types/class-details-class";
 import Image from "next/image";
 import { Suspense } from "react";
 import Loading from "./loading";
-import ClassTitleHeader from "@/app/components/class-title-header";
+import ClassTitleHeader from "@/app/components/praktikum/class-title-header";
 
 export default async function ClassDetails({
   params,

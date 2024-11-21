@@ -1,4 +1,4 @@
-import { Class } from "../types/class-details-class";
+import { Class } from "../../types/class-details-class";
 
 export default function ClassTitleHeader({ data }: { data: Class }) {
   const { subject_class, semester } = data;
