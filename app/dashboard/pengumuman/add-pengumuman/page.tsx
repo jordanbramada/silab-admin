@@ -6,6 +6,7 @@ import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
 import { Announcement, AnnouncementTypeEnum } from "@/app/types/announcement";
 import { useState } from "react";
+import AddPengumumanTitle from "@/app/components/pengumuman/add-pengumuman/add-pengumuman-title";
 
 export default function Pengumuman() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,10 +69,7 @@ export default function Pengumuman() {
 
   return (
     <div className="flex h-full w-full flex-col space-y-10">
-      <p className="w-full text-[32px] font-semibold text-[#1D1D1D]">
-        Buat <span className="font-extrabold">pengumuman</span> yang akan
-        disebarkan ke mahasiswa
-      </p>
+      <AddPengumumanTitle />
 
       <div className="flex h-screen w-full flex-col space-y-10 overflow-auto overscroll-contain rounded-[20px] bg-white p-5">
         <p className="text-[22px] font-bold text-[#1D1D1D]">Buat Pengumuman</p>

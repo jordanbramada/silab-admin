@@ -75,3 +75,20 @@ export async function getAllStudents() {
     console.log(error);
   }
 }
+
+export async function getAllSubjectClasses(){
+  try {
+    const token = await getToken();
+    const response = await fetch(`${process.env.BASE_URL}/subject/classes`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.log(error);
+  }
+}
