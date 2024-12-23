@@ -18,11 +18,6 @@ const sideBarItems: SideBarProps[] = [
     route: "/dashboard/praktikum",
     title: "Praktikum",
   },
-  {
-    imageSrc: "/presensi.png",
-    route: "/dashboard/presensi-asisten",
-    title: "Presensi Asisten",
-  },
 ];
 
 export default async function SideBar() {
