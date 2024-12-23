@@ -21,7 +21,7 @@ export default function ClassMeetingsContent({
 }: ClassMeetingsContentProps) {
   const [selectedMeeting, setSelectedMeeting] = useState<string>("");
   const [meetingData, setMeetingData] = useState<Meeting[] | undefined>(
-    undefined,
+    undefined
   );
 
   const downloadPDF = async () => {
@@ -123,7 +123,19 @@ export default function ClassMeetingsContent({
             </div>
             <div className="flex flex-col items-end">
               <p>Tanggal Meeting</p>
-              <p>Total Mahasiswa Presensi</p>
+              <p>
+                Jumlah hadir{" "}
+                {
+                  meetingData
+                    ?.find((meeting) => meeting.id === selectedMeeting)
+                    ?.students?.filter((student) => student.is_attended)?.length
+                }
+                /
+                {
+                  meetingData?.find((meeting) => meeting.id === selectedMeeting)
+                    ?.students.length
+                }
+              </p>
             </div>
           </div>
           <div id="recap-attendances">
