@@ -36,9 +36,12 @@ export default async function SideBar() {
             />
           );
         })}
-        {role === "laborant" && <MasterDataSidebarDisclosure />}
-
-        <PengumumanSidebarDisclosure />
+        {role === "laborant" && (
+          <>
+            <MasterDataSidebarDisclosure />
+            <PengumumanSidebarDisclosure />
+          </>
+        )}
       </div>
       <SignOutButton />
     </div>
