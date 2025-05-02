@@ -1,4 +1,5 @@
-import { SubjectBySemester } from "../../types/subject-by-semester";
+"use client";
+
 import {
   Disclosure,
   DisclosureButton,
@@ -6,25 +7,20 @@ import {
 } from "@headlessui/react";
 import SubjectDisclosureDetails from "../subject-disclosure-details";
 import SubjectClassesCard from "../subject-classes";
-import { getAccessToken } from "../../lib/sessions";
+import useSubjectStore from "@/app/store/useSubjectStore";
+import { useEffect } from "react";
 
-export default async function SubjectsList() {
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${process.env.BASE_URL}/subjects`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
+const SubjectsList = () => {
+  const { subjectsData, getAllSubjects } = useSubjectStore();
 
-  const responseData = await response.json();
-  const subjectData: SubjectBySemester[] = responseData["data"];
+  useEffect(() => {
+    getAllSubjects();
+  }, [getAllSubjects]);
 
   return (
     <div className="flex h-full w-full flex-col items-start space-y-4">
-      {subjectData &&
-        subjectData.map((subject) => (
+      {subjectsData &&
+        subjectsData.map((subject) => (
           <Disclosure
             key={subject.id}
             as={`div`}
@@ -45,4 +41,6 @@ export default async function SubjectsList() {
         ))}
     </div>
   );
-}
+};
+
+export default SubjectsList;

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import { getUserData } from "./utils/cookie";
 import Appbar from "./appbar";
-import { UserDetails } from "./types/user-details";
-import { getAccessToken, getRole } from "./lib/sessions";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -18,21 +17,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const accessToken = await getAccessToken();
-  const res = await fetch(`${process.env.BASE_URL}/user-profiles`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  const responseData = await res.json();
-  const data: UserDetails = responseData["data"] as UserDetails;
-  const role = await getRole();
+  const userData = await getUserData();
 
   return (
     <html lang="en">
       <body className={manrope.className}>
-        {role && <Appbar role={role} data={data} />}
+        {userData && (
+          <Appbar
+            role={userData.role}
+            data={{
+              fullname: userData.fullname,
+              email: userData.email,
+              nim: userData.nim,
+            }}
+          />
+        )}
         {children}
       </body>
     </html>

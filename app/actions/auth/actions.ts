@@ -1,6 +1,6 @@
 "use server";
 
-import { setAccessToken, setRefreshToken } from "@/app/lib/sessions";
+import { setAccessToken, setRefreshToken } from "@/app/utils/cookie";
 import { redirect } from "next/navigation";
 
 export async function handleFormSubmitLogin(formData: FormData) {

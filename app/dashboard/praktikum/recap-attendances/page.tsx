@@ -1,4 +1,4 @@
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 import { Meeting } from "@/app/types/meeting";
 import { GetServerSideProps } from "next";
 import DownloadPDFClient from "./downloadpdf";
@@ -19,7 +19,7 @@ export default async function RecapAttendancesPage({
   const classId = (await searchParams).classId;
   const meetingId = (await searchParams).meetingId;
 
-  const accessToken = await getAccessToken();
+  const accessToken = await getToken();
   const response = await fetch(
     `${process.env.BASE_URL}/subject/classes/${classId}/meetings`,
     {

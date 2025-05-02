@@ -1,10 +1,10 @@
 "use server";
 
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 export async function fetchSubjectData() {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
 
     const response = await fetch(`${process.env.BASE_URL}/subjects`, {
       method: "GET",
@@ -24,7 +24,7 @@ export async function fetchSubjectData() {
 
 export async function fetchSubjectById(subjectId: string) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
 
     const response = await fetch(
       `${process.env.BASE_URL}/subjects/${subjectId}`,

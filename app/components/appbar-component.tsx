@@ -44,7 +44,8 @@ export default function AppbarComponent({ role, data }: AppbarComponentProps) {
           You logged in as a
         </p>
         <p className="text-[24px] font-bold text-[#3272CA]">
-          {data ? data.fullname.split(" ").slice(0, 2).join(" ") : ""} - {role === "student" ? "Assistant" : "Laborant"}
+          {data ? data.fullname.split(" ").slice(0, 2).join(" ") : ""} -{" "}
+          {role === "MAHASISWA" ? "ASISTEN" : "LABORAN"}
         </p>
       </div>
     </>

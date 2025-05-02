@@ -1,25 +1,22 @@
-import { getAccessToken } from "../lib/sessions";
+import { useEffect } from "react";
+import useClassStore from "../store/useClassStore";
 import ClassCard from "./praktikum/class-card";
 
-interface SubjectClassesCardProps {
+interface ISubjectClassesCardProps {
   subject_name: string;
 }
 
-export default async function SubjectClasses({
+const SubjectClasses: React.FC<ISubjectClassesCardProps> = ({
   subject_name,
-}: SubjectClassesCardProps) {
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${process.env.BASE_URL}/subject/classes`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
-  const responseData = await response.json();
-  const subjectClasses = responseData["data"] as SubjectClass[];
-  const filteredSubjectClasses = subjectClasses.filter(
-    (value) => value.subject_name === subject_name
+}) => {
+  const { getAllClass, classesData } = useClassStore();
+
+  useEffect(() => {
+    getAllClass();
+  }, [getAllClass]);
+
+  const filteredSubjectClasses = classesData.filter(
+    (value) => value.subject_name === subject_name,
   );
 
   return (
@@ -29,4 +26,6 @@ export default async function SubjectClasses({
       ))}
     </div>
   );
-}
+};
+
+export default SubjectClasses;

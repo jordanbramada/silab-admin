@@ -1,10 +1,10 @@
 "use server";
 
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 export async function getStudentPaymentStatus() {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getToken();
 
     const response = await fetch(`${process.env.BASE_URL}/activations/`, {
       method: "GET",
@@ -27,7 +27,7 @@ export async function updateStudentPaymentStatus(
   activationId: string | undefined,
 ) {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getToken();
 
     const response = await fetch(
       `${process.env.BASE_URL}/activations/${activationId}`,

@@ -1,23 +1,27 @@
+"use client";
+
+import {
+  IGetClassByIdResponseBody,
+  IGetClassResponseBody,
+} from "@/app/interfaces/class/class.interface";
 import Link from "next/link";
 
-interface ClassCardProps {
-  subjectClass: SubjectClass;
+interface IClassCardProps {
+  subjectClass: IGetClassResponseBody;
 }
 
-export default function ClassCard({ subjectClass }: ClassCardProps) {
+const ClassCard: React.FC<IClassCardProps> = ({ subjectClass }) => {
   return (
     <Link
       href={`praktikum/${subjectClass.id}`}
       key={subjectClass.id}
-      className="flex h-[150px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
+      className="flex h-[175px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
     >
       <div className="flex flex-row justify-between">
-        <p className="text-3xl font-bold text-[#FFBF01]">
-          {subjectClass.subject_class}
-        </p>
+        <p className="text-3xl font-bold text-[#FFBF01]">{subjectClass.name}</p>
         <div className="flex flex-row">
           <p className="text-3xl font-bold text-[#FFBF01]">
-            {subjectClass.registered_students}
+            {subjectClass.participants}
           </p>
           <p className="text-3xl font-bold text-[#FFBF01]">/</p>
           <p className="text-3xl font-bold text-[#FFBF01]">
@@ -28,9 +32,12 @@ export default function ClassCard({ subjectClass }: ClassCardProps) {
       <div className="flex flex-col text-white">
         <p className="text-lg">{subjectClass.subject_name}</p>
         <p className="text-sm">
-          {subjectClass.day}, Sesi ke - {subjectClass.session}
+          {subjectClass.day}, Sesi ke - {subjectClass.startAt} -{" "}
+          {subjectClass.endAt}
         </p>
       </div>
     </Link>
   );
-}
+};
+
+export default ClassCard;

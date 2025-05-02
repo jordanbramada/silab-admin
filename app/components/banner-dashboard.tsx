@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DashboardDataCards from "./dashboard-data-cards";
 
 export default function BannerDashboard() {
   return (

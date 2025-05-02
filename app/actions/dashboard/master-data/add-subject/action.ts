@@ -1,10 +1,10 @@
 "use server";
 
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 export async function getLecturers() {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getToken();
 
     const response = await fetch(`${process.env.BASE_URL}/lecturers`, {
       method: "GET",
@@ -27,7 +27,7 @@ export async function addSubjectFormSubmit(
   lecturer: string,
 ) {
   try {
-    const accessToken = await getAccessToken();
+    const accessToken = await getToken();
 
     const credit = formData.get("credit");
     const subjectCode = formData.get("subject_code");

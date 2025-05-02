@@ -1,28 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-const protectedRoutes = ["/dashboard", "/dashboard/:path"];
-const publicRoutes = ["/auth", "/"];
 
 export default async function middleware(req: NextRequest) {
   try {
-    const path = req.nextUrl.pathname;
-    const isProtectedRoute = protectedRoutes.some((route) =>
-      path.startsWith(route),
-    );
-    const isPublicRoute = publicRoutes.includes(path);
+    const { pathname } = req.nextUrl;
+    const token = req.cookies.get("accessToken")?.value;
 
-    const accessToken = cookies().get("accessToken")?.value;
+    const isProtectedRoute = pathname.startsWith("/dashboard");
+    const isAuthPage = pathname === "/auth";
 
-    if (isProtectedRoute && !accessToken) {
-      return NextResponse.redirect(new URL("/", req.nextUrl));
+    if (isProtectedRoute && !token) {
+      if (!isAuthPage) {
+        return NextResponse.redirect(new URL("/auth", req.url));
+      }
     }
 
-    if (
-      isPublicRoute &&
-      accessToken &&
-      !req.nextUrl.pathname.startsWith("/dashboard")
-    ) {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    if (isAuthPage && token) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   } catch (error) {
     console.log(error);

@@ -1,10 +1,10 @@
 "use server";
 
-import { getAccessToken, getToken } from "@/app/lib/sessions";
+import { getToken, getToken } from "@/app/utils/cookie";
 
 export async function getTotalMatkul() {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const response = await fetch(`${process.env.BASE_URL}/subjects`, {
       method: "GET",
       headers: {
@@ -76,7 +76,7 @@ export async function getAllStudents() {
   }
 }
 
-export async function getAllSubjectClasses(){
+export async function getAllSubjectClasses() {
   try {
     const token = await getToken();
     const response = await fetch(`${process.env.BASE_URL}/subject/classes`, {

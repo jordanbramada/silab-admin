@@ -5,7 +5,7 @@ interface DashboardDataContainerProps {
   subTitle: string;
 }
 
-export default async function DashboardDataContainer({
+export default function DashboardDataContainer({
   data,
   data2,
   title,

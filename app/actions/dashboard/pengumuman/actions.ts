@@ -1,11 +1,11 @@
 "use server";
 
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 import { Announcement } from "@/app/types/announcement";
 
 export async function addNewAnnouncement(announcement: Announcement) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const response = await fetch(`${process.env.BASE_URL}/announcements`, {
       method: "POST",
       headers: {
@@ -24,7 +24,7 @@ export async function addNewAnnouncement(announcement: Announcement) {
 
 export async function getAnnouncementList() {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const response = await fetch(`${process.env.BASE_URL}/announcements`, {
       method: "GET",
       headers: {

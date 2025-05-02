@@ -1,6 +1,6 @@
 "use server";
 
-import { getToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 export async function getAnnouncementDetails(id: string) {
   try {

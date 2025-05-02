@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  getStudentPaymentStatus,
-  updateStudentPaymentStatus,
-} from "@/app/actions/dashboard/master-data/pembayaran/actions";
 import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
-import { StudentPaymentStatus } from "@/app/types/student-payment-status";
+import { IGetActivationResponseBody } from "@/app/interfaces/activation/activation.interface";
+import useActivationStore from "@/app/store/useActivationStore";
 import {
   Dialog,
   DialogBackdrop,
@@ -17,83 +14,59 @@ import {
   Switch,
 } from "@headlessui/react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { debounce } from "lodash";
 
 export default function Pembayaran() {
-  const [data, setData] = useState<StudentPaymentStatus[]>([]);
-  const [filteredData, setFilteredData] = useState<StudentPaymentStatus[]>([]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [selectedStudent, setSelectedStudent] =
-    useState<StudentPaymentStatus>();
+    useState<IGetActivationResponseBody>();
   const [selectedStudentPaymentStatus, setSelectedStudentPaymentStatus] =
-    useState<string>("");
+    useState<boolean>();
   const [message, setMessage] = useState<string>("");
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
   const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getStudentPaymentStatus();
-      const fetchedData = response.data as StudentPaymentStatus[];
-      setData(fetchedData);
-
-      if (query) {
-        setFilteredData(
-          fetchedData.filter((student) => student.status === query),
-        );
-      } else {
-        setFilteredData(fetchedData);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [query]);
+  const {
+    activationData,
+    getAllActivations,
+    isLoading,
+    error,
+    status,
+    setStatusQuery,
+    setNameQuery,
+    reset,
+  } = useActivationStore();
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    getAllActivations();
+  }, [getAllActivations]);
 
-  const updatePaymentStatus = async (
-    status: string,
-    activationId: string | undefined,
-  ) => {
-    setLoading(true);
-    try {
-      const response: any = await updateStudentPaymentStatus(
-        status,
-        activationId,
-      );
+  useEffect(() => {
+    reset();
+  }, []);
 
-      if (response["status"] === "success") {
-        setError(false);
-        setMessage(response["message"]);
-        setSuccessDialogOpen(true);
+  const debouncedSetQuery = useMemo(() => {
+    return debounce((val: string) => {
+      setNameQuery(val);
+    }, 400);
+  }, [setNameQuery]);
 
-        await fetchData();
-      } else {
-        setError(true);
-        setMessage(response["message"]);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-      setIsDialogOpen(false);
-    }
-  };
+  useEffect(() => {
+    return () => {
+      debouncedSetQuery.cancel();
+    };
+  }, [debouncedSetQuery]);
 
   return (
     <div className="flex h-full w-full flex-col space-y-[38px] overflow-auto overscroll-contain">
       <div className="flex h-fit w-full flex-row space-x-9">
         <div className="flex h-[200px] w-[300px] flex-col justify-between rounded-3xl bg-[#3272CA] p-5">
           <h1 className="text-6xl font-bold text-[#FFBF01]">
-            {data.filter((student) => student.status === "Pending").length}
+            {
+              activationData.filter((student) => student.status === false)
+                .length
+            }
           </h1>
           <p className="text-base font-semibold text-white">
             Jumlah aktivasi mahasiswa yang{" "}
@@ -102,7 +75,7 @@ export default function Pembayaran() {
         </div>
         <div className="flex h-[200px] w-[300px] flex-col justify-between rounded-3xl bg-[#3272CA] p-5">
           <h1 className="text-6xl font-bold text-[#FFBF01]">
-            {data.filter((student) => student.status === "Paid").length}
+            {activationData.filter((student) => student.status === true).length}
           </h1>
           <p className="text-base font-semibold text-white">
             Jumlah aktivasi mahasiswa yang{" "}
@@ -125,27 +98,27 @@ export default function Pembayaran() {
               "h-full w-full rounded-2xl pl-10 data-[focus]:outline-[#3272CA]"
             }
             placeholder="Cari Mahasiswa"
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => setNameQuery(e.target.value)}
           />
         </Field>
       </div>
       <div className="flex h-fit w-full flex-col space-y-14 rounded-2xl bg-white p-7">
         <div className="flex w-full flex-row space-x-3">
           <button
-            onClick={() => setQuery(undefined)}
-            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${query === undefined ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
+            onClick={() => setStatusQuery("")}
+            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${status === "" ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
           >
             Show All
           </button>
           <button
-            onClick={() => setQuery("Paid")}
-            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${query === "Paid" ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
+            onClick={() => setStatusQuery("true")}
+            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${status === "true" ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
           >
             Sudah Bayar
           </button>
           <button
-            onClick={() => setQuery("Pending")}
-            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${query === "Pending" ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
+            onClick={() => setStatusQuery("false")}
+            className={`h-fit w-fit rounded-full p-3 text-xs font-semibold ${status === "false" ? "bg-[#3272CA] text-white" : "border-2 border-[#BFD9EF] text-[#3272CA]"}`}
           >
             Belum Bayar
           </button>
@@ -158,11 +131,11 @@ export default function Pembayaran() {
             <p className="flex w-2/12 justify-center">Status Pembayaran</p>
             <p className="flex w-1/12 justify-center"></p>
           </div>
-          {data &&
-            !query &&
-            data.map((student) => (
+          {activationData &&
+            !status &&
+            activationData.map((student) => (
               <div
-                key={student.activation_id}
+                key={student.id}
                 className="flex flex-row text-sm font-semibold text-[#5E6278]"
               >
                 <p className="flex w-2/12 justify-center">{student.nim}</p>
@@ -173,9 +146,9 @@ export default function Pembayaran() {
                   ))}
                 </div>
                 <p
-                  className={`flex h-fit w-2/12 justify-center rounded-md p-2 font-semibold ${student.status === "Pending" ? "bg-[#F1F1F2]" : "bg-[#E8FFF3] text-[#50CD89]"}`}
+                  className={`flex h-fit w-2/12 justify-center rounded-md p-2 font-semibold ${student.status === false ? "bg-[#F1F1F2]" : "bg-[#E8FFF3] text-[#50CD89]"}`}
                 >
-                  {student.status === "Paid" ? "Sudah Bayar" : "Belum Bayar"}
+                  {student.status === true ? "Sudah Bayar" : "Belum Bayar"}
                 </p>
                 <button
                   onClick={() => {
@@ -185,20 +158,22 @@ export default function Pembayaran() {
                   }}
                   className="relative flex h-6 w-1/12 justify-center"
                 >
-                  <Image
-                    src={"/edit-blue.png"}
-                    alt="action"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
+                  {!student.status && (
+                    <Image
+                      src={"/edit-blue.png"}
+                      alt="action"
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
                 </button>
               </div>
             ))}
-          {filteredData &&
-            query &&
-            filteredData.map((student) => (
+          {activationData &&
+            status &&
+            activationData.map((student) => (
               <div
-                key={student.activation_id}
+                key={student.id}
                 className="flex flex-row text-sm font-semibold text-[#5E6278]"
               >
                 <p className="flex w-2/12 justify-center">{student.nim}</p>
@@ -209,17 +184,19 @@ export default function Pembayaran() {
                   ))}
                 </div>
                 <p
-                  className={`flex h-fit w-2/12 justify-center rounded-md p-2 font-semibold ${student.status === "Pending" ? "bg-[#F1F1F2]" : "bg-[#E8FFF3] text-[#50CD89]"}`}
+                  className={`flex h-fit w-2/12 justify-center rounded-md p-2 font-semibold ${student.status === false ? "bg-[#F1F1F2]" : "bg-[#E8FFF3] text-[#50CD89]"}`}
                 >
-                  {student.status === "Paid" ? "Sudah Bayar" : "Belum Bayar"}
+                  {student.status === true ? "Sudah Bayar" : "Belum Bayar"}
                 </p>
                 <button className="relative flex h-6 w-1/12 justify-center">
-                  <Image
-                    src={"/edit-blue.png"}
-                    alt="action"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
+                  {!student.status && (
+                    <Image
+                      src={"/edit-blue.png"}
+                      alt="action"
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
                 </button>
               </div>
             ))}
@@ -261,13 +238,9 @@ export default function Pembayaran() {
                       Belum Bayar
                     </p>
                     <Switch
-                      checked={
-                        selectedStudentPaymentStatus === "Paid" ? true : false
-                      }
+                      checked={selectedStudentPaymentStatus}
                       onChange={(checked) =>
-                        setSelectedStudentPaymentStatus(
-                          checked ? "Paid" : "Pending",
-                        )
+                        setSelectedStudentPaymentStatus(checked ? true : false)
                       }
                       className="group relative flex h-7 w-14 cursor-pointer rounded-full bg-[#D9D9D9] p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[checked]:bg-[#3272CA] data-[focus]:outline-1 data-[focus]:outline-white"
                     >
@@ -283,12 +256,12 @@ export default function Pembayaran() {
                 </div>
               </div>
               <button
-                onClick={() =>
-                  updatePaymentStatus(
-                    selectedStudentPaymentStatus,
-                    selectedStudent?.activation_id,
-                  )
-                }
+                // onClick={() =>
+                //   updatePaymentStatus(
+                //     selectedStudentPaymentStatus,
+                //     selectedStudent?.activation_id,
+                //   )
+                // }
                 className="w-full rounded-full bg-[#D2E3F1] p-4 font-semibold text-[#3272CA]"
               >
                 Simpan Perubahan

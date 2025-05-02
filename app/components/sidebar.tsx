@@ -1,15 +1,11 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
+"use client";
+
 import SideBarItem, { SideBarProps } from "./sidebar-item";
 import SignOutButton from "./signout-button";
-import Image from "next/image";
-import Link from "next/link";
 import PengumumanSidebarDisclosure from "./pengumuman-sidebar-disclosure";
 import MasterDataSidebarDisclosure from "./master-data-sidebar-disclosure";
-import { getRole } from "../lib/sessions";
+import useAuthStore from "../store/useAuthStore";
+import { useEffect } from "react";
 
 const sideBarItems: SideBarProps[] = [
   { imageSrc: "/dashboard.png", route: "/dashboard", title: "Dashboard" },
@@ -20,8 +16,12 @@ const sideBarItems: SideBarProps[] = [
   },
 ];
 
-export default async function SideBar() {
-  const role = await getRole();
+export default function SideBar() {
+  const { userData, me } = useAuthStore();
+
+  useEffect(() => {
+    me;
+  }, [me]);
 
   return (
     <div className="mt-8 flex h-full w-1/4 flex-col justify-between px-8 py-4">
@@ -36,7 +36,7 @@ export default async function SideBar() {
             />
           );
         })}
-        {role === "laborant" && (
+        {userData?.role === "LABORAN" && (
           <>
             <MasterDataSidebarDisclosure />
             <PengumumanSidebarDisclosure />

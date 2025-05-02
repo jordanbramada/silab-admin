@@ -55,7 +55,7 @@ export default function Appbar({ role, data }: AppbarProps) {
         </p>
         <p className="text-[24px] font-bold text-[#3272CA]">
           {data && data.fullname.split(" ").slice(0, 2).join(" ")} -{" "}
-          {role && role === "student" ? "Assisstant" : "Laboran"}
+          {role && role === "MAHASISWA" ? "ASISTEN" : "LABORAN"}
         </p>
       </div>
     </div>

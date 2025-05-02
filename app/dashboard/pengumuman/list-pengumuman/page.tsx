@@ -1,7 +1,7 @@
 import { getAnnouncementList } from "@/app/actions/dashboard/pengumuman/actions";
 import AnnouncementCard from "@/app/components/pengumuman/announcement-card";
 import AnnouncementSettingsDropdownItem from "@/app/components/pengumuman/announcement-settings-dropdown-item";
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 import { Pengumuman } from "@/app/types/pengumuman";
 import { PengumumanQuery } from "@/app/types/pengumuman-query";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default async function ListPengumuman() {
-  const accessToken = await getAccessToken();
+  const accessToken = await getToken();
   const res = await fetch(`${process.env.BASE_URL}/announcements`, {
     method: "GET",
     headers: {

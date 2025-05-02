@@ -1,28 +1,28 @@
+"use client";
+
 import AddPracticumBanner from "@/app/components/praktikum/add-practicum-banner";
 import ClassCard from "@/app/components/praktikum/class-card";
 import SubjectsList from "@/app/components/praktikum/subjects-list";
-import { getAccessToken, getRole } from "@/app/lib/sessions";
+import useAuthStore from "@/app/store/useAuthStore";
+import useClassStore from "@/app/store/useClassStore";
+import { useEffect } from "react";
 
-export default async function Praktikum() {
-  const role: string = await getRole();
+export default function Praktikum() {
+  const { userData, me } = useAuthStore();
+  const { classesData, getAllClass } = useClassStore();
 
-  const accessToken = await getAccessToken();
-  const response = await fetch(`${process.env.BASE_URL}/subject/classes`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
-  const responseData = await response.json();
-  const subjectClasses = responseData["data"] as SubjectClass[];
+  useEffect(() => {
+    getAllClass();
+    me();
+  }, [getAllClass, me]);
 
   return (
     <div className="h-full w-full space-y-10 overflow-auto overscroll-contain">
       <AddPracticumBanner />
-      {role === "laborant" && <SubjectsList />}
-      {role === "student" &&
-        subjectClasses.map((subjectClass) => (
+      {userData?.role === "LABORAN" && <SubjectsList />}
+      {userData?.role === "MAHASISWA" &&
+        classesData &&
+        classesData.map((subjectClass) => (
           <ClassCard subjectClass={subjectClass} key={subjectClass.id} />
         ))}
     </div>

@@ -23,7 +23,7 @@ export default function TimeField({
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    nextRef: React.RefObject<HTMLInputElement>,
+    nextRef: React.RefObject<HTMLInputElement | null>,
   ) => {
     const { value, maxLength } = e.target;
     if (value.length >= maxLength) {
@@ -33,7 +33,7 @@ export default function TimeField({
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    prevRef: React.RefObject<HTMLInputElement>,
+    prevRef: React.RefObject<HTMLInputElement | null>,
   ) => {
     if (
       e.key === "Backspace" &&

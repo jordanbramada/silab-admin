@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import { useState } from "react";
 import SuccessDialog from "../success-dialog";
-import { postMeeting } from "../../actions/dashboard/praktikum/[classId]/actions";
+import useMeetingStore from "@/app/store/useMeetingStore";
 
 interface AddMeetingButtonProps {
   classId?: string;
@@ -17,33 +17,13 @@ interface AddMeetingButtonProps {
 export default function AddMeetingButton({ classId }: AddMeetingButtonProps) {
   const [isAddMeetingOpen, setIsAddMeetingOpen] = useState<boolean>(false);
   const [meetingName, setMeetingName] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
 
+  const { addMeeting, message, isLoading } = useMeetingStore();
+
   const handleMeetingNameChange = (value: string) => {
     setMeetingName(value);
-  };
-
-  const addMeeting = async (
-    meetingName: string,
-    classId: string | undefined
-  ) => {
-    setLoading(true);
-    try {
-      const response: any = await postMeeting(meetingName, classId);
-
-      if (response["status"] === "success") {
-        setMessage(response["message"]);
-        setIsSuccessDialogOpen(true);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-      setIsAddMeetingOpen(false);
-    }
   };
 
   return (
@@ -83,10 +63,12 @@ export default function AddMeetingButton({ classId }: AddMeetingButtonProps) {
               </fieldset>
               <div className="flex h-full flex-col justify-end">
                 <button
-                  onClick={() => addMeeting(meetingName, classId)}
+                  onClick={() =>
+                    addMeeting({ classId: classId!, meetingName: meetingName })
+                  }
                   className="h-fit w-1/3 self-end rounded-full bg-[#D2E3F1] py-3 font-bold text-[#3272CA] disabled:bg-gray-300 disabled:text-white"
                 >
-                  {loading ? (
+                  {isLoading ? (
                     <span className="loading loading-dots loading-sm" />
                   ) : (
                     "Simpan"
@@ -100,7 +82,7 @@ export default function AddMeetingButton({ classId }: AddMeetingButtonProps) {
       <SuccessDialog
         dialogOpen={isSuccessDialogOpen}
         onClose={() => setIsSuccessDialogOpen(false)}
-        title={message}
+        title={message!}
       />
     </>
   );

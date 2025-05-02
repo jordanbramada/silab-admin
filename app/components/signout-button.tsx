@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "@/app/lib/sessions";
+import { signOut } from "@/app/utils/cookie";
 import {
   Description,
   Dialog,
@@ -9,10 +9,22 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuthStore from "../store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function SignOutButton() {
+  const router = useRouter();
+
   let [isOpen, setIsOpen] = useState(false);
+
+  const { logout, userData } = useAuthStore();
+
+  useEffect(() => {
+    if (!userData) {
+      router.replace("/auth");
+    }
+  }, [router, userData]);
 
   return (
     <div className="group/sidebaritem">
@@ -53,7 +65,7 @@ export default function SignOutButton() {
               <button
                 className="text-[#FF0000]"
                 onClick={async () => {
-                  await signOut();
+                  await logout();
                   setIsOpen(false);
                 }}
               >

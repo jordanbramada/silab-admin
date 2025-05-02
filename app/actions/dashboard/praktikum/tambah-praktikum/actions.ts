@@ -1,6 +1,6 @@
 "use server";
 
-import { getAccessToken, getToken } from "@/app/lib/sessions";
+import { getToken, getToken } from "@/app/utils/cookie";
 import { Class } from "@/app/types/add-class";
 
 export async function searchAsisten(query: string) {
@@ -27,7 +27,7 @@ export async function searchAsisten(query: string) {
 
 export async function addClasses(newClass: Class) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const response = await fetch(`${process.env.BASE_URL}/subject/classes`, {
       method: "POST",
       headers: {

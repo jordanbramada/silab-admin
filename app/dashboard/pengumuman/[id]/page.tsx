@@ -1,13 +1,14 @@
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 interface AnnouncementDetailsProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default async function AnnouncementDetails({
-  params,
-}: AnnouncementDetailsProps) {
-  const accessToken = await getAccessToken();
+export default async function AnnouncementDetails(
+  props: AnnouncementDetailsProps,
+) {
+  const params = await props.params;
+  const accessToken = await getToken();
   const response = await fetch(
     `${process.env.BASE_URL}/announcements/${params.id}`,
     {

@@ -1,10 +1,10 @@
 "use server";
 
-import { getAccessToken } from "@/app/lib/sessions";
+import { getToken } from "@/app/utils/cookie";
 
 export async function fetchClassDetails(classId: string) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const response = await fetch(
       `${process.env.BASE_URL}/subject/classes/${classId}`,
       {
@@ -25,7 +25,7 @@ export async function fetchClassDetails(classId: string) {
 
 export async function fetchUsers(fullname: string | null) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     let response;
 
     if (fullname) {
@@ -61,7 +61,7 @@ export async function postCollaborators(
   classId: string | undefined,
 ) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const body = JSON.stringify({
       subject_class: classId,
       assistants: collaborators,
@@ -89,7 +89,7 @@ export async function postMeeting(
   classId: string | undefined,
 ) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
     const body = JSON.stringify({
       meetingName: meetingName,
     });
@@ -116,7 +116,7 @@ export async function postMeeting(
 
 export async function getMeetings(classId: string | undefined) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
 
     const response = await fetch(
       `${process.env.BASE_URL}/subject/classes/${classId}/meetings`,
@@ -142,7 +142,7 @@ export async function updateAttendancesStatus(
   meetingToken: string | undefined,
 ) {
   try {
-    const token = await getAccessToken();
+    const token = await getToken();
 
     const response = await fetch(
       `${process.env.BASE_URL}/subject/classes/${classId}/meetings/${meetingId}`,

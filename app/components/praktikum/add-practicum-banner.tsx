@@ -1,11 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { getRole } from "../../lib/sessions";
+import useAuthStore from "@/app/store/useAuthStore";
 
-export default async function AddPracticumBanner() {
-  const role = await getRole();
+export default function AddPracticumBanner() {
+  const { userData } = useAuthStore();
 
-  if (role === "laborant") {
+  if (userData?.role === "LABORAN") {
     return (
       <div className="flex h-[215px] w-full flex-row justify-between rounded-3xl bg-white p-5">
         <div className="flex w-[593px] flex-col justify-between">
