@@ -1,7 +1,10 @@
 import { error } from "console";
-import { IGetSubjectResponseBody } from "../interfaces/subject/subject.interface";
+import {
+  IAddSubjectRequestBody,
+  IGetSubjectResponseBody,
+} from "../interfaces/subject/subject.interface";
 import { create } from "zustand";
-import { getAllSubjects } from "../services/subject/api";
+import { addSubject, getAllSubjects } from "../services/subject/api";
 
 type SubjectState = GlobalState & {
   subjectsData: IGetSubjectResponseBody[];
@@ -9,6 +12,7 @@ type SubjectState = GlobalState & {
 
 type SubjectActions = {
   getAllSubjects: () => Promise<void>;
+  addSubject: (body: IAddSubjectRequestBody) => Promise<void>;
 };
 
 const initialState = {
@@ -29,6 +33,22 @@ const useSubjectStore = create<SubjectState & SubjectActions>((set, get) => ({
       if (res.data && res.status) {
         set({ subjectsData: res.data });
       } else {
+        set({ error: res.message });
+      }
+    } catch {
+      console.log(get().error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  addSubject: async (body) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const res = await addSubject(body);
+
+      if (!res.status) {
         set({ error: res.message });
       }
     } catch {

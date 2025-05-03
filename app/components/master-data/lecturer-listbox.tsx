@@ -10,38 +10,33 @@ import Image from "next/image";
 import { Lecturer } from "../../types/lecturer";
 import { useEffect, useState } from "react";
 import { getLecturers } from "../../actions/dashboard/master-data/add-subject/action";
+import useDosenStore from "@/app/store/useDosenStore";
 
 interface LecturerListBoxProps {
+  value: string | null;
   onLecturerChange: (value: string) => void;
 }
 
 export default function LecturerListBox({
+  value,
   onLecturerChange,
 }: LecturerListBoxProps) {
-  const [selectedLecturer, setSelectedLecturer] = useState<Lecturer>();
-  const [lecturersData, setLecturersData] = useState<Lecturer[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedLecturer, setSelectedLecturer] = useState<Lecturer | null>(
+    null,
+  );
+
+  const { getDosen, dosenData } = useDosenStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const responseData = await getLecturers();
+    getDosen();
+  }, [getDosen]);
 
-        if (responseData["status"] === "success") {
-          setLecturersData(responseData["data"]);
-        } else if (responseData["error"] === true) {
-          console.log(responseData["message"]);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  useEffect(() => {
+    if (value && dosenData.length > 0) {
+      const lecturer = dosenData.find((d) => d.id === value) || null;
+      setSelectedLecturer(lecturer);
+    }
+  }, [value, dosenData]);
 
   return (
     <fieldset className="flex h-fit w-full flex-col space-y-3">
@@ -52,15 +47,14 @@ export default function LecturerListBox({
         value={selectedLecturer}
         onChange={(value) => {
           setSelectedLecturer(value);
-          onLecturerChange(value.id);
+          onLecturerChange(value!.id);
         }}
       >
         <ListboxButton
           className={`relative flex h-[54px] w-full flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] px-[15px]`}
         >
           <p>
-            {selectedLecturer && selectedLecturer.fullname}
-            {!selectedLecturer && "Dosen Pengampu"}
+            {selectedLecturer ? selectedLecturer.fullname : "Dosen Pengampu"}
           </p>
           <div className="relative h-[24px] w-[24px]">
             <Image src={"/down.png"} alt="chevron down" fill />
@@ -70,7 +64,7 @@ export default function LecturerListBox({
           anchor="bottom"
           className={`mt-2 h-fit w-[var(--button-width)] rounded-lg bg-[#f5f5f5]`}
         >
-          {lecturersData.map((lecturer) => (
+          {dosenData.map((lecturer) => (
             <ListboxOption
               className={`flex h-[54px] w-full items-center justify-center data-[focus]:bg-[#3272CA] data-[focus]:text-white`}
               key={lecturer.id}

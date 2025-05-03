@@ -10,3 +10,11 @@ export const getAllActivation = async (
 
   return res.data;
 };
+
+export const putUpdatePaymentStatus = async (
+  id: string,
+): Promise<IBaseResponse> => {
+  const res = await satellite.put(`/activation/${id}`);
+
+  return res.data;
+};

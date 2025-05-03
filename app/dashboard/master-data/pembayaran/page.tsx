@@ -30,6 +30,7 @@ export default function Pembayaran() {
   const {
     activationData,
     getAllActivations,
+    updatePaymentStatus,
     isLoading,
     error,
     status,
@@ -256,12 +257,7 @@ export default function Pembayaran() {
                 </div>
               </div>
               <button
-                // onClick={() =>
-                //   updatePaymentStatus(
-                //     selectedStudentPaymentStatus,
-                //     selectedStudent?.activation_id,
-                //   )
-                // }
+                onClick={() => updatePaymentStatus(selectedStudent?.id!)}
                 className="w-full rounded-full bg-[#D2E3F1] p-4 font-semibold text-[#3272CA]"
               >
                 Simpan Perubahan

@@ -17,25 +17,46 @@ export default function ClassSessionListbox({
   value,
   onClassSessionChange,
 }: ClassSessionListboxProps) {
-  const [sessionsData, setSessionsData] = useState<Sessions[]>([]);
   const [selectedSession, setSelectedSession] = useState<Sessions | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getClassSessions();
-
-        if (response["status"] === "success") {
-          setSessionsData(response["data"]["sessions"]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-    setSelectedSession(value);
-  }, [value]);
+  const sessions: Sessions[] = [
+    {
+      id: "1",
+      start_time: "07.00",
+      end_time: "08.40",
+      session: "1",
+    },
+    {
+      id: "2",
+      start_time: "08.45",
+      end_time: "10.25",
+      session: "2",
+    },
+    {
+      id: "3",
+      start_time: "10.30",
+      end_time: "12.10",
+      session: "3",
+    },
+    {
+      id: "4",
+      start_time: "12.30",
+      end_time: "14.10",
+      session: "4",
+    },
+    {
+      id: "5",
+      start_time: "14.15",
+      end_time: "16.05",
+      session: "5",
+    },
+    {
+      id: "6",
+      start_time: "16.10",
+      end_time: "17.10",
+      session: "6",
+    },
+  ];
 
   return (
     <div className="flex h-full w-full flex-col justify-between space-y-3">
@@ -56,8 +77,8 @@ export default function ClassSessionListbox({
           anchor="bottom"
           className={`w-[var(--button-width)] space-y-3 rounded-lg bg-[#f5f5f5]`}
         >
-          {sessionsData &&
-            sessionsData.map((session) => (
+          {sessions &&
+            sessions.map((session) => (
               <ListboxOption
                 value={session}
                 key={session.id}

@@ -1,6 +1,6 @@
 "use server";
 
-import { getToken, getToken } from "@/app/utils/cookie";
+import { getToken } from "@/app/utils/cookie";
 import { Class } from "@/app/types/add-class";
 
 export async function searchAsisten(query: string) {

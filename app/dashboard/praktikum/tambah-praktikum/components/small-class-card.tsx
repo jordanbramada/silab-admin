@@ -1,7 +1,8 @@
+import { IGetClassResponseBody } from "@/app/interfaces/class/class.interface";
 import Link from "next/link";
 
 interface SmallClassCardProps {
-  subjectClass: SubjectClass;
+  subjectClass: IGetClassResponseBody;
 }
 
 export default function SmallClassCard({ subjectClass }: SmallClassCardProps) {
@@ -12,12 +13,10 @@ export default function SmallClassCard({ subjectClass }: SmallClassCardProps) {
       className="flex h-[140px] w-1/5 flex-col justify-between rounded-2xl bg-[#3272CA] p-3"
     >
       <div className="flex flex-row justify-between">
-        <p className="text-3xl font-bold text-[#FFBF01]">
-          {subjectClass.subject_class}
-        </p>
+        <p className="text-3xl font-bold text-[#FFBF01]">{subjectClass.name}</p>
         <div className="flex flex-row">
           <p className="text-3xl font-bold text-[#FFBF01]">
-            {subjectClass.registered_students}
+            {subjectClass.participants}
           </p>
           <p className="text-3xl font-bold text-[#FFBF01]">/</p>
           <p className="text-3xl font-bold text-[#FFBF01]">
@@ -28,7 +27,8 @@ export default function SmallClassCard({ subjectClass }: SmallClassCardProps) {
       <div className="flex flex-col text-white">
         <p className="text-lg">{subjectClass.subject_name}</p>
         <p className="text-sm">
-          {subjectClass.day}, Sesi ke - {subjectClass.session}
+          {subjectClass.day}, Sesi ke - {subjectClass.startAt} -{" "}
+          {subjectClass.endAt}
         </p>
       </div>
     </Link>

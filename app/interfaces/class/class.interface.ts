@@ -23,3 +23,13 @@ export interface IGetClassByIdResponseBody {
   endAt: string;
   participants: number;
 }
+
+export interface IAddClassRequestBody {
+  subjectId: string;
+  name: string;
+  quota: number;
+  day: string;
+  startAt: string;
+  endAt: string;
+  room: string;
+}

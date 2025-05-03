@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import { IGetActivationResponseBody } from "../interfaces/activation/activation.interface";
-import { getAllActivation } from "../services/activation/api";
+import {
+  getAllActivation,
+  putUpdatePaymentStatus,
+} from "../services/activation/api";
 
 type ActivationState = GlobalState & {
   activationData: IGetActivationResponseBody[];
@@ -10,6 +13,7 @@ type ActivationState = GlobalState & {
 
 type ActivationActions = {
   getAllActivations: () => Promise<void>;
+  updatePaymentStatus: (id: string) => Promise<void>;
   setStatusQuery: (query: string | undefined) => void;
   setNameQuery: (query: string) => void;
   reset: () => void;
@@ -48,6 +52,22 @@ const useActivationStore = create<ActivationState & ActivationActions>(
         if (res.data && res.status) {
           set({ activationData: res.data });
         } else {
+          set({ error: res.message });
+        }
+      } catch {
+        console.log(get().error);
+      } finally {
+        set({ isLoading: false });
+      }
+    },
+
+    updatePaymentStatus: async (id) => {
+      set({ isLoading: true, error: null });
+
+      try {
+        const res = await putUpdatePaymentStatus(id);
+
+        if (!res.status) {
           set({ error: res.message });
         }
       } catch {

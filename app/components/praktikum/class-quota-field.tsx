@@ -12,7 +12,7 @@ export default function ClassQuotaField({
   const displayValue = value || "";
 
   return (
-    <fieldset className="flex h-full w-fit flex-col space-y-3">
+    <div className="flex h-full w-fit flex-col space-y-3">
       <label className="text-base font-semibold text-[#5E6278]">Kuota</label>
       <input
         className="h-[54px] w-full rounded-2xl bg-[#f5f5f5] p-5 font-semibold text-[#1D1D1D] focus:outline-[#3272CA]"
@@ -22,6 +22,6 @@ export default function ClassQuotaField({
         value={displayValue}
         onChange={(event) => onClassQuotaChange(event.target.value)}
       />
-    </fieldset>
+    </div>
   );
 }

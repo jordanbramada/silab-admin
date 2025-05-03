@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { fetchSubjectData } from "../../actions/dashboard/praktikum/actions";
 import { SubjectBySemester } from "../../types/subject-by-semester";
+import useSubjectStore from "@/app/store/useSubjectStore";
 
 interface SubjectDropdownMenuProps {
   isDisabled: boolean;
@@ -18,27 +19,13 @@ export default function SubjectDropdownMenu({
   isDisabled,
   onSubjectChange,
 }: SubjectDropdownMenuProps) {
-  const [subjectData, setSubjectData] = useState<SubjectBySemester[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const { getAllSubjects, isLoading, error, subjectsData } = useSubjectStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setSelectedSubject("");
-      setLoading(true);
-
-      try {
-        const data = await fetchSubjectData();
-        setSubjectData(data.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    getAllSubjects();
+  }, [getAllSubjects]);
 
   return (
     <Listbox>
@@ -55,7 +42,7 @@ export default function SubjectDropdownMenu({
         anchor="bottom"
         className={`w-[var(--button-width)] space-y-3 rounded-lg bg-white`}
       >
-        {subjectData.map((subject) => {
+        {subjectsData.map((subject) => {
           return (
             <ListboxOption
               value={subject}

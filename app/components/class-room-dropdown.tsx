@@ -14,7 +14,7 @@ export default function ClassRoomDropdown({
 }: ClassRoomDropdownProps) {
   const [selectedRoom, setSelectedRoom] = useState<string>("");
 
-  const classRoom: ClassRoom[] = [{ name: "Lab. PSI" }, { name: "Lab. SBTI" }];
+  const classRoom: ClassRoom[] = [{ name: "PSI" }, { name: "SBTI" }];
 
   useEffect(() => {
     setSelectedRoom(value);

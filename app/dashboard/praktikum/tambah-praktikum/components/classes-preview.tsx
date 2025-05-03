@@ -1,7 +1,8 @@
+import { IGetClassResponseBody } from "@/app/interfaces/class/class.interface";
 import SmallClassCard from "./small-class-card";
 
 interface ClassesPreviewProps {
-  subjectClasses: SubjectClass[];
+  subjectClasses: IGetClassResponseBody[];
 }
 
 export default function ClassesPreview({

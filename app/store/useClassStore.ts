@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import {
+  IAddClassRequestBody,
   IGetClassByIdResponseBody,
   IGetClassResponseBody,
 } from "../interfaces/class/class.interface";
-import { getAllClass, getClassById } from "../services/class/api";
+import { getAllClass, getClassById, postClass } from "../services/class/api";
 
 type ClassState = GlobalState & {
   classesData: IGetClassResponseBody[];
@@ -13,6 +14,7 @@ type ClassState = GlobalState & {
 type ClassActions = {
   getAllClass: () => Promise<void>;
   getClassById: (id: string) => Promise<void>;
+  addClass: (body: IAddClassRequestBody) => Promise<void>;
 };
 
 const initialState = {
@@ -52,6 +54,22 @@ const useClassStore = create<ClassState & ClassActions>((set, get) => ({
       if (res.status && res.data) {
         set({ classData: res.data });
       } else {
+        set({ error: res.message });
+      }
+    } catch {
+      console.log(get().error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  addClass: async (body) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const res = await postClass(body);
+
+      if (!res.status) {
         set({ error: res.message });
       }
     } catch {
