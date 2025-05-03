@@ -11,6 +11,8 @@ import {
 } from "@headlessui/react";
 import ClassAssistantsComboBox from "../class-assistants";
 import SuccessDialog from "../success-dialog";
+import { IGetUserResponseBody } from "@/app/interfaces/user/user.interface";
+import useCollaboratorStore from "@/app/store/useCollaboratorStore";
 
 interface AddCollaboratorsButtonProps {
   classId?: string;
@@ -26,32 +28,34 @@ export default function AddCollaboratorsButton({
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
   const [selectedCollaborators, setSelectedCollaborators] = useState<User[]>(
-    []
+    [],
   );
 
-  const addCollaborators = async (
-    collaborators: string[],
-    classId?: string
-  ) => {
-    setLoading(true);
-    try {
-      const response: any = await postCollaborators(collaborators, classId);
+  const { addClassCollaborators } = useCollaboratorStore();
 
-      if (response["status"] === "success") {
-        setMessage(response["message"]);
-        setIsSuccessDialogOpen(true);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-      setIsAddCollaboratorsOpen(false);
-    }
-  };
+  // const addCollaborators = async (
+  //   collaborators: string[],
+  //   classId?: string,
+  // ) => {
+  //   setLoading(true);
+  //   try {
+  //     const response: any = await postCollaborators(collaborators, classId);
 
-  const handleCollaboratorsChange = (value: User[]) => {
+  //     if (response["status"] === "success") {
+  //       setMessage(response["message"]);
+  //       setIsSuccessDialogOpen(true);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //     setIsAddCollaboratorsOpen(false);
+  //   }
+  // };
+
+  const handleCollaboratorsChange = (value: IGetUserResponseBody[]) => {
     const validCollaborators = value.filter(
-      (collaborator): collaborator is User => collaborator != null
+      (collaborator): collaborator is User => collaborator != null,
     );
 
     setSelectedCollaborators(validCollaborators);
@@ -90,9 +94,12 @@ export default function AddCollaboratorsButton({
                 disabled={selectedCollaborators.length === 0 ? true : false}
                 onClick={() => {
                   const collaboratorsId = selectedCollaborators.map(
-                    (collaborator) => collaborator.id
+                    (collaborator) => collaborator.id,
                   );
-                  addCollaborators(collaboratorsId, classId);
+                  addClassCollaborators({
+                    classId: classId!,
+                    collaborators: collaboratorsId,
+                  });
                 }}
                 className="h-fit w-1/3 self-end rounded-full bg-[#D2E3F1] py-3 font-bold text-[#3272CA] disabled:bg-gray-300 disabled:text-white"
               >

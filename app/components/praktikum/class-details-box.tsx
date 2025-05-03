@@ -2,12 +2,13 @@ import Image from "next/image";
 import AddCollaboratorsButton from "@/app/components/praktikum/add-collaborators-button";
 import { IGetClassByIdResponseBody } from "@/app/interfaces/class/class.interface";
 import useAuthStore from "@/app/store/useAuthStore";
-
+import { IGetCollaboratorsResponseBody } from "@/app/interfaces/collaborator/collaborator.interface";
 interface IClassDetailBox {
   data: IGetClassByIdResponseBody;
+  assistant: IGetCollaboratorsResponseBody[];
 }
 
-const ClassDetailsBox: React.FC<IClassDetailBox> = ({ data }) => {
+const ClassDetailsBox: React.FC<IClassDetailBox> = ({ data, assistant }) => {
   const { userData } = useAuthStore();
 
   return (
@@ -35,12 +36,12 @@ const ClassDetailsBox: React.FC<IClassDetailBox> = ({ data }) => {
         </div>
         <div className="flex flex-col space-y-2">
           {/* asprak */}
-          {/* {assistant.length !== 0 &&
-            assistant.map((assistant) => (
-              <div className="flex flex-row space-x-[10px]" key={assistant}>
+          {assistant.length !== 0 &&
+            assistant.map((assistant, idx) => (
+              <div className="flex flex-row space-x-[10px]" key={idx}>
                 <div className="h-full w-[6px] rounded-full bg-[#D2E3F1]"></div>
                 <p className="text-[18px] font-semibold text-black">
-                  {assistant}
+                  {assistant.fullname}
                 </p>
               </div>
             ))}
@@ -50,7 +51,7 @@ const ClassDetailsBox: React.FC<IClassDetailBox> = ({ data }) => {
                 Asisten Praktikum Belum Ditambahkan
               </p>
             </div>
-          )} */}
+          )}
         </div>
       </div>
       <div className="h-full w-[0.3px] rounded-full border border-dashed border-[#1d1d1d]/30"></div>

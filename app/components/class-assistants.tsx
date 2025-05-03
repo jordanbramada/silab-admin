@@ -7,44 +7,35 @@ import {
 } from "@headlessui/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { fetchUsers } from "../actions/dashboard/praktikum/[classId]/actions";
+import useAsistenStore from "../store/useAsistenStore";
+import { IGetUserResponseBody } from "../interfaces/user/user.interface";
 
 interface ClassAssistantsComboBoxProps {
-  onClassAssistantsChange: (value: User[]) => void;
-  value: User[];
+  onClassAssistantsChange: (value: IGetUserResponseBody[]) => void;
+  value: IGetUserResponseBody[];
 }
 
 export default function ClassAssistantsComboBox({
   onClassAssistantsChange,
   value,
 }: ClassAssistantsComboBoxProps) {
-  const [query, setQuery] = useState<string>("");
-  const [asistenData, setAsistenData] = useState<User[]>([]);
-  const [selected, setSelected] = useState<User[]>([]);
+  const [selected, setSelected] = useState<IGetUserResponseBody[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchUsers(query);
-        setAsistenData(data.data || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [query]);
+  const { getAsisten, asistenData, setQuery } = useAsistenStore();
 
   useEffect(() => {
-    const selectedUsers = asistenData.filter((user) => value.includes(user));
+    getAsisten();
+  }, [getAsisten]);
+
+  useEffect(() => {
+    const selectedUsers = asistenData.filter((user: IGetUserResponseBody) =>
+      value.includes(user),
+    );
     setSelected(selectedUsers);
   }, [value, asistenData]);
 
-  const handleOnAsistenChange = (selected: User) => {
+  const handleOnAsistenChange = (selected: IGetUserResponseBody) => {
     const isExist = value.find((user) => user.id === selected.id);
 
     if (!isExist) {
@@ -55,7 +46,7 @@ export default function ClassAssistantsComboBox({
   };
 
   const removeAsisten = useCallback(
-    (selected: User) => {
+    (selected: IGetUserResponseBody) => {
       const updatedCollaboratorsList = value.filter(
         (user) => user.id !== selected.id,
       );

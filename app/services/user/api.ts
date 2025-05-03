@@ -9,3 +9,11 @@ export const getDosen = async (): Promise<
 
   return res.data;
 };
+
+export const getAsisten = async (
+  query: string | undefined,
+): Promise<IBaseResponse<IGetUserResponseBody[]>> => {
+  const res = await satellite.get(`/user/asisten?name=${query}`);
+
+  return res.data;
+};
