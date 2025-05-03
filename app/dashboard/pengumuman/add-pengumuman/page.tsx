@@ -4,15 +4,25 @@ import { addNewAnnouncement } from "@/app/actions/dashboard/pengumuman/actions";
 import AnnouncementTypeDropdown from "@/app/components/pengumuman/announcement-type-dropdown";
 import ErrorDialog from "@/app/components/error-dialog";
 import SuccessDialog from "@/app/components/success-dialog";
-import { Announcement, AnnouncementTypeEnum } from "@/app/types/announcement";
 import { useState } from "react";
 import AddPengumumanTitle from "@/app/components/pengumuman/add-pengumuman/add-pengumuman-title";
+import {
+  AnnouncementTypeEnum,
+  IAddAnnouncementRequestBody,
+} from "@/app/interfaces/announcement/announcement.interface";
+import useAnnouncementStore from "@/app/store/useAnnouncementStore";
 
 export default function Pengumuman() {
-  const [loading, setLoading] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [announcement, setAnnouncement] = useState<IAddAnnouncementRequestBody>(
+    {
+      type: AnnouncementTypeEnum.BASIC,
+      title: "",
+      body: "",
+    },
+  );
+
+  const { isLoading, error, addAnnouncement } = useAnnouncementStore();
 
   const open = () => {
     setDialogOpen(true);
@@ -22,16 +32,10 @@ export default function Pengumuman() {
     setDialogOpen(false);
   };
 
-  const initialAnnouncement: Announcement = {
-    type: AnnouncementTypeEnum.Basic,
-    title: "",
-    body: "",
-  };
-
-  const [announcement, setAnnouncement] =
-    useState<Announcement>(initialAnnouncement);
-
-  const handleValueChange = (field: keyof Announcement, value: any) => {
+  const handleValueChange = (
+    field: keyof IAddAnnouncementRequestBody,
+    value: any,
+  ) => {
     setAnnouncement((prev) => ({
       ...prev,
       [field]: value,
@@ -39,26 +43,7 @@ export default function Pengumuman() {
   };
 
   const handleAddNewAnnnouncement = async () => {
-    try {
-      setLoading(true);
-
-      const response = await addNewAnnouncement(announcement);
-
-      if (response["status"] === "success") {
-        setError(false);
-        setMessage(response["message"]);
-        resetAnnouncement();
-        open();
-      } else {
-        setError(true);
-        setMessage(response["message"]);
-        open();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    await addAnnouncement(announcement);
   };
 
   const resetAnnouncement = () => {
@@ -70,10 +55,9 @@ export default function Pengumuman() {
   return (
     <div className="flex h-full w-full flex-col space-y-10">
       <AddPengumumanTitle />
-
       <div className="flex h-screen w-full flex-col space-y-10 overflow-auto overscroll-contain rounded-[20px] bg-white p-5">
         <p className="text-[22px] font-bold text-[#1D1D1D]">Buat Pengumuman</p>
-        <fieldset className="w-full space-y-3">
+        <div className="w-full space-y-3">
           <label className="text-base font-semibold text-[#5E6278]">
             Judul Pengumuman
           </label>
@@ -84,7 +68,7 @@ export default function Pengumuman() {
             onChange={(e) => handleValueChange("title", e.target.value)}
             value={announcement.title ?? ""}
           />
-        </fieldset>
+        </div>
         <div className="h-[85px]">
           <AnnouncementTypeDropdown
             onAnnouncementTypeChange={(value) =>
@@ -93,7 +77,7 @@ export default function Pengumuman() {
             value={announcement.type}
           />
         </div>
-        <fieldset className="w-full space-y-3">
+        <div className="w-full space-y-3">
           <label className="text-base font-semibold text-[#5E6278]">
             Deskripsi Pengumuman{" "}
             <span className="text-xs font-normal text-[#5E6278]/75">
@@ -109,7 +93,7 @@ export default function Pengumuman() {
             onChange={(e) => handleValueChange("body", e.target.value)}
             value={announcement.body ?? ""}
           />
-        </fieldset>
+        </div>
         <div className="my-10 h-[1px] w-full bg-[#1D1D1D]/30" />
         <div className="flex w-full flex-row justify-end space-x-6">
           <button
@@ -122,7 +106,7 @@ export default function Pengumuman() {
             onClick={() => handleAddNewAnnnouncement()}
             className="rounded-full bg-[#D2E3F1] px-[16px] py-[8px] text-[16px] font-semibold text-[#3272CA]"
           >
-            {!loading ? (
+            {!isLoading ? (
               "Simpan"
             ) : (
               <span className="loading loading-dots loading-sm" />
@@ -134,11 +118,11 @@ export default function Pengumuman() {
         <SuccessDialog
           dialogOpen={dialogOpen}
           onClose={close}
-          title={message}
+          title={"Announcement Added!"}
         />
       )}
       {error && (
-        <ErrorDialog dialogOpen={dialogOpen} onClose={close} title={message} />
+        <ErrorDialog dialogOpen={dialogOpen} onClose={close} title={error} />
       )}
     </div>
   );

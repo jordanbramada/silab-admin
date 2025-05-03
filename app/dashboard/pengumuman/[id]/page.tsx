@@ -1,34 +1,26 @@
-import { getToken } from "@/app/utils/cookie";
+"use client";
 
-interface AnnouncementDetailsProps {
-  params: Promise<{ id: string }>;
-}
+import useAnnouncementStore from "@/app/store/useAnnouncementStore";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
 
-export default async function AnnouncementDetails(
-  props: AnnouncementDetailsProps,
-) {
-  const params = await props.params;
-  const accessToken = await getToken();
-  const response = await fetch(
-    `${process.env.BASE_URL}/announcements/${params.id}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );
-  const responseData = await response.json();
-  const announcement = responseData["data"];
+export default function AnnouncementDetails() {
+  const params = useParams<{ id: string }>();
+
+  const { getAnnouncementById, announcementData } = useAnnouncementStore();
+
+  useEffect(() => {
+    getAnnouncementById(params.id);
+  }, [getAnnouncementById, params.id]);
 
   return (
     <div className="w-full overflow-auto overscroll-contain">
       <div className="flex w-full flex-col">
         <p className="mt-10 text-[22px] font-bold text-[#1D1D1D]">
-          {announcement.title}
+          {announcementData?.title}
         </p>
         <p className="mt-10 text-[18px] font-semibold text-[#1D1D1D]">
-          {announcement.body}
+          {announcementData?.body}
         </p>
 
         <div className="my-10 h-[1px] w-full bg-[#1D1D1D]/20" />
@@ -38,7 +30,7 @@ export default async function AnnouncementDetails(
               Tanggal / Waktu Posting
             </p>
             <p className="w-1/3 text-lg font-bold text-[#1D1D1D]">
-              {new Date(announcement.created_at).toDateString()}
+              {announcementData?.created_at}
             </p>
           </div>
         </div>

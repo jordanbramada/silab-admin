@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import BannerDashboard from "../components/banner-dashboard";
 import DashboardDataCards from "../components/dashboard-data-cards";
 import useDashboardStore from "../store/useDashboardStore";
-import useAuthStore from "../store/useAuthStore";
 
 export default function Dashboard() {
   const {
@@ -15,12 +14,10 @@ export default function Dashboard() {
     totalSubject,
     totalUnpaidStudent,
   } = useDashboardStore();
-  const { me } = useAuthStore();
 
   useEffect(() => {
     getTotalRegisteredStudent(), getTotalSubject(), getTotalUnpaidStudent();
-    me();
-  }, [getTotalRegisteredStudent, getTotalSubject, getTotalUnpaidStudent, me]);
+  }, [getTotalRegisteredStudent, getTotalSubject, getTotalUnpaidStudent]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between space-y-6 overflow-auto overscroll-contain">

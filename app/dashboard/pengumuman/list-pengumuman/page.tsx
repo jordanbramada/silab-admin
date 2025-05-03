@@ -1,25 +1,16 @@
-import { getAnnouncementList } from "@/app/actions/dashboard/pengumuman/actions";
-import AnnouncementCard from "@/app/components/pengumuman/announcement-card";
-import AnnouncementSettingsDropdownItem from "@/app/components/pengumuman/announcement-settings-dropdown-item";
-import { getToken } from "@/app/utils/cookie";
-import { Pengumuman } from "@/app/types/pengumuman";
-import { PengumumanQuery } from "@/app/types/pengumuman-query";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+"use client";
 
-export default async function ListPengumuman() {
-  const accessToken = await getToken();
-  const res = await fetch(`${process.env.BASE_URL}/announcements`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: "no-store",
-  });
-  const responseData = await res.json();
-  const data: Pengumuman[] = (await responseData["data"]) as Pengumuman[];
+import AnnouncementCard from "@/app/components/pengumuman/announcement-card";
+import { IGetAllAnnouncementsResponseBody } from "@/app/interfaces/announcement/announcement.interface";
+import useAnnouncementStore from "@/app/store/useAnnouncementStore";
+import { useEffect } from "react";
+
+const ListPengumuman = () => {
+  const { announcementsData, getAllAnnouncements } = useAnnouncementStore();
+
+  useEffect(() => {
+    getAllAnnouncements();
+  }, [getAllAnnouncements]);
 
   return (
     <div className="flex h-full w-full flex-col overflow-auto overscroll-contain">
@@ -29,14 +20,18 @@ export default async function ListPengumuman() {
         </p>
       </div>
       <div className="mt-10 flex flex-col space-y-10">
-        {data &&
-          data.map((announcement: Pengumuman) => (
-            <AnnouncementCard
-              announcement={announcement}
-              key={announcement.id}
-            />
-          ))}
+        {announcementsData &&
+          announcementsData.map(
+            (announcement: IGetAllAnnouncementsResponseBody) => (
+              <AnnouncementCard
+                announcement={announcement}
+                key={announcement.id}
+              />
+            ),
+          )}
       </div>
     </div>
   );
-}
+};
+
+export default ListPengumuman;

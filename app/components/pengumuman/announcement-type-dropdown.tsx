@@ -1,16 +1,16 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Image from "next/image";
 import { AnnouncementType } from "../../types/announcement-type";
-import { AnnouncementTypeEnum } from "../../types/announcement";
 import { useState } from "react";
+import { AnnouncementTypeEnum } from "@/app/interfaces/announcement/announcement.interface";
 
 const announcementTypeList: AnnouncementType[] = [
-  { title: "Pengumuman", value: AnnouncementTypeEnum[3] },
-  { title: "Pendaftaran Praktikum", value: AnnouncementTypeEnum[1] },
-  { title: "Pendaftaran Inhal", value: AnnouncementTypeEnum[2] },
+  { title: "Pengumuman", value: AnnouncementTypeEnum.BASIC },
+  { title: "Pendaftaran Praktikum", value: AnnouncementTypeEnum.PRACTICUM },
+  { title: "Pendaftaran Inhal", value: AnnouncementTypeEnum.INHALL },
   {
     title: "Pendaftaran Asisten Praktikum",
-    value: AnnouncementTypeEnum[0],
+    value: AnnouncementTypeEnum.ASSISTANT,
   },
 ];
 
