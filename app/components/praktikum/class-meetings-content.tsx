@@ -11,18 +11,18 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Link from "next/link";
 import Image from "next/image";
+import { IGetAllClassMeetingResponseBody } from "@/app/interfaces/meeting/meeting.interface";
 
 interface ClassMeetingsContentProps {
   classId?: string;
+  meetingData: IGetAllClassMeetingResponseBody[];
 }
 
 export default function ClassMeetingsContent({
   classId,
+  meetingData,
 }: ClassMeetingsContentProps) {
   const [selectedMeeting, setSelectedMeeting] = useState<string>("");
-  const [meetingData, setMeetingData] = useState<Meeting[] | undefined>(
-    undefined
-  );
 
   const downloadPDF = async () => {
     try {
@@ -54,11 +54,7 @@ export default function ClassMeetingsContent({
       <div className="flex w-full flex-row justify-between">
         <div className="flex h-1/6 flex-row space-x-4">
           <AddMeetingButton classId={classId} />
-          <MeetingsDropDown
-            classId={classId}
-            onMeetingSelected={setSelectedMeeting}
-            onMeetingDataRetrieved={setMeetingData}
-          />
+          <MeetingsDropDown onMeetingSelected={setSelectedMeeting} />
         </div>
         <div className="flex h-1/6 flex-row space-x-4">
           <OpenAttendancesButton
@@ -131,10 +127,9 @@ export default function ClassMeetingsContent({
                     ?.students?.filter((student) => student.is_attended)?.length
                 }
                 /
-                {
+                {meetingData !== undefined &&
                   meetingData?.find((meeting) => meeting.id === selectedMeeting)
-                    ?.students.length
-                }
+                    ?.students?.length}
               </p>
             </div>
           </div>
@@ -149,7 +144,7 @@ export default function ClassMeetingsContent({
             </div>
             {meetingData
               ?.find((meeting) => meeting.id === selectedMeeting)
-              ?.students.map((student) => (
+              ?.students?.map((student) => (
                 <div
                   key={student.student_id}
                   className="flex w-full flex-row text-base font-semibold text-[#5E6278]"

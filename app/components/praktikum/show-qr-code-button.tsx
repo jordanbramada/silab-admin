@@ -10,9 +10,10 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import QRCode from "react-qr-code";
+import { IGetAllClassMeetingResponseBody } from "@/app/interfaces/meeting/meeting.interface";
 
 interface ShowQrCodeButtonProps {
-  meetings?: Meeting[];
+  meetings?: IGetAllClassMeetingResponseBody[];
   selectedMeeting?: string;
 }
 
@@ -48,7 +49,7 @@ export default function ShowQrCodeButton({
               Kode QR Presensi
             </DialogTitle>
             <div className="flex h-full w-full items-center justify-center">
-              <QRCode value={qrToken ?? ""} />
+              <QRCode value={qrToken ?? "token"} />
             </div>
           </DialogPanel>
         </div>

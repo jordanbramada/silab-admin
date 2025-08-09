@@ -4,10 +4,11 @@ import { useState } from "react";
 import { updateAttendancesStatus } from "../actions/dashboard/praktikum/[classId]/actions";
 import SuccessDialog from "./success-dialog";
 import { Meeting } from "../types/meeting";
+import { IGetAllClassMeetingResponseBody } from "../interfaces/meeting/meeting.interface";
 
 interface OpenAttendancesButtonProps {
   classId?: string;
-  meeting?: Meeting[];
+  meeting?: IGetAllClassMeetingResponseBody[];
   selectedMeeting?: string;
 }
 

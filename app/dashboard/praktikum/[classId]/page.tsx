@@ -13,7 +13,7 @@ const ClassDetails: React.FC = () => {
   const params = useParams<{ classId: string }>();
 
   const { getClassById, classData, isLoading } = useClassStore();
-  const { getMeetings } = useMeetingStore();
+  const { getMeetings, meetingsData } = useMeetingStore();
   const { getClassCollaborators, collaboratorsData } = useCollaboratorStore();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const ClassDetails: React.FC = () => {
         <>
           <ClassTitleHeader data={classData} />
           <ClassDetailsBox data={classData} assistant={collaboratorsData} />
-          <ClassMeetingsContent classId={classData.id} />
+          <ClassMeetingsContent classId={classData.id} meetingData={meetingsData} />
         </>
       )}
     </div>
